@@ -15,15 +15,15 @@ return new class extends Migration
         Schema::create('form_designs', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
             $table->foreignUuid('form_id')->constrained()->onDelete('cascade');
-            $table->string('background', 20);
-            $table->string('questions', 20);
-            $table->string('answers', 20);
-            $table->string('buttons', 20);
-            $table->string('button_text', 20);
-            $table->string('star_rating', 20);
-            $table->string('font', 20);
-            $table->string('background_image', 200);
-            $table->string('logo', 200);
+            $table->string('background', 20)->default('#ffffff');
+            $table->string('questions', 20)->default('#000000');
+            $table->string('answers', 20)->default('#000000');
+            $table->string('buttons', 20)->default('#000000');
+            $table->string('button_text', 20)->default('#ffffff');
+            $table->string('star_rating', 20)->default('#000000');
+            $table->string('font', 20)->default('Inter');
+            $table->string('background_image', 200)->nullable(true);
+            $table->string('logo', 200)->nullable(true);
             $table->timestamps();
         });
     }

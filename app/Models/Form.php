@@ -29,4 +29,9 @@ class Form extends Model
     {
         return $this->hasMany(FormResponses::class);
     }
+
+    public function design()
+    {
+        return $this->hasOne(FormDesign::class);
+    }
 }

@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Form;
+use App\Models\FormDesign;
 use App\Models\FormFields;
 use App\Models\FormSection;
+use App\Models\SectionCategory;
+use App\Models\SectionType;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -46,6 +49,10 @@ class FormController extends Controller
                 'user_id' => Auth::id()
             ]);
 
+            FormDesign::create([
+                'form_id' =>$form->id
+            ]);
+
             FormSection::create([
                 'form_id' => $form->id,
                 'section_type_id' => 1,
@@ -60,6 +67,7 @@ class FormController extends Controller
                 'order' => 0,
                 'description' => "That's all. You may now close this window."
             ]);
+            
             DB::commit();
         } catch(Exception $e) {
             DB::rollBack();
@@ -76,18 +84,32 @@ class FormController extends Controller
     public function show(string $uuid)
     {
         $section = request()->query('section');
-        $form = Form::where('forms.id', $uuid)
-                ->leftJoin('form_designs', 'forms.id', '=', 'form_designs.form_id')
-                ->first();
-        $formFields = FormFields::where('form_id', $form->id)->orderBy('order')->get();
-        $formSections = FormSection::where('form_id', $uuid)->orderBy('order')->get();
-        $data = [
+        Log::info('section ' . $section);
+        $form = Form::where('id', $uuid)
+                ->with('design') 
+                ->firstOrFail();
+
+        $formFields = FormFields::where('form_section_id', $section)->get();
+        $formSections = FormSection::where('form_id', $uuid)
+            ->join('section_types', 'form_sections.section_type_id', '=', 'section_types.id')
+            ->select('form_sections.*', 'section_types.name as formsectionname') // Select only the necessary columns
+            ->orderBy('form_sections.order')
+            ->get();
+
+        $sectionCategories = SectionCategory::with('sectionTypes')->get();
+
+        $groupedSectionTypes = $sectionCategories->map(function ($category) {
+            return [
+                'category_name' => $category->name,
+                'section_types' => $category->sectionTypes,
+            ];
+        });
+
+        return Inertia::render('Form', [
             'form' => $form,
             'formFields' => $formFields,
             'form_sections' => $formSections,
-        ];
-        return Inertia::render('Form', [
-            'data' => $data
+            'groupedSectionTypes' => $groupedSectionTypes
         ]);
     }
 

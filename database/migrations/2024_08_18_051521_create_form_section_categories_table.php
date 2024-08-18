@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -12,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('section_types', function (Blueprint $table) {
+        Schema::create('section_categories', function (Blueprint $table) {
             $table->id();
-            $table->string('image')->nullable(true);
-            $table->string('name', 60);
-            $table->text('description');
-            $table->boolean('show')->defualt(true);
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -27,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('section_types');
+        Schema::dropIfExists('section_categories'); // Corrected table name
     }
 };
