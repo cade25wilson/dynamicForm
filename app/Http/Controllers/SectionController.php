@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Form;
 use App\Models\FormFields;
 use App\Models\FormSection;
+use App\Models\SectionType;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -35,8 +36,26 @@ class SectionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'SectionId' => 'required|exists:section_types,id',
+            'FormId' => 'required|exists:forms,id',
+            'Name' => 'required|string',
+        ]);
+        $order = FormSection::where('form_id', $data['FormId'])->orderBy('order', 'desc')->first();
+        $order = $order++;
+        
+        $type = SectionType::where('id', $data['SectionId']);
+        $section = FormSection::create([
+            'form_id' => $data['FormId'],
+            'section_type_id' => $data['SectionId'],
+            'order' => $order,
+            'name' => $data['Name'],
+        ]);
+
+        // $formField = $this->generateFormFields($section->id, $type);
     }
+
+
 
     /**
      * Display the specified resource.
@@ -82,7 +101,6 @@ class SectionController extends Controller
         } catch(Exception $e){
             return redirect('form/' . $formSection->form_id);
         }
-
     }
     
     /**

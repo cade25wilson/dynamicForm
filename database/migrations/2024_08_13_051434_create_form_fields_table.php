@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('form_fields', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
-            $table->foreignUuid('form_id')->constrained()->onDelete('cascade');
+            // $table->foreignUuid('form_id')->constrained()->onDelete('cascade');
             $table->string('label', 255);
             $table->string('type', 50);
             $table->boolean('required')->default(false);

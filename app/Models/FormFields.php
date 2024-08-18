@@ -10,13 +10,14 @@ class FormFields extends Model
 {
     use HasUuids;
     // The attributes that are mass assignable.
-    protected $fillable = ['form_id', 'label', 'type', 'required', 'order', 'options', 'form_section_id'];
+    // protected $fillable = ['form_id', 'label', 'type', 'required', 'order', 'options', 'form_section_id'];
+    protected $fillable = ['label', 'type', 'required', 'order', 'options', 'form_section_id'];
 
     // Define the relationship with the Form model
-    public function form()
-    {
-        return $this->belongsTo(Form::class);
-    }
+    // public function form()
+    // {
+    //     return $this->belongsTo(Form::class);
+    // }
 
     public function formsection()
     {

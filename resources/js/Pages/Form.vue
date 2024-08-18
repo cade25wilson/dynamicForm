@@ -71,7 +71,7 @@
 </TransitionRoot>
 
 
-				<p class="text-white">{{form}}</p>
+				<p class="text-white">{{formFields}}</p>
 			</div>
 			<div class="h-screen col-span-3">
 				fdsa
