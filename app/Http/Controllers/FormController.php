@@ -57,7 +57,7 @@ class FormController extends Controller
                 'form_id' => $form->id,
                 'section_type_id' => 2,
                 'name' => 'Thank you! 🙌',
-                'order' => 2,
+                'order' => 0,
                 'description' => "That's all. You may now close this window."
             ]);
             DB::commit();
