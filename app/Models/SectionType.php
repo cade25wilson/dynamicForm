@@ -10,7 +10,7 @@ class SectionType extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description', 'section_category_id', 'show'];
+    protected $fillable = ['name', 'description', 'section_category_id', 'show', 'default_name'];
 
     public function sectionCategory()
     {

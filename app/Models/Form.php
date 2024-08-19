@@ -19,10 +19,10 @@ class Form extends Model
     }
 
     // Define the relationship with the FormField model
-    public function fields()
-    {
-        return $this->hasMany(FormFields::class);
-    }
+    // public function fields()
+    // {
+    //     return $this->hasMany(FormFields::class);
+    // }
 
     // Define the relationship with the FormResponse model
     public function responses()

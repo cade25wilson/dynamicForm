@@ -15,9 +15,11 @@ return new class extends Migration
         Schema::create('section_types', function (Blueprint $table) {
             $table->id();
             $table->string('image')->nullable(true);
-            $table->string('name', 60);
-            $table->text('description');
-            $table->boolean('show')->defualt(true);
+            $table->string('name', 60)->nullable(true);
+            $table->text('description')->nullable(true);
+            $table->boolean('show')->defualt(true)->index();
+            $table->json('options')->nullable(true);
+            $table->string('default_name');
             $table->timestamps();
         });
     }

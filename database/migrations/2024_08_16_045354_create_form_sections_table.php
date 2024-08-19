@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignUuid('form_id')->constrained('forms')                                                                                                                                                                                                                                                                                                    ;
             $table->foreignId('section_type_id')->constrained('section_types');
             $table->integer('order')->default(1)->index();
-            $table->string('name');
+            $table->string('name')->nullable(true);
             $table->text('description')->nullable(true);
             $table->json('options')->nullable(true);
             $table->timestamps();

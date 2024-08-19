@@ -13,7 +13,7 @@ class SectionCategorySeeder extends Seeder
             'Text & Video',
             'Choice',
             'Other',
-            'Rating & Ranking',
+            // 'Rating & Ranking',
             'Null', 
         ];
 

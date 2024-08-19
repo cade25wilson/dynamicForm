@@ -96,8 +96,10 @@ class FormController extends Controller
             ->orderBy('form_sections.order')
             ->get();
 
-        $sectionCategories = SectionCategory::with('sectionTypes')->get();
-
+        $sectionCategories = SectionCategory::with(['sectionTypes' => function ($query) {
+            $query->where('show', true)->select('id', 'name', 'section_category_id');
+        }])->get();
+        
         $groupedSectionTypes = $sectionCategories->map(function ($category) {
             return [
                 'category_name' => $category->name,
