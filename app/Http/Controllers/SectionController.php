@@ -59,67 +59,6 @@ class SectionController extends Controller
         return redirect('/form/' . $data['FormId']);
     }
 
-    private function generateFormFields(string $sectionId, mixed $type): void
-    {
-        switch ($type->id) {
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                FormFields::create(['label' => 'First Name','type' => 'text','order' => 1,'form_section_id' => $sectionId]);
-                FormFields::create(['label' => 'Lase Name','type' => 'text','order' => 1,'form_section_id' => $sectionId]);
-                FormFields::create(['label' => 'Email','type' => 'email','order' => 1,'form_section_id' => $sectionId]);
-                FormFields::create(['label' => 'Phone Number','type' => 'tel','order' => 1,'form_section_id' => $sectionId]);
-                FormFields::create(['label' => 'Company','type' => 'text','order' => 1,'form_section_id' => $sectionId]);
-                break;
-            case 4:
-                FormFields::create(['type' => 'text','order' => 1,'form_section_id' => $sectionId]);
-                break;
-            case 5:
-                FormFields::create(['type' => 'textarea','order' => 1,'form_section_id' => $sectionId]);
-                break;
-            case 6:
-                FormFields::create(['type' => 'tel','order' => 1,'form_section_id' => $sectionId]);
-                break;
-            case 7:
-                // FormFields::create([]);
-                break;
-            case 8:
-                FormFields::create(['type' => 'option','order' => 1,'form_section_id' => $sectionId, 'options' => json_encode(['Option 1', 'Option 2'])]);
-                break;
-            case 9:
-                FormFields::create(['type' => 'option','order' => 1,'form_section_id' => $sectionId, 'options' => json_encode(['Option 1', 'Option 2'])]);
-                break;
-            case 10:
-                FormFields::create(['type' => 'select','order' => 1,'form_section_id' => $sectionId]);
-                break;
-            case 11:
-                FormFields::create(['label' => 'Date','type' => 'date','order' => 1,'form_section_id' => $sectionId]);
-                break;
-            case 12:
-                FormFields::create([]);
-                break;
-            case 13:
-                FormFields::create(['label' => 'Star Rating','type' => 'rating','order' => 1,'form_section_id' => $sectionId]);
-                break;
-            case 14:
-                FormFields::create(['type' => 'Scale','order' => 1,'form_section_id' => $sectionId]);
-                break;
-            case 15:
-                FormFields::create(['label' => 'Signature','type' => 'canvas','order' => 1,'form_section_id' => $sectionId]);
-                break;
-            case 16:
-                FormFields::create(['label' => 'File Upload','type' => 'file','order' => 1,'form_section_id' => $sectionId]);
-                break;
-            default:
-                echo "Type ID is not within the range of 0 to 16";
-                break;
-        }        
-    }
-
-
-
     /**
      * Display the specified resource.
      */
@@ -221,4 +160,62 @@ class SectionController extends Controller
         }
     }
     
+    private function generateFormFields(string $sectionId, mixed $type): void
+    {
+        switch ($type->id) {
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                FormFields::create(['label' => 'First Name','type' => 'text','order' => 1,'form_section_id' => $sectionId]);
+                FormFields::create(['label' => 'Lase Name','type' => 'text','order' => 1,'form_section_id' => $sectionId]);
+                FormFields::create(['label' => 'Email','type' => 'email','order' => 1,'form_section_id' => $sectionId]);
+                FormFields::create(['label' => 'Phone Number','type' => 'tel','order' => 1,'form_section_id' => $sectionId]);
+                FormFields::create(['label' => 'Company','type' => 'text','order' => 1,'form_section_id' => $sectionId]);
+                break;
+            case 4:
+                FormFields::create(['type' => 'text','order' => 1,'form_section_id' => $sectionId]);
+                break;
+            case 5:
+                FormFields::create(['type' => 'textarea','order' => 1,'form_section_id' => $sectionId]);
+                break;
+            case 6:
+                FormFields::create(['type' => 'tel','order' => 1,'form_section_id' => $sectionId]);
+                break;
+            case 7:
+                // FormFields::create([]);
+                break;
+            case 8:
+                FormFields::create(['type' => 'option','order' => 1,'form_section_id' => $sectionId, 'options' => json_encode(['Option 1', 'Option 2'])]);
+                break;
+            case 9:
+                FormFields::create(['type' => 'option','order' => 1,'form_section_id' => $sectionId, 'options' => json_encode(['Option 1', 'Option 2'])]);
+                break;
+            case 10:
+                FormFields::create(['type' => 'select','order' => 1,'form_section_id' => $sectionId]);
+                break;
+            case 11:
+                FormFields::create(['label' => 'Date','type' => 'date','order' => 1,'form_section_id' => $sectionId]);
+                break;
+            case 12:
+                FormFields::create([]);
+                break;
+            case 13:
+                FormFields::create(['label' => 'Star Rating','type' => 'rating','order' => 1,'form_section_id' => $sectionId]);
+                break;
+            case 14:
+                FormFields::create(['type' => 'Scale','order' => 1,'form_section_id' => $sectionId]);
+                break;
+            case 15:
+                FormFields::create(['label' => 'Signature','type' => 'canvas','order' => 1,'form_section_id' => $sectionId]);
+                break;
+            case 16:
+                FormFields::create(['label' => 'File Upload','type' => 'file','order' => 1,'form_section_id' => $sectionId]);
+                break;
+            default:
+                echo "Type ID is not within the range of 0 to 16";
+                break;
+        }        
+    }
 }
