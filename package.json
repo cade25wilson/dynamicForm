@@ -20,8 +20,10 @@
         "vue": "^3.3.13"
     },
     "dependencies": {
+        "@ckpack/vue-color": "^1.6.0",
         "@headlessui/vue": "^1.7.22",
         "@heroicons/vue": "^2.1.5",
+        "@melloware/coloris": "^0.24.0",
         "vue-router": "^4.4.3",
         "vuedraggable": "^4.1.0"
     }

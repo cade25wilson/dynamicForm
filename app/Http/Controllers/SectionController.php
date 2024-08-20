@@ -39,10 +39,10 @@ class SectionController extends Controller
         $data = $request->validate([
             'SectionId' => 'required|exists:section_types,id',
             'FormId' => 'required|exists:forms,id',
-            // 'Name' => 'required|string',
         ]);
+
         $order = 0;
-        if($data['SectionId'] != 2){
+        if($data['SectionId'] != 1 || $data['SectionId'] != 2){
             $order = FormSection::where('form_id', $data['FormId'])->orderBy('order', 'desc')->first();
             $order = $order->order + 1;
         }
@@ -199,7 +199,7 @@ class SectionController extends Controller
                 FormFields::create(['label' => 'Date','type' => 'date','order' => 1,'form_section_id' => $sectionId]);
                 break;
             case 12:
-                FormFields::create([]);
+                // FormFields::create([]);
                 break;
             case 13:
                 FormFields::create(['label' => 'Star Rating','type' => 'rating','order' => 1,'form_section_id' => $sectionId]);
