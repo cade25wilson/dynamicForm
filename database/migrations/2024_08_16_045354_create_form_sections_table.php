@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('order')->default(1)->index();
             $table->string('name')->nullable(true);
             $table->text('description')->nullable(true);
+            $table->string('button_text')->default('continue');
             $table->json('options')->nullable(true);
             $table->timestamps();
         });

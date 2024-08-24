@@ -8,11 +8,10 @@
         <SectionModal :show="showNewSectionModal" :searchQuery.sync="searchQuery"
           :filteredCategories="filteredCategories" :selectSectionType="selectSectionType"
           :getButtonClass="getButtonClass" :submit="submit" @close="showNewSectionModal = false" />
-        <!-- <p class="text-white">{{ formFields }}</p> -->
-        <CanvasContent :formFields="formFields" :formSections="form_sections" :design="form.design"/>
+        <CanvasContent :formSections="form_sections" :design="form.design" :current_section="current_section"/>
       </div>
       <div class="h-screen col-span-3">
-        <TabPanel :tabs="tabs" :design="form.design">
+        <TabPanel :tabs="tabs" :design="form.design" :current_section="current_section">
         </TabPanel>
       </div>
     </div>
@@ -30,9 +29,9 @@ import TabPanel from '@/Components/TabPanel.vue';
 
 const props = defineProps({
   form: Object,
-  formFields: Object,
   form_sections: Object,
   groupedSectionTypes: Array,
+  current_section: Object
 });
 
 const showNewSectionModal = ref(false);

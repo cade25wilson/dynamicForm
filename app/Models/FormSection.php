@@ -10,7 +10,7 @@ class FormSection extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $fillable = ['form_id', 'section_type_id', 'order', 'name', 'description', 'options'];
+    protected $fillable = ['form_id', 'section_type_id', 'order', 'name', 'description', 'options', 'button_text'];
 
     public function form()
     {
@@ -21,4 +21,13 @@ class FormSection extends Model
     {
         return $this->belongsTo(SectionType::class);
     }
+
+    public function formFields()
+    {
+        return $this->hasMany(FormFields::class);
+    }
+
+    protected $casts = [
+        'options' => 'array', // Casts the options attribute as an array
+    ];
 }

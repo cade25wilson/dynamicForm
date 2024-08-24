@@ -80,7 +80,27 @@ class SectionController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        Log::info($request);
+        $validatedData = $request->validate([
+            'button_text' => 'string|required',
+            'name' => 'string|nullable',
+            'description' => 'string|nullable',
+            'background_image' => 'nullable|file',
+            'embed' => 'nullable|string'
+        ]);
+
+        $formSection = FormSection::where('id', $id)->firstOrFail();
+        Log::info($formSection);
+        $formSection->update([
+            'button_text' => $validatedData['button_text'],
+            'name' => $validatedData['name'],
+            'description' => $validatedData['description'],
+            'options' => json_encode([
+                'background_image' => $validatedData['background_image'],
+                'embed' => $validatedData['embed'],
+            ]),
+        ]);
+        return;
     }
 
     public function duplicate(string $id)

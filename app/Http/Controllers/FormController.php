@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Form;
 use App\Models\FormDesign;
-use App\Models\FormFields;
 use App\Models\FormSection;
 use App\Models\SectionCategory;
-use App\Models\SectionType;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -57,15 +55,26 @@ class FormController extends Controller
                 'form_id' => $form->id,
                 'section_type_id' => 1,
                 'name' => 'Hey there 😀',
-                'description' => 'Mind filling out this form?'
+                'description' => 'Mind filling out this form?',
+                'button_text' => 'start',
+                'options' => json_encode([
+                    'background_image' => null,
+                    'embed' => null,
+                ]),
             ]);
+            
 
             FormSection::create([
                 'form_id' => $form->id,
                 'section_type_id' => 2,
                 'name' => 'Thank you! 🙌',
                 'order' => 0,
-                'description' => "That's all. You may now close this window."
+                'description' => "That's all. You may now close this window.",
+                "button_text" => "exit",
+                'options' => json_encode([
+                    'background_image' => null,
+                    'embed' => null,
+                ]),
             ]);
             
             DB::commit();
@@ -84,12 +93,18 @@ class FormController extends Controller
     public function show(string $uuid)
     {
         $section = request()->query('section');
-        Log::info('section ' . $section);
         $form = Form::where('id', $uuid)
                 ->with('design') 
                 ->firstOrFail();
 
-        $formFields = FormFields::where('form_section_id', $section)->get();
+        if($section){
+            $currentSection = FormSection::with('formFields')->find($section);
+        } else{
+            $currentSection = FormSection::where('form_id', $form->id)
+            ->orderBy('order')
+            ->with('formFields')
+            ->first();
+        }
         $formSections = FormSection::where('form_id', $uuid)
             ->join('section_types', 'form_sections.section_type_id', '=', 'section_types.id')
             ->select('form_sections.*', 'section_types.name as formsectionname') // Select only the necessary columns
@@ -109,9 +124,9 @@ class FormController extends Controller
 
         return Inertia::render('Form', [
             'form' => $form,
-            'formFields' => $formFields,
             'form_sections' => $formSections,
-            'groupedSectionTypes' => $groupedSectionTypes
+            'groupedSectionTypes' => $groupedSectionTypes,
+            'current_section' => $currentSection
         ]);
     }
 

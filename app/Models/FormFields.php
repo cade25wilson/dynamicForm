@@ -19,7 +19,7 @@ class FormFields extends Model
     //     return $this->belongsTo(Form::class);
     // }
 
-    public function formsection()
+    public function formSection()
     {
         return $this->belongsTo(FormSection::class);
     }
