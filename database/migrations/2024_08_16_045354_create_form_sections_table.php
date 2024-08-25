@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('name')->nullable(true);
             $table->text('description')->nullable(true);
             $table->string('button_text')->default('continue');
+            $table->string('background_image')->nullable(true);
+            $table->string('text_align')->nullable(true);
             $table->json('options')->nullable(true);
             $table->timestamps();
         });

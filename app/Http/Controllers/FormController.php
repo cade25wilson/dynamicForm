@@ -56,9 +56,9 @@ class FormController extends Controller
                 'section_type_id' => 1,
                 'name' => 'Hey there 😀',
                 'description' => 'Mind filling out this form?',
-                'button_text' => 'start',
+                'button_text' => 'Start',
+                'text_align' => 'center',
                 'options' => json_encode([
-                    'background_image' => null,
                     'embed' => null,
                 ]),
             ]);
@@ -71,8 +71,8 @@ class FormController extends Controller
                 'order' => 0,
                 'description' => "That's all. You may now close this window.",
                 "button_text" => "exit",
+                'text_align' => 'center',
                 'options' => json_encode([
-                    'background_image' => null,
                     'embed' => null,
                 ]),
             ]);

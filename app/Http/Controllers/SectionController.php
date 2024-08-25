@@ -48,6 +48,7 @@ class SectionController extends Controller
         }
         
         $type = SectionType::where('id', $data['SectionId'])->first();
+        // $options = $this->generateOptions($data['SectionId']);
         $section = FormSection::create([
             'form_id' => $data['FormId'],
             'section_type_id' => $data['SectionId'],
@@ -80,28 +81,48 @@ class SectionController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        Log::info($request);
         $validatedData = $request->validate([
             'button_text' => 'string|required',
             'name' => 'string|nullable',
             'description' => 'string|nullable',
-            'background_image' => 'nullable|file',
+            'text_align' => 'string|required',
             'embed' => 'nullable|string'
         ]);
 
-        $formSection = FormSection::where('id', $id)->firstOrFail();
-        Log::info($formSection);
-        $formSection->update([
+        FormSection::where('id', $id)->firstOrFail()->update([
             'button_text' => $validatedData['button_text'],
             'name' => $validatedData['name'],
             'description' => $validatedData['description'],
+            'text_align' => $validatedData['text_align'],
             'options' => json_encode([
-                'background_image' => $validatedData['background_image'],
                 'embed' => $validatedData['embed'],
             ]),
         ]);
         return;
     }
+
+    public function backgroundImage(string $id, Request $request)
+    {
+        $request->validate([
+            'background_image' => 'nullable|file'
+        ]);
+        
+        $background_image = null;
+        if($request->file('background_image')){
+            $file = $request->file('background_image');
+            $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
+            $filename = "{$originalName}-{$id}.{$extension}";
+
+            $file->move(public_path('background_images'), $filename);
+            $background_image = "/background_images/{$filename}";
+        }
+
+        FormSection::where('id', $id)->updateOrFail([
+            'background_image' => $background_image
+        ]);        
+    }
+
 
     public function duplicate(string $id)
     {
@@ -179,6 +200,13 @@ class SectionController extends Controller
             ]);
         }
     }
+
+    // private function generateOptions(string $sectionId)
+    // {
+    //     switch($sectionId):
+    //         case 1:
+    //             $options = 
+    // }
     
     private function generateFormFields(string $sectionId, mixed $type): void
     {

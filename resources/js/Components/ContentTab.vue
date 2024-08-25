@@ -105,17 +105,27 @@
             </div>
         </div>
     </div>
-    <div class="mt-6" v-if="!page.props.current_section.section_type_id === 3">
+    <div class="mt-6" v-if="page.props.current_section.section_type_id != 3">
         <div class="flex items-center justify-between">
             <label for="text-align-editor" class="block text-sm font-medium text-gray-700">Text align</label>
         </div>
         <div class="mt-2 flex space-x-2">
-            <button  type="button" class="p-2 border rounded">
+            <button
+                type="button"
+                class="p-2 border rounded"
+                :class="{'bg-gray-200': page.props.current_section.text_align === 'left'}"
+                @click="page.props.current_section.text_align = 'left'; handleBlur();"
+            >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h8m-8 6h16"></path>
                 </svg>
             </button>
-            <button type="button" class="p-2 border rounded bg-gray-200">
+            <button
+                type="button"
+                class="p-2 border rounded"
+                :class="{'bg-gray-200': page.props.current_section.text_align === 'center'}"
+                @click="page.props.current_section.text_align = 'center'; handleBlur();"
+            >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M8 12h8m-8 6h8"></path>
                 </svg>
@@ -137,14 +147,14 @@
             </p>
         </div>
         <label class="flex items-center mt-2 justify-center border border-gray-200 rounded-md p-6 hover:bg-gray-50 cursor-pointer">
-            <span class="text-sm text-gray-500">
+            <span class="text-sm text-gray-500" v-if="!page.props.current_section.background_image">
                 Select Image
             </span>
-            <input type="file" accept="image/png, image/jpeg" class="text-xs hidden">
+            <div class="h-10 w-auto" v-else>
+                <img :src="page.props.current_section.background_image" alt="Cover Image" class="h-full max-h-full w-auto max-w-full object-contain">
+            </div>
+            <input type="file" accept="image/png, image/jpeg" class="text-xs hidden" @change="updateBackground">
         </label>
-        <p class="text-xs mt-2 text-gray-500 text-center">
-            Uploading...
-        </p>
     </div>
 </div>
 </template>
@@ -158,15 +168,12 @@ const editor = ref(false);
 const urlLink = ref(null);
 
 function handleBlur(){
-    let backgroundImage;
     let embed;
 
     // Check if 'options' exists and is not null
     if (page.props.current_section.options) {
-        backgroundImage = page.props.current_section.options.background_image || null;
         embed = page.props.current_section.options.embed || null;
     } else {
-        backgroundImage = null;
         embed = null;
     }
 
@@ -175,9 +182,19 @@ function handleBlur(){
         button_text: page.props.current_section.button_text,
         name: page.props.current_section.name,
         description: page.props.current_section.description,
-        background_image: backgroundImage,
+        text_align: page.props.current_section.text_align,
         embed: embed
     });
+}
+
+function updateBackground(event) {
+    const file = event.target.files[0];
+    if (file) {
+        page.props.current_section.background_image = file;
+        router.put(`/background/${page.props.current_section.id}`, {
+            background_image: file,
+        });
+    }
 }
 </script>
 

@@ -6,7 +6,9 @@
               <h4 class="text-4xl py-6 font-bold text-gray-700 custom-text-color leading-snug">
               </h4>
               <div class="text-gray-600 custom-text-color-light text-sm md:text-base js_text_description">
-                {{page}}
+                <template v-if="page.props.current_section.section_type_id=1">
+                  <WelcomeSection />
+                </template>
               </div>
               <div>
                 <button type="button"
@@ -24,7 +26,9 @@
 </template>
 
 <script setup>
-import { router, usePage } from '@inertiajs/vue3';
+import { usePage } from '@inertiajs/vue3';
+import WelcomeSection from './WelcomeSection.vue';
+
 const page = usePage();
 const props = defineProps({
     formSections: Object,

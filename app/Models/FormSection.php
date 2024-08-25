@@ -10,7 +10,7 @@ class FormSection extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $fillable = ['form_id', 'section_type_id', 'order', 'name', 'description', 'options', 'button_text'];
+    protected $fillable = ['form_id', 'section_type_id', 'order', 'name', 'description', 'options', 'button_text', 'background_image', 'text_align'];
 
     public function form()
     {

@@ -27,6 +27,7 @@ Route::middleware([
     Route::delete('section/{id}', [SectionController::class, 'destroy'])->name('section.destroy');
     Route::post('section', [SectionController::class, 'store'])->name('section.store');
     Route::post('section/{id}', [SectionController::class, 'duplicate'])->name('section.duplicate');
+    Route::put('background/{id}', [SectionController::class, 'backgroundImage']);
     Route::put('section/{id}', [SectionController::class, 'update']);
     Route::put('design/{id}', [DesignController::class, 'update']);
 });
