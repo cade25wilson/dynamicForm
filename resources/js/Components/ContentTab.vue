@@ -130,6 +130,16 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M8 12h8m-8 6h8"></path>
                 </svg>
             </button>
+            <button
+        type="button"
+        class="p-2 border rounded"
+        :class="{'bg-gray-200': page.props.current_section.text_align === 'right'}"
+        @click="page.props.current_section.text_align = 'right'; handleBlur();"
+    >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M10 12h10m-10 6h10"></path>
+        </svg>
+    </button>
         </div>
     </div>
     <div class="mt-6">

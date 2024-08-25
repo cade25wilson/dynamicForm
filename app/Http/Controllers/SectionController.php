@@ -118,7 +118,7 @@ class SectionController extends Controller
             $background_image = "/background_images/{$filename}";
         }
 
-        FormSection::where('id', $id)->updateOrFail([
+        FormSection::where('id', $id)->firstOrFail()->update([
             'background_image' => $background_image
         ]);        
     }

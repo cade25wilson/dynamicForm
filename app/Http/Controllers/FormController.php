@@ -101,6 +101,7 @@ class FormController extends Controller
             $currentSection = FormSection::with('formFields')->find($section);
         } else{
             $currentSection = FormSection::where('form_id', $form->id)
+            ->where('order', '!=', 0)
             ->orderBy('order')
             ->with('formFields')
             ->first();
