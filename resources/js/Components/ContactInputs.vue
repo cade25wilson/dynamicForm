@@ -1,9 +1,11 @@
 <template>
     <div class="mt-8 space-y-8" :style="{ color: page.props.form.design.answers }">
-        <div class="flex space-x-8">
-            <div class="w-1/2" v-if="page.props.current_section.form_fields[0].show">
+        <!-- First set of fields -->
+        <div :class="singleFieldVisible(0, 1) ? 'flex' : 'flex space-x-6'">
+            <div :class="singleFieldVisible(0, 1) ? 'w-full' : 'w-1/2'" v-if="page.props.current_section.form_fields[0].show">
                 <label class="text-sm" :style="{ color: page.props.form.design.answers }">
                     {{page.props.current_section.form_fields[0].label}}
+                    <sup class="text-red-700" v-if="page.props.current_section.form_fields[0].required">*</sup>
                 </label>
                 <input
                     type="text"
@@ -13,7 +15,7 @@
                     :style="{ borderColor: page.props.form.design.answers, color: page.props.form.design.answers }"
                 >
             </div>
-            <div class="w-1/2" v-if="page.props.current_section.form_fields[1].show">
+            <div :class="singleFieldVisible(0, 1) ? 'w-full' : 'w-1/2'" v-if="page.props.current_section.form_fields[1].show">
                 <label class="text-sm" :style="{ color: page.props.form.design.answers }">
                     {{page.props.current_section.form_fields[1].label}}
                     <sup class="text-red-700" v-if="page.props.current_section.form_fields[1].required">*</sup>
@@ -27,10 +29,13 @@
                 >
             </div>
         </div>
-        <div class="flex space-x-6">        
-            <div class="w-1/2" v-if="page.props.current_section.form_fields[2].show">
+
+        <!-- Second set of fields -->
+        <div :class="singleFieldVisible(2, 3) ? 'flex' : 'flex space-x-6'">
+            <div :class="singleFieldVisible(2, 3) ? 'w-full' : 'w-1/2'" v-if="page.props.current_section.form_fields[2].show">
                 <label class="text-sm" :style="{ color: page.props.form.design.answers }">
                     {{page.props.current_section.form_fields[2].label}}
+                    <sup class="text-red-700" v-if="page.props.current_section.form_fields[2].required">*</sup>
                 </label>
                 <input
                     type="email"
@@ -40,9 +45,10 @@
                     :style="{ borderColor: page.props.form.design.answers, color: page.props.form.design.answers }"
                 >
             </div>    
-            <div class="w-1/2" v-if="page.props.current_section.form_fields[3].show">
+            <div :class="singleFieldVisible(2, 3) ? 'w-full' : 'w-1/2'" v-if="page.props.current_section.form_fields[3].show">
                 <label class="text-sm" :style="{ color: page.props.form.design.answers }">
                     {{page.props.current_section.form_fields[3].label}}
+                    <sup class="text-red-700" v-if="page.props.current_section.form_fields[3].required">*</sup>
                 </label>
                 <input
                     type="text"
@@ -53,9 +59,12 @@
                 >
             </div>
         </div>
+
+        <!-- Single field -->
         <div v-if="page.props.current_section.form_fields[4].show">
             <label class="text-sm" :style="{ color: page.props.form.design.answers }">
                 {{page.props.current_section.form_fields[4].label}}
+                <sup class="text-red-700" v-if="page.props.current_section.form_fields[4].required">*</sup>
             </label>
             <input
                 type="text"
@@ -69,9 +78,17 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
+
 const page = usePage();
+
+const singleFieldVisible = (index1, index2) => {
+    const fields = page.props.current_section.form_fields;
+    return (fields[index1].show && !fields[index2].show) || (!fields[index1].show && fields[index2].show);
+};
 </script>
+
 
 <style scoped>
 .custom-placeholder::placeholder {

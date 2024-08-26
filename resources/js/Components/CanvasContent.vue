@@ -47,3 +47,15 @@ const props = defineProps({
     current_section: Object
 });
 </script>
+
+<style scoped>
+.scrollbar-hide::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* Optional: just to hide the scrollbar from view */
+}
+
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+</style>
