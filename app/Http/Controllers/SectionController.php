@@ -217,10 +217,10 @@ class SectionController extends Controller
                 break;
             case 3:
                 FormFields::create(['label' => 'First Name','type' => 'text','order' => 1,'form_section_id' => $sectionId]);
-                FormFields::create(['label' => 'Lase Name','type' => 'text','order' => 1,'form_section_id' => $sectionId]);
-                FormFields::create(['label' => 'Email','type' => 'email','order' => 1,'form_section_id' => $sectionId]);
-                FormFields::create(['label' => 'Phone Number','type' => 'tel','order' => 1,'form_section_id' => $sectionId]);
-                FormFields::create(['label' => 'Company','type' => 'text','order' => 1,'form_section_id' => $sectionId]);
+                FormFields::create(['label' => 'Last Name','type' => 'text','order' => 2,'form_section_id' => $sectionId]);
+                FormFields::create(['label' => 'Email','type' => 'email','order' => 3,'form_section_id' => $sectionId]);
+                FormFields::create(['label' => 'Phone Number','type' => 'tel','order' => 4,'form_section_id' => $sectionId]);
+                FormFields::create(['label' => 'Company','type' => 'text','order' => 5,'form_section_id' => $sectionId]);
                 break;
             case 4:
                 FormFields::create(['type' => 'text','order' => 1,'form_section_id' => $sectionId]);

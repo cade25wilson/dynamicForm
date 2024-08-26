@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DesignController;
+use App\Http\Controllers\FieldController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\SectionController;
 use Illuminate\Foundation\Application;
@@ -30,4 +31,5 @@ Route::middleware([
     Route::put('background/{id}', [SectionController::class, 'backgroundImage']);
     Route::put('section/{id}', [SectionController::class, 'update']);
     Route::put('design/{id}', [DesignController::class, 'update']);
+    Route::put('field/{id}', [FieldController::class, 'update']);
 });

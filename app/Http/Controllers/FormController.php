@@ -98,12 +98,16 @@ class FormController extends Controller
                 ->firstOrFail();
 
         if($section){
-            $currentSection = FormSection::with('formFields')->find($section);
+            $currentSection = FormSection::with(['formFields' => function($query) {
+                $query->orderBy('order');
+            }])->find($section);
         } else{
             $currentSection = FormSection::where('form_id', $form->id)
             ->where('order', '!=', 0)
             ->orderBy('order')
-            ->with('formFields')
+            ->with(['formFields' => function($query) {
+                $query->orderBy('order', 'asc');
+            }])
             ->first();
         }
         $formSections = FormSection::where('form_id', $uuid)

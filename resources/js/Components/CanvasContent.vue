@@ -6,15 +6,18 @@
           <div class="h-full flex items-center justify-center mx-auto overflow-y-auto scrollbar-hide">
             <div :class="{
                   'text-center': page.props.current_section.text_align === 'center',
-                  'text-left': page.props.current_section.text_align === 'left',
-                  'text-right': page.props.current_section.text_align === 'right'
+                  'text-right': page.props.current_section.text_align === 'right',
+                  'text-left': page.props.current_section.text_align === 'left'
               }" class="w-9/12 transition-all overflow-auto max-h-full py-12 scrollbar-hide">
-              <h4 class="text-4xl py-6 font-bold text-gray-700 custom-text-color leading-snug">
+              <h4 class="text-4xl py-6 text-gray-700 custom-text-color leading-snug">
               </h4>
               <div class="text-gray-600 custom-text-color-light text-sm md:text-base js_text_description">
-                <template v-if="page.props.current_section.section_type_id=1">
-                  <WelcomeSection />
-                </template>
+                  <template v-if="page.props.current_section.section_type_id === 1">
+                    <WelcomeSection />
+                  </template>
+                  <template v-if="page.props.current_section.section_type_id === 3">
+                    <ContactSection />
+                  </template>
               </div>
               <div>
                 <button type="button"
@@ -35,6 +38,7 @@
 <script setup>
 import { usePage } from '@inertiajs/vue3';
 import WelcomeSection from './WelcomeSection.vue';
+import ContactSection from './ContactSection.vue';
 
 const page = usePage();
 const props = defineProps({

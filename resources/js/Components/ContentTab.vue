@@ -131,17 +131,18 @@
                 </svg>
             </button>
             <button
-        type="button"
-        class="p-2 border rounded"
-        :class="{'bg-gray-200': page.props.current_section.text_align === 'right'}"
-        @click="page.props.current_section.text_align = 'right'; handleBlur();"
-    >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M10 12h10m-10 6h10"></path>
-        </svg>
-    </button>
+                type="button"
+                class="p-2 border rounded"
+                :class="{'bg-gray-200': page.props.current_section.text_align === 'right'}"
+                @click="page.props.current_section.text_align = 'right'; handleBlur();"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M10 12h10m-10 6h10"></path>
+                </svg>
+            </button>
         </div>
     </div>
+    <ContactDesign v-else />
     <div class="mt-6">
         <label for="text-cta-text-editor" class="block text-sm font-medium text-gray-700">
             Button Text 
@@ -172,6 +173,7 @@
 <script setup>
 import { ref, onMounted, watch, nextTick, onBeforeUnmount } from 'vue';
 import { usePage, router } from '@inertiajs/vue3';
+import ContactDesign from './ContactDesign.vue';
 
 const page = usePage(); 
 const editor = ref(false);

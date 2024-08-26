@@ -19,9 +19,9 @@ return new class extends Migration
             $table->integer('order')->default(1)->index();
             $table->string('name')->nullable(true);
             $table->text('description')->nullable(true);
-            $table->string('button_text')->default('continue');
+            $table->string('button_text')->default('Continue');
             $table->string('background_image')->nullable(true);
-            $table->string('text_align')->nullable(true);
+            $table->string('text_align')->default('left');
             $table->json('options')->nullable(true);
             $table->timestamps();
         });
