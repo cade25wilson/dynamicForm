@@ -54,6 +54,7 @@ class SectionController extends Controller
             'section_type_id' => $data['SectionId'],
             'order' => $order,
             'name' => $type->default_name,
+            'text_align' => 'left'
         ]);
 
         $this->generateFormFields($section->id, $type);
@@ -226,7 +227,7 @@ class SectionController extends Controller
                 FormFields::create(['type' => 'text','order' => 1,'form_section_id' => $sectionId]);
                 break;
             case 5:
-                FormFields::create(['type' => 'textarea','order' => 1,'form_section_id' => $sectionId]);
+                FormFields::create(['type' => 'textarea','order' => 1,'form_section_id' => $sectionId, 'options' => json_encode(['length' => 0])]);
                 break;
             case 6:
                 FormFields::create(['type' => 'tel','order' => 1,'form_section_id' => $sectionId]);

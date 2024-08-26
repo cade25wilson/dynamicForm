@@ -32,4 +32,5 @@ Route::middleware([
     Route::put('section/{id}', [SectionController::class, 'update']);
     Route::put('design/{id}', [DesignController::class, 'update']);
     Route::put('field/{id}', [FieldController::class, 'update']);
+    Route::put('field/maxlength/{id}', [FieldController::class, 'maxlength']);
 });

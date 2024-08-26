@@ -55,13 +55,31 @@ class FieldController extends Controller
     {
         Log::info($request);
         $data = $request->validate([
-            'label' => 'required|string',
+            'label' => 'nullable|string',
             'placeholder' => 'nullable|string',
             'show' => 'required|boolean',
             'required' => 'required|boolean',
         ]);
 
         FormFields::where('id', $id)->firstOrFail()->update($data);
+        return;
+    }
+
+    public function maxlength(Request $request, string $id)
+    {
+        $data = $request->validate([
+            'length' => 'numeric|nullable'
+        ]);
+        
+        if($data['length'] === NULL){
+            $data['length'] = "";
+        }
+        // Find the form field by ID
+        $formField = FormFields::where('id', $id)->firstOrFail();
+        $options = json_decode($formField->options, true);
+        $options['length'] = $data['length']; // Replace $newLength with your desired value
+        $formField->options = json_encode($options);
+        $formField->save();
         return;
     }
 

@@ -18,6 +18,15 @@
                   <template v-if="page.props.current_section.section_type_id === 3">
                     <ContactSection />
                   </template>
+                  <template v-if="page.props.current_section.section_type_id === 4">
+                    <ShortText />
+                  </template>
+                  <template v-if="page.props.current_section.section_type_id === 5">
+                    <LongText />
+                  </template>
+                  <template v-if="page.props.current_section.section_type_id === 6">
+                    <PhoneSection />
+                  </template>
               </div>
               <div>
                 <button type="button"
@@ -37,8 +46,11 @@
 
 <script setup>
 import { usePage } from '@inertiajs/vue3';
-import WelcomeSection from './WelcomeSection.vue';
 import ContactSection from './ContactSection.vue';
+import LongText from './LongText.vue';
+import PhoneSection from './PhoneSection.vue';
+import ShortText from './ShortText.vue';
+import WelcomeSection from './WelcomeSection.vue';
 
 const page = usePage();
 const props = defineProps({

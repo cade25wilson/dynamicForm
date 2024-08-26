@@ -87,7 +87,7 @@
         </div>
     </div>
     <div>
-        <div class="mt-6 border-b border-gray-100 pb-4">
+        <div class="mt-6 border-b border-gray-100 pb-4" v-if="![3, 4, 5, 6].includes(page.props.current_section.section_type_id)">
             <div class="flex items-center justify-between">
                 <label for="embed-url-editor" class="block text-sm font-medium text-gray-700">
                     Embed 
@@ -105,7 +105,7 @@
             </div>
         </div>
     </div>
-    <div class="mt-6" v-if="page.props.current_section.section_type_id != 3">
+    <div class="mt-6" v-if="![3, 4, 5, 6].includes(page.props.current_section.section_type_id)">
         <div class="flex items-center justify-between">
             <label for="text-align-editor" class="block text-sm font-medium text-gray-700">Text align</label>
         </div>
@@ -142,7 +142,8 @@
             </button>
         </div>
     </div>
-    <ContactDesign v-else />
+    <ContactDesign v-if="page.props.current_section.section_type_id===3" />
+    <FormFields v-if="hasOneField"/>
     <div class="mt-6">
         <label for="text-cta-text-editor" class="block text-sm font-medium text-gray-700">
             Button Text 
@@ -171,9 +172,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, nextTick, onBeforeUnmount } from 'vue';
+import { computed, ref, onMounted, watch, nextTick, onBeforeUnmount } from 'vue';
 import { usePage, router } from '@inertiajs/vue3';
 import ContactDesign from './ContactDesign.vue';
+import FormFields from './FormFields.vue';
 
 const page = usePage(); 
 const editor = ref(false);
@@ -208,6 +210,11 @@ function updateBackground(event) {
         });
     }
 }
+
+const hasOneField = computed(() => {
+  return page.props.current_section.form_fields.length === 1;
+});
+
 </script>
 
 <style>
