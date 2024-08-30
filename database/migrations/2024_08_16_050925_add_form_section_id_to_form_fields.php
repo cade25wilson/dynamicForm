@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('form_fields', function (Blueprint $table) {
-            $table->foreignUuid('form_section_id')->constrained('form_sections');
+            $table->foreignUuid('form_section_id')->constrained('form_sections')->onDelete('cascade');
         });
     }
 

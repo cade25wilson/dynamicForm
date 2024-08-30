@@ -1,5 +1,6 @@
 <template>
-    <div>      
+    <div class="container">
+    <div class="scrollable-content">      
         <div class="mt-4">
             <label for="text-title-editor" class="block text-sm font-medium text-gray-700">Title</label>
             <div class="mt-1">
@@ -87,7 +88,7 @@
         </div>
     </div>
     <div>
-        <div class="mt-6 border-b border-gray-100 pb-4" v-if="![3, 4, 5, 6].includes(page.props.current_section.section_type_id)">
+        <div class="mt-6 border-b border-gray-100 pb-4" v-if="![3, 4, 5, 6, 8].includes(page.props.current_section.section_type_id)">
             <div class="flex items-center justify-between">
                 <label for="embed-url-editor" class="block text-sm font-medium text-gray-700">
                     Embed 
@@ -105,45 +106,10 @@
             </div>
         </div>
     </div>
-    <div class="mt-6" v-if="![3, 4, 5, 6].includes(page.props.current_section.section_type_id)">
-        <div class="flex items-center justify-between">
-            <label for="text-align-editor" class="block text-sm font-medium text-gray-700">Text align</label>
-        </div>
-        <div class="mt-2 flex space-x-2">
-            <button
-                type="button"
-                class="p-2 border rounded"
-                :class="{'bg-gray-200': page.props.current_section.text_align === 'left'}"
-                @click="page.props.current_section.text_align = 'left'; handleBlur();"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h8m-8 6h16"></path>
-                </svg>
-            </button>
-            <button
-                type="button"
-                class="p-2 border rounded"
-                :class="{'bg-gray-200': page.props.current_section.text_align === 'center'}"
-                @click="page.props.current_section.text_align = 'center'; handleBlur();"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M8 12h8m-8 6h8"></path>
-                </svg>
-            </button>
-            <button
-                type="button"
-                class="p-2 border rounded"
-                :class="{'bg-gray-200': page.props.current_section.text_align === 'right'}"
-                @click="page.props.current_section.text_align = 'right'; handleBlur();"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M10 12h10m-10 6h10"></path>
-                </svg>
-            </button>
-        </div>
-    </div>
+    <TextAlign v-if="![3, 4, 5, 6, 8].includes(page.props.current_section.section_type_id)" />
     <ContactDesign v-if="page.props.current_section.section_type_id===3" />
-    <FormFields v-if="hasOneField"/>
+    <FormFields v-if="hasOneField && page.props.current_section.section_type_id != 8"/>
+    <SingleSelect v-if="page.props.current_section.section_type_id == 8" />
     <div class="mt-6">
         <label for="text-cta-text-editor" class="block text-sm font-medium text-gray-700">
             Button Text 
@@ -152,7 +118,7 @@
             <input type="text" @blur="handleBlur" v-model="page.props.current_section.button_text" name="text-cta-text-editor" id="text-cta-text-editor" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm" placeholder="Next">
         </div>
     </div>
-    <div class="mt-6 pt-6">
+    <div class="mt-6 pt-6" v-if="![8].includes(page.props.current_section.section_type_id)">
         <div class="flex items-center justify-between">
             <p class="block text-sm font-medium text-gray-700">
                 Background Image
@@ -169,6 +135,7 @@
         </label>
     </div>
 </div>
+</div>
 </template>
 
 <script setup>
@@ -176,6 +143,8 @@ import { computed, ref, onMounted, watch, nextTick, onBeforeUnmount } from 'vue'
 import { usePage, router } from '@inertiajs/vue3';
 import ContactDesign from './ContactDesign.vue';
 import FormFields from './FormFields.vue';
+import SingleSelect from './SingleSelect.vue';
+import TextAlign from './TextAlign.vue';
 
 const page = usePage(); 
 const editor = ref(false);
@@ -218,6 +187,11 @@ const hasOneField = computed(() => {
 </script>
 
 <style>
+    .container {
+        height: 88vh; /* Full viewport height */
+        overflow: hidden; /* Prevent the page from scrolling */
+    }
+
     .ProseMirror {
         padding: 1rem;
         border: 1px solid #E5E7EB;
@@ -273,4 +247,10 @@ const hasOneField = computed(() => {
         resize: vertical;
     }
 
+    .scrollable-content {
+        height: 100%;
+        overflow-y: auto; /* Enable vertical scrolling */
+        padding-right: 16px; /* Adjust padding to prevent scrollbar overlap */
+        box-sizing: content-box; /* Ensure padding doesn't affect the width */
+    }
 </style>        

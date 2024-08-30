@@ -1,4 +1,5 @@
 <template>
+    {{page.props.current_section.id}}
     <div class="flex items-center justify-between px-2 mt-1">
         <div class="flex items-center">
             <h4 class="text-xs text-gray-500">Blocks</h4>
@@ -124,17 +125,9 @@
 <script setup>
 import { computed, reactive, defineEmits, ref } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
+import axios from 'axios';
 
-const props = defineProps({
-    formSections: {
-        type: Array,
-        required: true,
-    },
-    formID: {
-        type: String,
-        required: true
-    },
-});
+const page = usePage();
 
 const showMenu = reactive({});
 const showNewSectionModal = ref(false);
@@ -145,13 +138,13 @@ const currentSection = computed(() => {
 });
 
 const nonThankYouSections = computed(() =>
-    props.formSections
+    page.props.form_sections
         .filter((section) => section.section_type_id !== 2)
         .sort((a, b) => a.order - b.order)
 );
 
 const thankYouSections = computed(() =>
-    props.formSections
+    page.props.form_sections
         .filter((section) => section.section_type_id === 2)
         .sort((a, b) => a.order - b.order)
 );
@@ -175,19 +168,16 @@ function Duplicate(id) {
 
 function Delete(id) {
     const page = usePage();
-    router.delete(`/section/${id}`, {
+    router.delete(`/section/${id}?section=${page.props.current_section.id}`, {
         _token: page.props.csrf_token,
     });
 }
 
 function changeSection(id) {
     const page = usePage();
-    router.get(`/form/${props.formID}?section=${id}`, {
+    router.get(`/form/${page.props.form.id}?section=${id}`, {
         _token: page.props.csrf_token,
-    })
-        .then(() => {
-            window.history.pushState(null, '', `/form/${props.formID}?section=${id}`);
-        });
+    });
 }
 </script>
 

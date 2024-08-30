@@ -2,7 +2,7 @@
   <AppLayout title="Dashboard">
     <div class="grid grid-cols-12 h-screen">
       <div class="h-screen overflow-y-auto pb-40 col-span-2 relative px-2 pt-4">
-        <FormSidebar :formSections="form_sections" :formID="form.id" @open-modal="showModal" />
+        <FormSidebar @open-modal="showModal" />
       </div>
       <div class="h-screen col-span-7 relative">
         <SectionModal :show="showNewSectionModal" :searchQuery.sync="searchQuery"
@@ -34,6 +34,7 @@ const props = defineProps({
   current_section: Object
 });
 
+const page = usePage();
 const showNewSectionModal = ref(false);
 const searchQuery = ref('');
 const selectedSectionType = ref(null);
@@ -72,7 +73,6 @@ function getButtonClass(item) {
 
 function submit() {
   console.log('Form created with Section Type ID:', selectedSectionType.value);
-  const page = usePage();
   router.post('/section', {
     _token: page.props.csrf_token,
     SectionId: selectedSectionType.value,

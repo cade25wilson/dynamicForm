@@ -62,7 +62,6 @@ class FormController extends Controller
                     'embed' => null,
                 ]),
             ]);
-            
 
             FormSection::create([
                 'form_id' => $form->id,
@@ -110,6 +109,7 @@ class FormController extends Controller
             }])
             ->first();
         }
+        
         $formSections = FormSection::where('form_id', $uuid)
             ->join('section_types', 'form_sections.section_type_id', '=', 'section_types.id')
             ->select('form_sections.*', 'section_types.name as formsectionname') // Select only the necessary columns

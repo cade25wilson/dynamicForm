@@ -58,7 +58,7 @@ class SectionController extends Controller
         ]);
 
         $this->generateFormFields($section->id, $type);
-        return redirect('/form/' . $data['FormId']);
+        return redirect('/form/' . $data['FormId'] . '?section=' . $section->id);
     }
 
     /**
@@ -166,15 +166,15 @@ class SectionController extends Controller
                 $section->order = $index + 1;
                 $section->save();
             }
-    
             return redirect('form/' . $formSection->form_id);
         } catch (Exception $e) {
             return Inertia::render('Form', [
                 'error' => $e->getMessage()
             ]);
         }
+        return redirect('form/' . $formSection->form_id);
     }
-    
+
     private function duplicateFormSection(FormSection $formSection, int $newOrder): FormSection
     {
         return FormSection::create([
@@ -201,13 +201,6 @@ class SectionController extends Controller
             ]);
         }
     }
-
-    // private function generateOptions(string $sectionId)
-    // {
-    //     switch($sectionId):
-    //         case 1:
-    //             $options = 
-    // }
     
     private function generateFormFields(string $sectionId, mixed $type): void
     {
@@ -236,7 +229,7 @@ class SectionController extends Controller
                 // FormFields::create([]);
                 break;
             case 8:
-                FormFields::create(['type' => 'option','order' => 1,'form_section_id' => $sectionId, 'options' => json_encode(['Option 1', 'Option 2'])]);
+                FormFields::create(['type' => 'option','order' => 1,'form_section_id' => $sectionId, 'options' => json_encode(['choices' => ['option 1', 'option 2'], 'align' => 'horizontal'])]);
                 break;
             case 9:
                 FormFields::create(['type' => 'option','order' => 1,'form_section_id' => $sectionId, 'options' => json_encode(['Option 1', 'Option 2'])]);
