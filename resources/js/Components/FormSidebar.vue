@@ -1,5 +1,4 @@
 <template>
-    {{page.props.current_section.id}}
     <div class="flex items-center justify-between px-2 mt-1">
         <div class="flex items-center">
             <h4 class="text-xs text-gray-500">Blocks</h4>

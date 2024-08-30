@@ -110,6 +110,12 @@ class FormController extends Controller
             ->first();
         }
         
+        if ($currentSection) {
+            foreach ($currentSection->formFields as $formField) {
+                $formField->options = json_decode($formField->options, true);
+            }
+        }
+
         $formSections = FormSection::where('form_id', $uuid)
             ->join('section_types', 'form_sections.section_type_id', '=', 'section_types.id')
             ->select('form_sections.*', 'section_types.name as formsectionname') // Select only the necessary columns

@@ -12,10 +12,10 @@
                 borderColor: page.props.form.design.answers
             }"
         ></textarea>
-        <p class="text-right mt-2 text-gray-600 custom-text-color-light" v-if="formFieldOptions.length > 0"
+        <p class="text-right mt-2 text-gray-600 custom-text-color-light" v-if="page.props.current_section.form_fields[0].options.length"
             :style="{ color: page.props.form.design.answers }"
             >
-            <span>0</span>/<span>{{ formFieldOptions.length }}</span>
+            <span>0</span>/<span>{{ page.props.current_section.form_fields[0].options.length }}</span>
         </p>
     </div>
 </template>
@@ -28,10 +28,6 @@ import FormSectionDescription from './FormSectionDescription.vue';
 import FormSectionName from './FormSectionName.vue';
 
 const page = usePage();
-const formFieldOptions = ref(JSON.parse(page.props.current_section.form_fields[0].options || '{}'));
+// const formFieldOptions = ref(JSON.parse(page.props.current_section.form_fields[0].options || '{}'));
 
-// Watch for updates to formFieldOptions and sync with page.props
-watch(formFieldOptions, (newOptions) => {
-    page.props.current_section.form_fields[0].options = JSON.stringify(newOptions);
-});
 </script>

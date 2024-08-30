@@ -41,7 +41,7 @@
                 type="number" 
                 min="0" 
                 max="1000000" 
-                v-model.number="parsedOptions.length" 
+                v-model="page.props.current_section.form_fields[0].options.length" 
                 @blur="updateMaxChar(page.props.current_section.form_fields[0])" 
                 name="textarea-max-char-editor" 
                 id="textarea-max-char-editor" 
@@ -61,9 +61,6 @@ import { ref, computed } from 'vue';
 
 const page = usePage();
 
-// Parse the options JSON string for the first form field
-const parsedOptions = ref(JSON.parse(page.props.current_section.form_fields[0].options || '{}'));
-
 function updateField(field){
     router.put(`/field/${field.id}`, {
         _token: page.props.csrf_token,
@@ -77,7 +74,7 @@ function updateField(field){
 function updateMaxChar(field){
     router.put(`/field/maxlength/${field.id}`, {
         _token: page.props.csrf_token,
-        length: parsedOptions.value.length
+        length: page.props.current_section.form_fields[0].options.length
     });
 }
 

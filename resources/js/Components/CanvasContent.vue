@@ -1,4 +1,5 @@
 <template>
+  <!-- {{page}} -->
     <div
           class="relative lg:mx-6 mt-[4rem] bg-white custom-bg-color rounded-md h-[calc(100vh_-_13rem)] border border-dashed border-gray-500  bg-cover bg-center bg-no-repeat custom-form-font"
           :style="{ backgroundColor: page.props.form.design.background }"

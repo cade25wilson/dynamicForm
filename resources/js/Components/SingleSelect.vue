@@ -18,19 +18,6 @@
             </p>
         </div>
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
     <div class="relative flex items-start mt-6">
         <div class="flex h-6 items-center">
           <input x-model="horizontal" @input.debounce="updateHorizontal()" id="radio-horizontal-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f" aria-describedby="radio-horizontal-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f-description" name="radio-horizontal-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600" value="">
@@ -39,9 +26,6 @@
           <label for="radio-horizontal-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f" class="text-sm font-medium text-gray-700">Horizontally align options</label>
         </div>
     </div>
-
-
-
     <div class="relative flex items-center mt-6">
         <div class="flex h-6 items-center">
           <input x-model="hideLabels" @input.debounce="updateHideLabels()" id="radio-hide-labels-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f" aria-describedby="radio-hide-labels-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f-description" name="radio-hide-labels-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600">
@@ -57,9 +41,6 @@
             </a>
         </div>
     </div>
-
-
-
 </template>
 
 <script setup>
