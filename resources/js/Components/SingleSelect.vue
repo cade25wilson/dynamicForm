@@ -18,7 +18,7 @@
             </p>
         </div>
     </div>
-    <div class="relative flex items-start mt-6">
+    <div class="relative flex items-start mt-6" v-if="page.props.current_section.section_type_id != 10">
         <div class="flex h-6 items-center">
           <input @input.debounce="updateHorizontal()" :checked="page.props.current_section.form_fields[0].options.align == 'horizontal'" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600" value="">
         </div>
@@ -26,7 +26,7 @@
           <label for="radio-horizontal-checkbox-editor" class="text-sm font-medium text-gray-700">Horizontally align options</label>
         </div>
     </div>
-    <div class="relative flex items-center mt-6">
+    <div class="relative flex items-center mt-6" v-if="page.props.current_section.section_type_id != 10">
         <div class="flex h-6 items-center">
           <input x-model="hideLabels" @input.debounce="updateHideLabels()" :checked="page.props.current_section.form_fields[0].options.hide_label" id="radio-hide-labels-checkbox-editor" aria-describedby="radio-hide-labels-checkbox-editor-description" name="radio-hide-labels-checkbox-editor" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600">
         </div>

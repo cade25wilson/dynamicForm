@@ -34,6 +34,10 @@
                   <template v-if="[10].includes(page.props.current_section.section_type_id)">
                     <DropDownSection />
                   </template>
+                  <template v-if="[11].includes(page.props.current_section.section_type_id)">
+                    <DatePicker />
+                  </template>
+
               </div>
               <div>
                 <button type="button"
@@ -54,6 +58,7 @@
 <script setup>
 import { usePage } from '@inertiajs/vue3';
 import ContactSection from './ContactSection.vue';
+import DatePicker from './DatePicker.vue';
 import DropDownSection from './DropDownSection.vue';
 import LongText from './LongText.vue';
 import PhoneSection from './PhoneSection.vue';
