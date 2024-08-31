@@ -28,7 +28,7 @@
                   <template v-if="page.props.current_section.section_type_id === 6">
                     <PhoneSection />
                   </template>
-                  <template v-if="page.props.current_section.section_type_id === 8">
+                  <template v-if="[8, 9].includes(page.props.current_section.section_type_id)">
                     <SingleSelectSection />
                   </template>
               </div>

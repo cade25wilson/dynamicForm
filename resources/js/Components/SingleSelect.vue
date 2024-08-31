@@ -5,10 +5,10 @@
 
     <div class="relative flex items-center mt-6">
         <div class="flex h-6 items-center">
-          <input x-model="randomize" @input.debounce="updateRandomize()" :checked="page.props.current_section.form_fields[0].options.random" id="radio-randomize-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f" aria-describedby="radio-randomize-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f-description" name="radio-randomize-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600" value="">
+          <input x-model="randomize" @input.debounce="updateRandomize()" :checked="page.props.current_section.form_fields[0].options.random" id="radio-randomize-checkbox-editor" aria-describedby="radio-randomize-checkbox-editor-description" name="radio-randomize-checkbox-editor" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600" value="">
         </div>
         <div class="ml-3 text-sm leading-6 flex items-center justify-between">
-            <label for="radio-randomize-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f" class="text-sm font-medium text-gray-700">
+            <label for="radio-randomize-checkbox-editor" class="text-sm font-medium text-gray-700">
                 <span>Randomize options</span>
             </label>
             <p x-data="" x-tooltip.raw="If checked, options will be presented in a random order. This helps in reducing bias towards selections that are listed first." class="text-gray-500 cursor-pointer hover:text-gray-600 ml-2">
@@ -23,15 +23,15 @@
           <input @input.debounce="updateHorizontal()" :checked="page.props.current_section.form_fields[0].options.align == 'horizontal'" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600" value="">
         </div>
         <div class="ml-3 text-sm leading-6">
-          <label for="radio-horizontal-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f" class="text-sm font-medium text-gray-700">Horizontally align options</label>
+          <label for="radio-horizontal-checkbox-editor" class="text-sm font-medium text-gray-700">Horizontally align options</label>
         </div>
     </div>
     <div class="relative flex items-center mt-6">
         <div class="flex h-6 items-center">
-          <input x-model="hideLabels" @input.debounce="updateHideLabels()" id="radio-hide-labels-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f" aria-describedby="radio-hide-labels-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f-description" name="radio-hide-labels-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600">
+          <input x-model="hideLabels" @input.debounce="updateHideLabels()" :checked="page.props.current_section.form_fields[0].options.hide_label" id="radio-hide-labels-checkbox-editor" aria-describedby="radio-hide-labels-checkbox-editor-description" name="radio-hide-labels-checkbox-editor" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600">
         </div>
         <div class="ml-3 text-sm leading-6 flex items-center justify-between">
-            <label for="radio-hide-labels-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f" class="text-sm font-medium text-gray-700">
+            <label for="radio-hide-labels-checkbox-editor" class="text-sm font-medium text-gray-700">
                 <span>Hide labels</span>
             </label>
             <a href="https://youform.com/blog/hiding-labels-in-picture-choice-questions-in-youform" target="_blank" x-data="" x-tooltip.raw="If checked, option labels will be hidden. Only works when the options have images. Click to learn more." class="text-gray-500 inline-block cursor-pointer hover:text-gray-600 ml-2">
@@ -122,6 +122,40 @@ function updateRandomize() {
     .catch(error => {
         console.error('Error:', error); // Handle any errors
     });
+}
 
+function updateHideLabels() {
+    let param;
+    if (page.props.current_section.form_fields[0].options.hide_label == true) {
+        page.props.current_section.form_fields[0].options.hide_label = false;
+        param = false;
+    } else {
+        page.props.current_section.form_fields[0].options.hide_label = true;
+        param = true;
+    }
+    
+    const formFieldId = page.props.current_section.form_fields[0].id;
+    const hideParam = param; // Replace with the actual value you want to send
+
+    fetch(`/field/hide-label/${formFieldId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': getCsrfToken() // Include the CSRF token in the headers
+        },
+        body: JSON.stringify({
+            hide: hideParam
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return;
+    })
+    .catch(error => {
+        console.error('Error:', error); // Handle any errors
+    });
 }
 </script>

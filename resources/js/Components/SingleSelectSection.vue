@@ -9,7 +9,7 @@
         }">
             <label class="relative min-w-40 block cursor-pointer rounded-lg border px-4 py-3 shadow-sm focus:outline-none custom-answer-text-color bg-transparent border-gray-700 custom-answer-text-color-as-border-color" :style="{borderColor: page.props.form.design.answers}"
             v-for="(option, index) in page.props.current_section.form_fields[0].options.choices" :key="index">
-                <div class="flex flex-1">
+                <div class="flex flex-1" v-if="!(page.props.current_section.form_fields[0].options.hide_label && option.image)">
                     <span class="flex flex-col">
                         <span class="block text-sm pr-4 font-medium text-gray-900 custom-answer-text-color" :style="{color: page.props.form.design.answers}">{{ option.label }}</span>
                     </span>

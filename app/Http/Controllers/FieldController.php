@@ -100,7 +100,7 @@ class FieldController extends Controller
         // Prepare the new choice with label and null image
         $newChoice = [
             'label' => $data['name'],
-            'image' => null
+            'image' => null,
         ];
     
         if (isset($options['choices']) && is_array($options['choices'])) {
@@ -169,10 +169,7 @@ class FieldController extends Controller
 
                 // Check if index is within bounds
                 if (isset($options['choices'][$index])) {
-                    $options['choices'][$index] = [
-                        'label' => $value,
-                        'image' => null
-                    ];
+                    $options['choices'][$index]['label'] = $value;
                 } else {
                     // Handle the case where the index is out of bounds
                     return response()->json(['error' => 'Index out of bounds'], 400);
@@ -214,6 +211,26 @@ class FieldController extends Controller
             $background_image = "/option/{$filename}";
 
             $options['choices'][$data['index']]['image'] = $background_image;
+            $formField->options = json_encode($options);
+            $formField->save();
+            return;
+        }catch(Exception $e){
+            Log::info($e);
+        }
+    }
+
+    public function addimagelink(Request $request, string $id)
+    {
+        try{
+            $data = $request->validate([
+                'image' => 'URL|required',
+                'index' => 'Numeric|required'
+            ]);
+            $formField = FormFields::where('id', $id)->firstOrFail();
+
+            $options = json_decode($formField->options, true);
+
+            $options['choices'][$data['index']]['image'] = $data['image'];
             $formField->options = json_encode($options);
             $formField->save();
             return;
@@ -291,7 +308,23 @@ class FieldController extends Controller
             Log::info($e);
         }
     }
-    
+
+    public function hidelabel(Request $request, string $id)
+    {
+        try{
+            $data = $request->validate([
+                'hide' => 'Boolean|required'
+            ]);
+
+            $formField = FormFields::where('id', $id)->firstOrFail();
+            $options = json_decode($formField->options, true);
+            $options['hide_label'] = $data['hide'];
+            $formField->options = json_encode($options);
+            $formField->save();
+        } catch (Exception $e){
+            Log::info($e);
+        }
+    }    
 
     /**
      * Remove the specified resource from storage.

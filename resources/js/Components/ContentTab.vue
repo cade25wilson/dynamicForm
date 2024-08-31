@@ -88,7 +88,7 @@
         </div>
     </div>
     <div>
-        <div class="mt-6 border-b border-gray-100 pb-4" v-if="![3, 4, 5, 6, 8].includes(page.props.current_section.section_type_id)">
+        <div class="mt-6 border-b border-gray-100 pb-4" v-if="![3, 4, 5, 6, 8, 9].includes(page.props.current_section.section_type_id)">
             <div class="flex items-center justify-between">
                 <label for="embed-url-editor" class="block text-sm font-medium text-gray-700">
                     Embed 
@@ -106,10 +106,10 @@
             </div>
         </div>
     </div>
-    <TextAlign v-if="![3, 4, 5, 6, 8].includes(page.props.current_section.section_type_id)" />
+    <TextAlign v-if="![3, 4, 5, 6, 8, 9].includes(page.props.current_section.section_type_id)" />
     <ContactDesign v-if="page.props.current_section.section_type_id===3" />
     <FormFields v-if="hasOneField && page.props.current_section.section_type_id != 8"/>
-    <SingleSelect v-if="page.props.current_section.section_type_id == 8" />
+    <SingleSelect v-if="[8, 9].includes(page.props.current_section.section_type_id)" />
     <div class="mt-6">
         <label for="text-cta-text-editor" class="block text-sm font-medium text-gray-700">
             Button Text 
