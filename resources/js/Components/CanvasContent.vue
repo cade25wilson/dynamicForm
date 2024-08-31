@@ -31,6 +31,9 @@
                   <template v-if="[8, 9].includes(page.props.current_section.section_type_id)">
                     <SingleSelectSection />
                   </template>
+                  <template v-if="[10].includes(page.props.current_section.section_type_id)">
+                    <DropDownSection />
+                  </template>
               </div>
               <div>
                 <button type="button"
@@ -51,6 +54,7 @@
 <script setup>
 import { usePage } from '@inertiajs/vue3';
 import ContactSection from './ContactSection.vue';
+import DropDownSection from './DropDownSection.vue';
 import LongText from './LongText.vue';
 import PhoneSection from './PhoneSection.vue';
 import ShortText from './ShortText.vue';

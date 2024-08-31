@@ -104,6 +104,8 @@ Option 3"></textarea>
                 </div>
             </div>
 
+            <!-- <BulkInsertModal /> -->
+
 
             <div>
                 <ul class="space-y-2 mt-2">
