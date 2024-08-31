@@ -88,7 +88,7 @@
         </div>
     </div>
     <div>
-        <div class="mt-6 border-b border-gray-100 pb-4" v-if="![3, 4, 5, 6, 8, 9, 10, 11].includes(page.props.current_section.section_type_id)">
+        <div class="mt-6 border-b border-gray-100 pb-4" v-if="![3, 4, 5, 6, 8, 9, 10, 11, 12].includes(page.props.current_section.section_type_id)">
             <div class="flex items-center justify-between">
                 <label for="embed-url-editor" class="block text-sm font-medium text-gray-700">
                     Embed 
@@ -106,10 +106,11 @@
             </div>
         </div>
     </div>
-    <TextAlign v-if="![3, 4, 5, 6, 8, 9, 10, 11].includes(page.props.current_section.section_type_id)" />
+    <TextAlign v-if="![3, 4, 5, 6, 8, 9, 10, 11, 12].includes(page.props.current_section.section_type_id)" />
     <ContactDesign v-if="page.props.current_section.section_type_id===3" />
     <FormFields v-if="hasOneField && ![8, 9, 10].includes(page.props.current_section.section_type_id)"/>
     <SingleSelect v-if="[8, 9, 10].includes(page.props.current_section.section_type_id)" />
+    <SchedulerOptions v-if="page.props.current_section.section_type_id == 12" />
     <div class="mt-6">
         <label for="text-cta-text-editor" class="block text-sm font-medium text-gray-700">
             Button Text 
@@ -118,7 +119,7 @@
             <input type="text" @blur="handleBlur" v-model="page.props.current_section.button_text" name="text-cta-text-editor" id="text-cta-text-editor" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm" placeholder="Next">
         </div>
     </div>
-    <div class="mt-6 pt-6" v-if="![8, 9, 10, 11].includes(page.props.current_section.section_type_id)">
+    <div class="mt-6 pt-6" v-if="![8, 9, 10, 11, 12].includes(page.props.current_section.section_type_id)">
         <div class="flex items-center justify-between">
             <p class="block text-sm font-medium text-gray-700">
                 Background Image
@@ -143,6 +144,7 @@ import { computed, ref, onMounted, watch, nextTick, onBeforeUnmount } from 'vue'
 import { usePage, router } from '@inertiajs/vue3';
 import ContactDesign from './ContactDesign.vue';
 import FormFields from './FormFields.vue';
+import SchedulerOptions from './SchedulerOptions.vue';
 import SingleSelect from './SingleSelect.vue';
 import TextAlign from './TextAlign.vue';
 

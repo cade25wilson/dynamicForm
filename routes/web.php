@@ -43,4 +43,7 @@ Route::middleware([
     Route::put('field/update/image/{id}', [FieldController::class, 'addimage']);
     Route::put('field/update/imagelink/{id}', [FieldController::class, 'addimagelink']);
     Route::put('field/delete/image/{id}', [FieldController::class, 'removeimage']);
+    Route::put('field/schedule/platform/{id}', [FieldController::class, 'scheduleprovider']);
+    Route::put('field/schedule/link/{id}', [FieldController::class, 'schedulelink']);
+    Route::put('field/label/{id}', [FieldController::class, 'label']);
 });

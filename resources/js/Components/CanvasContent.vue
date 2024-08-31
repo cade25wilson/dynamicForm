@@ -37,6 +37,9 @@
                   <template v-if="[11].includes(page.props.current_section.section_type_id)">
                     <DatePicker />
                   </template>
+                  <template v-if="[12].includes(page.props.current_section.section_type_id)">
+                    <SchedulerSection />
+                  </template>
 
               </div>
               <div>
@@ -62,6 +65,7 @@ import DatePicker from './DatePicker.vue';
 import DropDownSection from './DropDownSection.vue';
 import LongText from './LongText.vue';
 import PhoneSection from './PhoneSection.vue';
+import SchedulerSection from './SchedulerSection.vue';
 import ShortText from './ShortText.vue';
 import SingleSelectSection from './SingleSelectSection.vue';
 import WelcomeSection from './WelcomeSection.vue';

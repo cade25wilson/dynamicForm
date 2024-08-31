@@ -324,7 +324,56 @@ class FieldController extends Controller
         } catch (Exception $e){
             Log::info($e);
         }
-    }    
+    }
+
+    public function scheduleprovider(Request $request, string $id)
+    {
+        try{
+            $data = $request->validate([
+                'schedule_provider' => 'string|in:Calendly,Cal.com,SavvyCal'
+            ]);
+
+            $formField = FormFields::where('id', $id)->firstOrFail();
+            $options = json_decode($formField->options, true);
+            $options['schedule_provider'] = $data['schedule_provider'];
+            $formField->options = json_encode($options);
+            $formField->save();
+        } catch(Exception $e){
+            Log::info($e);
+        }
+    }
+
+    public function label(Request $request, string $id)
+    {
+        try{
+            $data = $request->validate([
+                'label' => 'string|required'
+            ]);
+
+            $formField = FormFields::where('id', $id)->firstOrFail();
+            $formField->label = $data['label'];
+            $formField->save();
+        } catch(Exception $e){
+            Log::info($e);
+        }    
+    }
+
+    public function schedulelink(Request $request, string $id)
+    {
+        try{
+            $data = $request->validate([
+                'schedule_link' => 'URL|required'
+            ]);
+
+            $formField = FormFields::where('id', $id)->firstOrFail();
+            $options = json_decode($formField->options, true);
+            $options['schedule_link'] = $data['schedule_link'];
+            $formField->options = json_encode($options);
+            $formField->save();
+        } catch(Exception $e){
+            Log::info($e);
+        }
+    }
 
     /**
      * Remove the specified resource from storage.

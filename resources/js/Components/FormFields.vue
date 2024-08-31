@@ -1,5 +1,5 @@
 <template>
-    <div class="mt-6" v-if="![5, 11].includes(page.props.current_section.section_type_id)">
+    <div class="mt-6" v-if="![5, 11, 12].includes(page.props.current_section.section_type_id)">
         <label for="input-placeholder-text-editor" class="block text-sm font-medium text-gray-700">Placeholder</label>
         <div class="mt-1">
             <input 
@@ -62,13 +62,37 @@ import { ref, computed } from 'vue';
 const page = usePage();
 
 function updateField(field){
-    router.put(`/field/${field.id}`, {
-        _token: page.props.csrf_token,
+    // router.put(`/field/${field.id}`, {
+    //     _token: page.props.csrf_token,
+    //     label: field.label,
+    //     placeholder: field.placeholder,
+    //     show: field.show,
+    //     required: field.required
+    // });
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    fetch(`/field/${field.id}`, {
+    method: 'PUT',
+    headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': csrfToken // Pass the CSRF token in the headers
+    },
+    body: JSON.stringify({
+        _token: csrfToken, // Also include the token in the body if needed
         label: field.label,
         placeholder: field.placeholder,
         show: field.show,
         required: field.required
+    })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
     });
+
 }
 
 function updateMaxChar(field){

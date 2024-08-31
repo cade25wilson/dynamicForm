@@ -243,7 +243,7 @@ class SectionController extends Controller
                 FormFields::create(['label' => 'Date','type' => 'date','order' => 1,'form_section_id' => $sectionId]);
                 break;
             case 12:
-                // FormFields::create([]);
+                FormFields::create(['label' => 'Choose a slot', 'type' => 'date', 'order' => 1, 'form_section_id' => $sectionId, 'options' => json_encode(['schedule_provider' => 'calendly', 'schedule_link' => null])]);
                 break;
             case 13:
                 FormFields::create(['label' => 'Star Rating','type' => 'rating','order' => 1,'form_section_id' => $sectionId]);
