@@ -229,7 +229,7 @@ class SectionController extends Controller
                 // FormFields::create([]);
                 break;
             case 8:
-                FormFields::create(['type' => 'option','order' => 1,'form_section_id' => $sectionId, 'options' => json_encode(['choices' => ['option 1', 'option 2'], 'align' => 'horizontal'])]);
+                FormFields::create(['type' => 'option','order' => 1,'form_section_id' => $sectionId,'options' => json_encode(['choices' => [['label' => 'option 1', 'image' => null],['label' => 'option 2', 'image' => null]],'align' => 'horizontal','random' => false])]);
                 break;
             case 9:
                 FormFields::create(['type' => 'option','order' => 1,'form_section_id' => $sectionId, 'options' => json_encode(['Option 1', 'Option 2'])]);

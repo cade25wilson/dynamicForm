@@ -5,7 +5,7 @@
 
     <div class="relative flex items-center mt-6">
         <div class="flex h-6 items-center">
-          <input x-model="randomize" @input.debounce="updateRandomize()" id="radio-randomize-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f" aria-describedby="radio-randomize-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f-description" name="radio-randomize-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600" value="">
+          <input x-model="randomize" @input.debounce="updateRandomize()" :checked="page.props.current_section.form_fields[0].options.random" id="radio-randomize-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f" aria-describedby="radio-randomize-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f-description" name="radio-randomize-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600" value="">
         </div>
         <div class="ml-3 text-sm leading-6 flex items-center justify-between">
             <label for="radio-randomize-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f" class="text-sm font-medium text-gray-700">
@@ -20,7 +20,7 @@
     </div>
     <div class="relative flex items-start mt-6">
         <div class="flex h-6 items-center">
-          <input x-model="horizontal" @input.debounce="updateHorizontal()" id="radio-horizontal-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f" aria-describedby="radio-horizontal-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f-description" name="radio-horizontal-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600" value="">
+          <input @input.debounce="updateHorizontal()" :checked="page.props.current_section.form_fields[0].options.align == 'horizontal'" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600" value="">
         </div>
         <div class="ml-3 text-sm leading-6">
           <label for="radio-horizontal-checkbox-editor-1efa9db2-7656-4051-aa4c-5c400493f03f" class="text-sm font-medium text-gray-700">Horizontally align options</label>
@@ -44,5 +44,84 @@
 </template>
 
 <script setup>
+import { usePage, router } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import SingleSelectOptions from './SingleSelectOptions.vue';
+
+const page = usePage();
+
+function updateHorizontal() {
+    let param;
+    if (page.props.current_section.form_fields[0].options.align === 'horizontal') {
+        page.props.current_section.form_fields[0].options.align = 'vertical';
+        param = 'vertical';
+    } else {
+        page.props.current_section.form_fields[0].options.align = 'horizontal';
+        param = 'horizontal';
+    }
+
+    const formFieldId = page.props.current_section.form_fields[0].id;
+    const alignParam = param; // Replace with the actual value you want to send
+
+    fetch(`/field/align/${formFieldId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json', // Optional: To specify that you expect a JSON response
+            'X-CSRF-TOKEN': getCsrfToken() // Include the CSRF token in the headers
+        },
+        body: JSON.stringify({
+            align: alignParam
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return;
+    })
+    .catch(error => {
+        console.error('Error:', error); // Handle any errors
+    });
+}
+
+function getCsrfToken() {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+}
+
+function updateRandomize() {
+    let param;
+    if (page.props.current_section.form_fields[0].options.random == true) {
+        page.props.current_section.form_fields[0].options.random = false;
+        param = false;
+    } else {
+        page.props.current_section.form_fields[0].options.random = true;
+        param = true;
+    }
+
+    const formFieldId = page.props.current_section.form_fields[0].id;
+    const randomParam = param; // Replace with the actual value you want to send
+
+    fetch(`/field/randomize/${formFieldId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': getCsrfToken() // Include the CSRF token in the headers
+        },
+        body: JSON.stringify({
+            random: randomParam
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return;
+    })
+    .catch(error => {
+        console.error('Error:', error); // Handle any errors
+    });
+
+}
 </script>
