@@ -1,5 +1,5 @@
 <template>
-    <div class="mt-6" v-if="![5, 11, 12].includes(page.props.current_section.section_type_id)">
+    <div class="mt-6" v-if="![5, 11, 12, 13, 14].includes(page.props.current_section.section_type_id)">
         <label for="input-placeholder-text-editor" class="block text-sm font-medium text-gray-700">Placeholder</label>
         <div class="mt-1">
             <input 

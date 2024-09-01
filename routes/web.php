@@ -46,4 +46,5 @@ Route::middleware([
     Route::put('field/schedule/platform/{id}', [FieldController::class, 'scheduleprovider']);
     Route::put('field/schedule/link/{id}', [FieldController::class, 'schedulelink']);
     Route::put('field/label/{id}', [FieldController::class, 'label']);
+    Route::put('field/star/{id}', [FieldController::class, 'star']);
 });

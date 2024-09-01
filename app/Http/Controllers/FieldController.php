@@ -358,6 +358,23 @@ class FieldController extends Controller
         }    
     }
 
+    public function star(Request $request, string $id)
+    {
+        try{
+            $data = $request->validate([
+                'number_stars' => 'numeric|min:3|max:10',
+            ]);
+            
+
+            $formField = FormFields::where('id', $id)->firstOrFail();
+            $options = json_decode($formField->options, true);
+            $options['number_stars'] = $data['number_stars'];
+            $formField->options = json_encode($options);
+            $formField->save();
+        } catch(Exception $e){
+            Log::info($e);
+        }
+    }
     public function schedulelink(Request $request, string $id)
     {
         try{

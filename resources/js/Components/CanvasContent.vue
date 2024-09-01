@@ -40,6 +40,12 @@
                   <template v-if="[12].includes(page.props.current_section.section_type_id)">
                     <SchedulerSection />
                   </template>
+                  <template v-if="[13].includes(page.props.current_section.section_type_id)">
+                    <StarSection />
+                  </template>
+                  <template v-if="[14].includes(page.props.current_section.section_type_id)">
+                    <OpinionSection />
+                  </template>
 
               </div>
               <div>
@@ -64,10 +70,12 @@ import ContactSection from './ContactSection.vue';
 import DatePicker from './DatePicker.vue';
 import DropDownSection from './DropDownSection.vue';
 import LongText from './LongText.vue';
+import OpinionSection from './OpinionSection.vue';
 import PhoneSection from './PhoneSection.vue';
 import SchedulerSection from './SchedulerSection.vue';
 import ShortText from './ShortText.vue';
 import SingleSelectSection from './SingleSelectSection.vue';
+import StarSection from './StarSection.vue';
 import WelcomeSection from './WelcomeSection.vue';
 
 const page = usePage();
