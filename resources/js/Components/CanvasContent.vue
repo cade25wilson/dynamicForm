@@ -46,7 +46,12 @@
                   <template v-if="[14].includes(page.props.current_section.section_type_id)">
                     <OpinionSection />
                   </template>
-
+                  <template v-if="[15].includes(page.props.current_section.section_type_id)">
+                    <SignatureSection />
+                  </template>
+                  <template v-if="[16].includes(page.props.current_section.section_type_id)">
+                    <FileSection />
+                  </template>
               </div>
               <div>
                 <button type="button"
@@ -69,11 +74,13 @@ import { usePage } from '@inertiajs/vue3';
 import ContactSection from './ContactSection.vue';
 import DatePicker from './DatePicker.vue';
 import DropDownSection from './DropDownSection.vue';
+import FileSection from './FileSection.vue';
 import LongText from './LongText.vue';
 import OpinionSection from './OpinionSection.vue';
 import PhoneSection from './PhoneSection.vue';
 import SchedulerSection from './SchedulerSection.vue';
 import ShortText from './ShortText.vue';
+import SignatureSection from './SignatureSection.vue';
 import SingleSelectSection from './SingleSelectSection.vue';
 import StarSection from './StarSection.vue';
 import WelcomeSection from './WelcomeSection.vue';

@@ -1,5 +1,5 @@
 <template>
-    <div class="mt-6" v-if="![5, 11, 12, 13, 14].includes(page.props.current_section.section_type_id)">
+    <div class="mt-6" v-if="![5, 11, 12, 13, 14, 15, 16].includes(page.props.current_section.section_type_id)">
         <label for="input-placeholder-text-editor" class="block text-sm font-medium text-gray-700">Placeholder</label>
         <div class="mt-1">
             <input 
@@ -29,6 +29,16 @@
         <div class="ml-3 text-sm leading-6">
           <label for="input-required-checkbox-editor" class="text-sm font-medium text-gray-700">Required field</label>
           <p id="input-required-checkbox-editor-description" class="text-gray-500">If checked, users will be required to complete this field.</p>
+        </div>
+    </div>
+
+    <div class="relative flex items-start mt-6" v-if="page.props.current_section.section_type_id == 16">
+        <div class="flex h-6 items-center">
+          <input v-model="page.props.current_section.form_fields[0].options.multiple" @input.debounce="updateMultiple()" id="file-upload-multiple-checkbox-editor-dd42fcf7-ade7-4e5b-96b3-5b82aae051a4" aria-describedby="file-upload-multiple-checkbox-editor-dd42fcf7-ade7-4e5b-96b3-5b82aae051a4-description" name="file-upload-multiple-checkbox-editor-dd42fcf7-ade7-4e5b-96b3-5b82aae051a4" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600">
+        </div>
+        <div class="ml-3 text-sm leading-6"> 
+          <label for="file-upload-multiple-checkbox-editor-dd42fcf7-ade7-4e5b-96b3-5b82aae051a4" class="text-sm font-medium text-gray-700">Allow multiple</label>
+          <p id="file-upload-multiple-checkbox-editor-dd42fcf7-ade7-4e5b-96b3-5b82aae051a4-description" class="text-gray-500">If checked, user will be able to upload multiple files.</p>
         </div>
     </div>
 
@@ -83,16 +93,27 @@ function updateField(field){
         show: field.show,
         required: field.required
     })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
     });
+}
 
+function updateMultiple(){
+    if(page.props.current_section.form_fields[0].options.multiple){
+        page.props.current_section.form_fields[0].options.multiple = false;
+    } else {
+        page.props.current_section.form_fields[0].options.multiple = true;
+    }
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    fetch(`/field/multiple/${page.props.current_section.form_fields[0].id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken // Pass the CSRF token in the headers
+        },
+        body: JSON.stringify({
+            _token: csrfToken, // Also include the token in the body if needed
+            multiple: page.props.current_section.form_fields[0].options.multiple
+        })
+    });
 }
 
 function updateMaxChar(field){

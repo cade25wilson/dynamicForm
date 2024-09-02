@@ -256,7 +256,7 @@ class SectionController extends Controller
                 FormFields::create(['label' => 'Signature','type' => 'canvas','order' => 1,'form_section_id' => $sectionId]);
                 break;
             case 16:
-                FormFields::create(['label' => 'File Upload','type' => 'file','order' => 1,'form_section_id' => $sectionId]);
+                FormFields::create(['label' => 'File Upload','type' => 'file','order' => 1,'form_section_id' => $sectionId, 'options' => json_encode(['multiple' => false])]);
                 break;
             default:
                 echo "Type ID is not within the range of 0 to 16";

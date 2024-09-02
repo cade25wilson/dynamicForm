@@ -375,6 +375,24 @@ class FieldController extends Controller
             Log::info($e);
         }
     }
+
+    public function multiple(Request $request, string $id)
+    {
+        try{
+            $data = $request->validate([
+                'multiple' => 'boolean|required',
+            ]);
+
+            $formField = FormFields::where('id', $id)->firstOrFail();
+            $options = json_decode($formField->options, true);
+            $options['multiple'] = $data['multiple'];
+            $formField->options = json_encode($options);
+            $formField->save();
+        } catch(Exception $e){
+            Log::info($e);
+        }
+    }
+
     public function schedulelink(Request $request, string $id)
     {
         try{
