@@ -64,7 +64,7 @@
                                                 <label class="block text-sm font-medium leading-6 text-gray-900">Add image URL</label>
                                                 <div class="mt-2">
                                                     <div class="flex w-full rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-gray-600"> 
-                                                        <input v-model="linkInput" x-ref="linkInput" @keydown.enter="addViaLink" type="text" class="block w-full flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" placeholder="https://beautifulimage.com/cat.png">
+                                                        <input v-model="linkInput" @keydown.enter="addViaLink" type="text" class="block w-full flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" placeholder="https://beautifulimage.com/cat.png">
                                                         <button @click="addViaLink" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-1 rounded-r-md">
                                                             + Add
                                                         </button>

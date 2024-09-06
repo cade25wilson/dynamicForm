@@ -1,5 +1,5 @@
 <template>
-  <AppLayout title="Dashboard">
+  <FormLayout title="Dashboard">
     <div class="grid grid-cols-12 h-screen">
       <div class="h-screen overflow-y-auto pb-40 col-span-2 relative px-2 pt-4">
         <FormSidebar @open-modal="showModal" />
@@ -15,13 +15,13 @@
         </TabPanel>
       </div>
     </div>
-  </AppLayout>
+  </FormLayout>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
-import AppLayout from '@/Layouts/AppLayout.vue';
+import FormLayout from '@/Layouts/FormLayout.vue';
 import CanvasContent from '@/Components/CanvasContent.vue';
 import FormSidebar from '@/Components/FormSidebar.vue';
 import SectionModal from '@/Components/SectionModal.vue';
@@ -72,7 +72,6 @@ function getButtonClass(item) {
 }
 
 function submit() {
-  console.log('Form created with Section Type ID:', selectedSectionType.value);
   router.post('/section', {
     _token: page.props.csrf_token,
     SectionId: selectedSectionType.value,

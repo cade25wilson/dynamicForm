@@ -3,14 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Form extends Model
+class PublishedForm extends Model
 {
     use HasUuids;
     // The attributes that are mass assignable.
-    protected $fillable = ['name', 'user_id'];
+    protected $fillable = ['form_id', 'name', 'user_id'];
 
     // Define the relationship with the User model
     public function user()
@@ -18,6 +17,10 @@ class Form extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function form()
+    {
+        return $this->hasOne(Form::class);
+    }
     // Define the relationship with the FormField model
     // public function fields()
     // {
@@ -25,18 +28,9 @@ class Form extends Model
     // }
 
     // Define the relationship with the FormResponse model
-    public function responses()
-    {
-        return $this->hasMany(FormResponses::class);
-    }
-
-    public function sections()
-    {
-        return $this->hasMany(FormSection::class);
-    }
 
     public function design()
     {
-        return $this->hasOne(FormDesign::class);
+        return $this->hasOne(PublishedFormDesign::class);
     }
 }

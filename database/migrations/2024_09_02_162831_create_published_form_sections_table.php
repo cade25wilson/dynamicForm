@@ -12,9 +12,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('form_sections', function (Blueprint $table) {
+        Schema::create('published_form_sections', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
-            $table->foreignUuid('form_id')->constrained('forms')->onDelete('cascade');
+            $table->foreignUuid('published_form_id')->constrained('published_forms')->onDelete('cascade');
             $table->foreignId('section_type_id')->constrained('section_types');
             $table->integer('order')->default(1)->index();
             $table->string('name')->nullable(true);
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('form_sections');
+        Schema::dropIfExists('published_form_sections');
     }
 };

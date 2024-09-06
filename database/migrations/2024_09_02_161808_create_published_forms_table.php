@@ -12,8 +12,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('forms', function (Blueprint $table) {
+        Schema::create('published_forms', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
+            $table->foreignUuid('form_id')->constrained()->onDelete('cascade');
             $table->string('name', 100);
             // $table->text('description')->default('Mind filling out this form?');
             // $table->string('embed')->nullable(true);
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('forms');
+        Schema::dropIfExists('published_forms');
     }
 };

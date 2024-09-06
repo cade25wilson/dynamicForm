@@ -54,7 +54,6 @@ class FieldController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        Log::info($request);
         $data = $request->validate([
             'label' => 'nullable|string',
             'placeholder' => 'nullable|string',
@@ -68,7 +67,6 @@ class FieldController extends Controller
 
     public function maxlength(Request $request, string $id)
     {
-        Log::info($request);
         try {
             $data = $request->validate([
                 'length' => 'numeric|nullable'
@@ -193,7 +191,6 @@ class FieldController extends Controller
     public function addimage(Request $request, string $id)
     {
         try{
-            Log::info($request->all());
             $data = $request->validate([
                 'image' => 'File|required',
                 'index' => 'Numeric|required'
@@ -279,8 +276,6 @@ class FieldController extends Controller
 
     public function align(Request $request, string $id)
     {
-        Log::info($request->all());
-
         $data = $request->validate([
             'align' => 'string|required|in:horizontal,vertical'
         ]);

@@ -13,45 +13,20 @@
               <h4 class="text-4xl py-6 text-gray-700 custom-text-color leading-snug">
               </h4>
               <div class="text-gray-600 custom-text-color-light text-sm md:text-base js_text_description">
-                  <template v-if="page.props.current_section.section_type_id === 1">
-                    <WelcomeSection />
-                  </template>
-                  <template v-if="page.props.current_section.section_type_id === 3">
-                    <ContactSection />
-                  </template>
-                  <template v-if="page.props.current_section.section_type_id === 4">
-                    <ShortText />
-                  </template>
-                  <template v-if="page.props.current_section.section_type_id === 5">
-                    <LongText />
-                  </template>
-                  <template v-if="page.props.current_section.section_type_id === 6">
-                    <PhoneSection />
-                  </template>
-                  <template v-if="[8, 9].includes(page.props.current_section.section_type_id)">
-                    <SingleSelectSection />
-                  </template>
-                  <template v-if="[10].includes(page.props.current_section.section_type_id)">
-                    <DropDownSection />
-                  </template>
-                  <template v-if="[11].includes(page.props.current_section.section_type_id)">
-                    <DatePicker />
-                  </template>
-                  <template v-if="[12].includes(page.props.current_section.section_type_id)">
-                    <SchedulerSection />
-                  </template>
-                  <template v-if="[13].includes(page.props.current_section.section_type_id)">
-                    <StarSection />
-                  </template>
-                  <template v-if="[14].includes(page.props.current_section.section_type_id)">
-                    <OpinionSection />
-                  </template>
-                  <template v-if="[15].includes(page.props.current_section.section_type_id)">
-                    <SignatureSection />
-                  </template>
-                  <template v-if="[16].includes(page.props.current_section.section_type_id)">
-                    <FileSection />
-                  </template>
+                  <WelcomeSection v-if="page.props.current_section.section_type_id === 1"/>
+                  <ThankyouSection v-if="page.props.current_section.section_type_id === 2"/>
+                  <ContactSection v-if="page.props.current_section.section_type_id === 3"/>
+                  <ShortText v-if="page.props.current_section.section_type_id === 4"/>
+                  <LongText v-if="page.props.current_section.section_type_id === 5"/>
+                  <PhoneSection v-if="page.props.current_section.section_type_id === 6"/>
+                  <SingleSelectSection v-if="[8, 9].includes(page.props.current_section.section_type_id)"/>
+                  <DropDownSection v-if="[10].includes(page.props.current_section.section_type_id)"/>
+                  <DatePicker v-if="[11].includes(page.props.current_section.section_type_id)"/>
+                  <SchedulerSection v-if="[12].includes(page.props.current_section.section_type_id)"/>
+                  <StarSection v-if="[13].includes(page.props.current_section.section_type_id)"/>
+                  <OpinionSection v-if="[14].includes(page.props.current_section.section_type_id)"/>
+                  <SignatureSection v-if="[15].includes(page.props.current_section.section_type_id)"/>
+                  <FileSection v-if="[16].includes(page.props.current_section.section_type_id)"/>
               </div>
               <div>
                 <button type="button"
@@ -83,6 +58,7 @@ import ShortText from './ShortText.vue';
 import SignatureSection from './SignatureSection.vue';
 import SingleSelectSection from './SingleSelectSection.vue';
 import StarSection from './StarSection.vue';
+import ThankyouSection from './ThankyouSection.vue';
 import WelcomeSection from './WelcomeSection.vue';
 
 const page = usePage();
@@ -95,7 +71,7 @@ const page = usePage();
 }
 
 .scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 </style>

@@ -15,7 +15,7 @@
             <label for="date-cta-text-editor-2cfa8b5f-5f14-4f48-a549-69d9c884d7f1" class="block text-sm font-medium text-gray-700">
                 {{page.props.current_section.form_fields[0].options.schedule_provider}} link
             </label>
-            <a href="https://youform.com/blog/calendly-integration-in-youform-cly3306z9001x52otg0px4jer" target="_blank" class="text-xs font-semibold text-blue-800">
+            <a href="" target="_blank" class="text-xs font-semibold text-blue-800">
                 What's this?
             </a>
         </div>

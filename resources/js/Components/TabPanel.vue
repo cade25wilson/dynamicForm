@@ -19,7 +19,7 @@
                             Design
                         </h4>
                         <p class="text-sm text-gray-500 mb-8">
-                            Use light or dark theme or make Youform your own by adding your brand color and logo.
+                            Use light or dark theme or make your own by adding your brand color and logo.
                         </p>
 
                         <div>

@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DesignController;
 use App\Http\Controllers\FieldController;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\PublishFormController;
 use App\Http\Controllers\SectionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,7 @@ Route::middleware([
     Route::delete('section/{id}', [SectionController::class, 'destroy'])->name('section.destroy');
     Route::post('section', [SectionController::class, 'store'])->name('section.store');
     Route::post('section/{id}', [SectionController::class, 'duplicate'])->name('section.duplicate');
+    Route::post('publish/{id}', [PublishFormController::class, 'store']);
     Route::put('background/{id}', [SectionController::class, 'backgroundImage']);
     Route::put('section/{id}', [SectionController::class, 'update']);
     Route::put('design/{id}', [DesignController::class, 'update']);
@@ -48,4 +50,5 @@ Route::middleware([
     Route::put('field/label/{id}', [FieldController::class, 'label']);
     Route::put('field/star/{id}', [FieldController::class, 'star']);
     Route::put('field/multiple/{id}', [FieldController::class, 'multiple']);
+    Route::delete('form/{id}', [FormController::class, 'destroy']);
 });
