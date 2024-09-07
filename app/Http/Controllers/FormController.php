@@ -93,65 +93,126 @@ class FormController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $uuid)
-    {
-        $section = request()->query('section');
-        $form = Form::where('id', $uuid)
-                ->with('design') 
-                ->firstOrFail();
+    // public function show(string $uuid)
+    // {
+    //     $section = request()->query('section');
+    //     $form = Form::where('id', $uuid)
+    //             ->with('design') 
+    //             ->firstOrFail();
 
-        if($section){
-            $currentSection = FormSection::with(['formFields' => function($query) {
-                $query->orderBy('order');
-            }])->find($section);
-        } else {
-            $currentSection = FormSection::where('form_id', $form->id)
+    //     if($section){
+    //         $currentSection = FormSection::with(['formFields' => function($query) {
+    //             $query->orderBy('order');
+    //         }])->find($section);
+    //     } else {
+    //         $currentSection = FormSection::where('form_id', $form->id)
+    //         ->where('order', '!=', 0)
+    //         ->orderBy('order')
+    //         ->with(['formFields' => function($query) {
+    //             $query->orderBy('order', 'asc');
+    //         }])
+    //         ->first();
+    //     }
+        
+    //     if ($currentSection) {
+    //         foreach ($currentSection->formFields as $formField) {
+    //             $formField->options = json_decode($formField->options, true);
+    //         }
+    //     }
+
+    //     $formSections = FormSection::where('form_id', $uuid)
+    //                     ->join('section_types', 'form_sections.section_type_id', '=', 'section_types.id')
+    //                     ->select('form_sections.*', 'section_types.name as formsectionname')
+    //                     ->orderBy('form_sections.order')
+    //                     ->get()
+    //                     ->map(function ($section) {
+    //                         $section->options = json_decode($section->options, true);
+    //                         return $section;
+    //                     });
+
+
+    //     $sectionCategories = SectionCategory::with(['sectionTypes' => function ($query) {
+    //         $query->where('show', true)->select('id', 'name', 'section_category_id');
+    //     }])->get();
+
+    //     $hasPublishedForm = PublishedForm::where('form_id', $uuid)->exists();
+        
+    //     $groupedSectionTypes = $sectionCategories->map(function ($category) {
+    //         return [
+    //             'category_name' => $category->name,
+    //             'section_types' => $category->sectionTypes,
+    //         ];
+    //     });
+
+    //     return Inertia::render('Form', [
+    //         'form' => $form,
+    //         'form_sections' => $formSections,
+    //         'groupedSectionTypes' => $groupedSectionTypes,
+    //         'current_section' => $currentSection,
+    //         'has_published_form' => $hasPublishedForm
+    //     ]);
+    // }
+
+    public function show(string $uuid)
+{
+    $section = request()->query('section');
+    $form = Form::where('id', $uuid)
+            ->with('design') 
+            ->firstOrFail();
+
+    if ($section) {
+        $currentSection = FormSection::with(['formFields' => function ($query) {
+            $query->orderBy('order');
+        }])->find($section);
+    } else {
+        $currentSection = FormSection::where('form_id', $form->id)
             ->where('order', '!=', 0)
             ->orderBy('order')
-            ->with(['formFields' => function($query) {
+            ->with(['formFields' => function ($query) {
                 $query->orderBy('order', 'asc');
             }])
             ->first();
+    }
+
+    if ($currentSection) {
+        $currentSection->options = json_decode($currentSection->options, true);
+        foreach ($currentSection->formFields as $formField) {
+            $formField->options = json_decode($formField->options, true);
         }
-        
-        if ($currentSection) {
-            foreach ($currentSection->formFields as $formField) {
-                $formField->options = json_decode($formField->options, true);
-            }
-        }
+    }
 
-        $formSections = FormSection::where('form_id', $uuid)
-                        ->join('section_types', 'form_sections.section_type_id', '=', 'section_types.id')
-                        ->select('form_sections.*', 'section_types.name as formsectionname')
-                        ->orderBy('form_sections.order')
-                        ->get()
-                        ->map(function ($section) {
-                            $section->options = json_decode($section->options, true);
-                            return $section;
-                        });
-
-
-        $sectionCategories = SectionCategory::with(['sectionTypes' => function ($query) {
-            $query->where('show', true)->select('id', 'name', 'section_category_id');
-        }])->get();
-
-        $hasPublishedForm = PublishedForm::where('form_id', $uuid)->exists();
-        
-        $groupedSectionTypes = $sectionCategories->map(function ($category) {
-            return [
-                'category_name' => $category->name,
-                'section_types' => $category->sectionTypes,
-            ];
+    $formSections = FormSection::where('form_id', $uuid)
+        ->join('section_types', 'form_sections.section_type_id', '=', 'section_types.id')
+        ->select('form_sections.*', 'section_types.name as formsectionname')
+        ->orderBy('form_sections.order')
+        ->get()
+        ->map(function ($section) {
+            $section->options = json_decode($section->options, true);
+            return $section;
         });
 
-        return Inertia::render('Form', [
-            'form' => $form,
-            'form_sections' => $formSections,
-            'groupedSectionTypes' => $groupedSectionTypes,
-            'current_section' => $currentSection,
-            'has_published_form' => $hasPublishedForm
-        ]);
-    }
+    $sectionCategories = SectionCategory::with(['sectionTypes' => function ($query) {
+        $query->where('show', true)->select('id', 'name', 'section_category_id');
+    }])->get();
+
+    $hasPublishedForm = PublishedForm::where('form_id', $uuid)->exists();
+
+    $groupedSectionTypes = $sectionCategories->map(function ($category) {
+        return [
+            'category_name' => $category->name,
+            'section_types' => $category->sectionTypes,
+        ];
+    });
+
+    return Inertia::render('Form', [
+        'form' => $form,
+        'form_sections' => $formSections,
+        'groupedSectionTypes' => $groupedSectionTypes,
+        'current_section' => $currentSection,
+        'has_published_form' => $hasPublishedForm
+    ]);
+}
+
 
     /**
      * Show the form for editing the specified resource.

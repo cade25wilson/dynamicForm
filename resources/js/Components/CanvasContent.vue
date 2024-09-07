@@ -2,7 +2,10 @@
   <!-- {{page}} -->
     <div
           class="relative lg:mx-6 mt-[4rem] bg-white custom-bg-color rounded-md h-[calc(100vh_-_13rem)] border border-dashed border-gray-500  bg-cover bg-center bg-no-repeat custom-form-font"
-          :style="{ backgroundColor: page.props.form.design.background }"
+          :style="{
+            backgroundColor: page.props.form.design.background,
+            backgroundImage: page.props.form.design.background_image ? `url(${page.props.form.design.background_image})` : 'none'
+          }"
           >
           <div class="h-full flex items-center justify-center mx-auto overflow-y-auto scrollbar-hide">
             <div :class="{
@@ -27,6 +30,9 @@
                   <OpinionSection v-if="[14].includes(page.props.current_section.section_type_id)"/>
                   <SignatureSection v-if="[15].includes(page.props.current_section.section_type_id)"/>
                   <FileSection v-if="[16].includes(page.props.current_section.section_type_id)"/>
+              </div>
+              <div class="my-6" v-if="page.props.current_section.options.embed">
+                  <iframe :src="page.props.current_section.options.embed" frameborder="0" marginheight="0" marginwidth="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen="" class="w-full max-w-2xl aspect-video mx-auto"></iframe>
               </div>
               <div>
                 <button type="button"

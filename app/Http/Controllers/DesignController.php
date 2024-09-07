@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\FormDesign;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class DesignController extends Controller
 {
@@ -60,7 +62,6 @@ class DesignController extends Controller
             'button_text' => 'required|string|regex:/^#[0-9A-Fa-f]{6}$/',
             'star_rating' => 'required|string|regex:/^#[0-9A-Fa-f]{6}$/',
             'font' => 'required|string|max:255',
-            'background_image' => 'nullable|string',
             'logo' => 'nullable|string',
             'form_id' => 'required|string'
         ]);
@@ -69,6 +70,27 @@ class DesignController extends Controller
         $design = FormDesign::findOrFail($id);
         $design->update($validatedData);
         return;
+    }
+
+    public function setBackground(Request $request, string $id)
+    {
+        try{
+            $request->validate([
+                'background_image' => 'file|required'
+            ]);
+
+            $file = $request->file('background_image');
+            $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
+            $filename = "{$originalName}-{$id}.{$extension}";
+
+            $file->move(public_path('background'), $filename);
+            $background_image = "/background/{$filename}";
+
+            FormDesign::where('form_id', $id)->update(['background_image' => $background_image]);
+        } catch(Exception $e){
+            Log::info($e);
+        }
     }
     
 

@@ -43,7 +43,7 @@ class SectionController extends Controller
         ]);
 
         $order = 0;
-        if($data['SectionId'] != 1 || $data['SectionId'] != 2){
+        if (!in_array($data['SectionId'], [1, 2])) {
             $order = FormSection::where('form_id', $data['FormId'])->orderBy('order', 'desc')->first();
             $order = $order->order + 1;
         }
@@ -52,7 +52,6 @@ class SectionController extends Controller
         $color = $this->getColor($data['SectionId']);
         $svg = $this->getSvg($data['SectionId']);
         $textAlign = $this->getTextAlign($data['SectionId']);
-        // $options = $this->generateOptions($data['SectionId']);
         $section = FormSection::create([
             'form_id' => $data['FormId'],
             'section_type_id' => $data['SectionId'],
@@ -251,21 +250,40 @@ class SectionController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $validatedData = $request->validate([
-            'button_text' => 'string|required',
-            'name' => 'string|nullable',
-            'description' => 'string|nullable',
-            'text_align' => 'string|required',
-            'embed' => 'nullable|string'
-        ]);
+        try{
+            $validatedData = $request->validate([
+                'button_text' => 'string|required',
+                'name' => 'string|nullable',
+                'description' => 'string|nullable',
+                'text_align' => 'string|required',
+                'embed' => 'nullable|url'
+            ]);
 
-        FormSection::where('id', $id)->firstOrFail()->update([
-            'button_text' => $validatedData['button_text'],
-            'name' => $validatedData['name'],
-            'description' => $validatedData['description'],
-            'text_align' => $validatedData['text_align'],
-        ]);
-        return;
+            if (!$validatedData['embed']){
+                FormSection::where('id', $id)->firstOrFail()->update([
+                    'button_text' => $validatedData['button_text'],
+                    'name' => $validatedData['name'],
+                    'description' => $validatedData['description'],
+                    'text_align' => $validatedData['text_align'],
+                ]);
+                return;
+            }
+            $formSection = FormSection::where('id', $id)->firstOrFail();
+            $options = json_decode($formSection->options, true);
+            $options['embed'] = $validatedData['embed'];
+            $options = json_encode($options);
+            $formSection->update([
+                'button_text' => $validatedData['button_text'],
+                'name' => $validatedData['name'],
+                'description' => $validatedData['description'],
+                'text_align' => $validatedData['text_align'],
+                'options' => $options
+            ]);
+
+            return;
+        } catch(Exception $e){
+            Log::info($e);
+        }
     }
 
     public function backgroundImage(string $id, Request $request)
@@ -281,8 +299,8 @@ class SectionController extends Controller
             $extension = $file->getClientOriginalExtension();
             $filename = "{$originalName}-{$id}.{$extension}";
 
-            $file->move(public_path('background_images'), $filename);
-            $background_image = "/background_images/{$filename}";
+            $file->move(public_path('cover_images'), $filename);
+            $background_image = "/cover_images/{$filename}";
         }
 
         FormSection::where('id', $id)->firstOrFail()->update([

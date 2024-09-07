@@ -5,6 +5,8 @@
 /public/build
 /public/hot
 /public/storage
+/public/background
+/public/cover_images
 /storage/*.key
 /vendor
 .env

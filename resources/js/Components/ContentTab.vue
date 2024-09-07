@@ -15,15 +15,15 @@
                     Embed 
                 </label>
                 <div class="flex items-center space-x-2">
-                    <button class="bg-gray-100 hover:bg-gray-200 p-1 border border-gray-200 rounded-md" >
+                    <button class="bg-gray-100 hover:bg-gray-200 p-1 border border-gray-200 rounded-md" @click="showEmbed = !showEmbed">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
                         </svg>
                     </button>
                 </div>
             </div>              
-            <div class="mt-1" style="display: none;">
-                <input type="text"  name="embed-url-editor" id="embed-url-editor" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm" placeholder="E.g https://loom.com/share/a8014d4f0e3143159ea1aec4c85bf6hu">
+            <div class="mt-1" v-if="showEmbed">
+                <input type="text" @blur="handleBlur" v-model="page.props.current_section.options.embed" name="embed-url-editor" id="embed-url-editor" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm" placeholder="E.g https://loom.com/share/a8014d4f0e3143159ea1aec4c85bf6hu">
             </div>
         </div>
     </div>
@@ -54,7 +54,7 @@
             <div class="h-10 w-auto" v-else>
                 <img :src="page.props.current_section.background_image" alt="Cover Image" class="h-full max-h-full w-auto max-w-full object-contain">
             </div>
-            <input type="file" accept="image/png, image/jpeg" class="text-xs hidden" @change="updateBackground">
+            <input type="file" accept="image/png, image/jpeg" class="text-xs hidden" @change="updateSectionBackground">
         </label>
     </div>
 </div>
@@ -75,6 +75,7 @@ import TextAlign from './TextAlign.vue';
 const page = usePage(); 
 const editor = ref(false);
 const urlLink = ref(null);
+const showEmbed = ref(false);
 
 function handleBlur(){
     let embed;
@@ -96,11 +97,11 @@ function handleBlur(){
     });
 }
 
-function updateBackground(event) {
+function updateSectionBackground(event) {
     const file = event.target.files[0];
     if (file) {
         page.props.current_section.background_image = file;
-        router.put(`/background/${page.props.current_section.id}`, {
+        router.put(`/section/background/${page.props.current_section.id}`, {
             background_image: file,
         });
     }
