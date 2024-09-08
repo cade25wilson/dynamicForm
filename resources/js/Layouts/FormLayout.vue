@@ -54,21 +54,21 @@
                     </div>
                     <div class="col-span-4 flex justify-end items-center">
                         <div class="space-x-4 flex items-center">
-                            <button type="button" class="relative col-span-1 inline-flex items-center px-4 py-2 text-sm leading-4 text-center text-red-800 bg-red-100 border border-transparent rounded-md shadow-sm hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400" data-has-alpine-state="true">
+                            <!-- <button type="button" class="relative col-span-1 inline-flex items-center px-4 py-2 text-sm leading-4 text-center text-red-800 bg-red-100 border border-transparent rounded-md shadow-sm hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400" data-has-alpine-state="true">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"></path>
                                 </svg>                                
-                            </button>
+                            </button> -->
                             <button type="button" @click="copyPageUrl" x-tooltip.raw="Click to copy form link" class="relative col-span-1 inline-flex items-center px-4 py-2 text-sm leading-4 text-center text-blue-800 bg-blue-100 border border-transparent rounded-md shadow-sm hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400" data-has-alpine-state="true">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"></path>
                                 </svg>              
                             </button>
-                            <a x-tooltip.raw="Open form page" target="_blank" class="relative col-span-1 inline-flex items-center px-4 py-2 text-sm leading-4 text-center text-gray-800 bg-gray-300 border border-transparent rounded-md shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400">
+                            <Link :href="`/forms/${page.props.form.id}`" x-tooltip.raw="Open form page" target="_blank" class="relative col-span-1 inline-flex items-center px-4 py-2 text-sm leading-4 text-center text-gray-800 bg-gray-300 border border-transparent rounded-md shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"></path>
                                 </svg> 
-                            </a>
+                            </Link>
                             <button  @click="publish()" x-tooltip.raw="Hitting this button will make your changes available to your users." type="button" class="relative text-center col-span-1 inline-flex text-white items-center px-3 py-2 text-sm font-medium leading-4  bg-gray-700 hover:bg-gray-800  border border-transparent rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400" data-has-alpine-state="true">
                                 <span class="flex items-center">
                                     <svg class="mr-2 -ml-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -141,14 +141,14 @@
             </div>
             <div class="max-w-md mx-auto">
                 <div class="flex items-center mt-2 justify-center" data-has-alpine-state="true">
-                    <input type="text" readonly="" value="https://app.youform.com/forms/8f2hlx5f" class="block w-80 rounded-md rounded-r-none border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6">
+                    <input type="text" readonly="" :value="`http://localhost:8000/forms/${page.props.form.id}`" class="block w-80 rounded-md rounded-r-none border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6">
                     <button @click="copyPageUrl()" class="flex items-center rounded-md rounded-l-none border border-transparent bg-coral px-4 py-1.5 text-sm font-medium text-black shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">                                  
                         Copy
                     </button>
                 </div>
             </div>
             <div class="mt-4 flex items-center justify-center space-x-3">
-                <a href="https://app.youform.com/forms/8f2hlx5f" target="_blank" class="inline-block p-1" x-tooltip.raw="Open form in new tab">
+                <a :href="`http://localhost:8000/forms/${page.props.form.id}`" target="_blank" class="inline-block p-1" x-tooltip.raw="Open form in new tab">
                     <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 30 30" class="w-7 h-7">
                         <path d="M 25.980469 2.9902344 A 1.0001 1.0001 0 0 0 25.869141 3 L 20 3 A 1.0001 1.0001 0 1 0 20 5 L 23.585938 5 L 13.292969 15.292969 A 1.0001 1.0001 0 1 0 14.707031 16.707031 L 25 6.4140625 L 25 10 A 1.0001 1.0001 0 1 0 27 10 L 27 4.1269531 A 1.0001 1.0001 0 0 0 25.980469 2.9902344 z M 6 7 C 4.9069372 7 4 7.9069372 4 9 L 4 24 C 4 25.093063 4.9069372 26 6 26 L 21 26 C 22.093063 26 23 25.093063 23 24 L 23 14 L 23 11.421875 L 21 13.421875 L 21 16 L 21 24 L 6 24 L 6 9 L 14 9 L 16 9 L 16.578125 9 L 18.578125 7 L 16 7 L 14 7 L 6 7 z"></path>
                     </svg>
@@ -233,6 +233,17 @@ const publish = () => {
         console.error('There was a problem with the fetch operation:', error);
     });
 };
+
+function copyPageUrl(){
+    navigator.clipboard.writeText(`http://localhost:8000/${page.props.form.id}`)
+        .then(() => {
+            console.log('Text copied to clipboard');
+        })
+        .catch(err => {
+            console.error('Failed to copy text: ', err);
+        });
+
+}
 
 function downloadQrCode(){
     const svgElement = document.querySelector('#qr-code');

@@ -7,10 +7,12 @@ use App\Models\PublishedForm;
 use App\Models\PublishedFormDesign;
 use App\Models\PublishedFormField;
 use App\Models\PublishedFormSection;
+use App\Models\SectionCategory;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class PublishFormController extends Controller
 {
@@ -155,7 +157,51 @@ class PublishFormController extends Controller
      */
     public function show(string $id)
     {
-        //
+        try{
+            $form = PublishedForm::where('form_id', $id)
+                ->with('design') 
+                ->firstOrFail();
+
+            // $formSections = PublishedFormSection::where('published_form_id', $form->id)
+            // ->join('section_types', 'published_form_sections.section_type_id', '=', 'section_types.id')
+            // ->select('published_form_sections.*', 'section_types.name as formsectionname')
+            // ->orderBy('published_form_sections.order')
+            // ->get()
+            // ->map(function ($section) {
+            //     if (is_string($section->options)) {
+            //         $section->options = json_decode($section->options, true);
+            //     }
+            //     return $section;
+            // });
+            $formSections = PublishedFormSection::where('published_form_id', $form->id)
+    ->join('section_types', 'published_form_sections.section_type_id', '=', 'section_types.id')
+    ->select('published_form_sections.*', 'section_types.name as formsectionname')
+    ->orderBy('published_form_sections.order')
+    ->get()
+    ->map(function ($section) {
+        // Decode options if it's a string
+        if (is_string($section->options)) {
+            $section->options = json_decode($section->options, true);
+        }
+        return $section;
+    });
+
+// Partition the collection into two: one with section_type_id != 2 and one with section_type_id == 2
+[$nonTypeTwo, $typeTwo] = $formSections->partition(function ($section) {
+    return $section->section_type_id !== 2;
+});
+
+// Merge non-type-2 sections first, then type-2 sections at the end
+$formSections = $nonTypeTwo->merge($typeTwo);
+
+
+            return Inertia::render('PublishedForm', [
+                'form' => $form,
+                'form_sections' => $formSections,
+            ]);
+        }catch(Exception $e){
+            Log::info($e);
+        }
     }
 
     /**

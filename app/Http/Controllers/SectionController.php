@@ -251,32 +251,33 @@ class SectionController extends Controller
     public function update(Request $request, string $id)
     {
         try{
+            Log::info($request);
             $validatedData = $request->validate([
-                'button_text' => 'string|required',
-                'name' => 'string|nullable',
-                'description' => 'string|nullable',
-                'text_align' => 'string|required',
+                // 'button_text' => 'string|required',
+                // 'name' => 'string|nullable',
+                // 'description' => 'string|nullable',
+                // 'text_align' => 'string|required',
                 'embed' => 'nullable|url'
             ]);
 
-            if (!$validatedData['embed']){
-                FormSection::where('id', $id)->firstOrFail()->update([
-                    'button_text' => $validatedData['button_text'],
-                    'name' => $validatedData['name'],
-                    'description' => $validatedData['description'],
-                    'text_align' => $validatedData['text_align'],
-                ]);
-                return;
-            }
+            // if (!$validatedData['embed']){
+            //     FormSection::where('id', $id)->firstOrFail()->update([
+            //         'button_text' => $validatedData['button_text'],
+            //         'name' => $validatedData['name'],
+            //         'description' => $validatedData['description'],
+            //         'text_align' => $validatedData['text_align'],
+            //     ]);
+            //     return;
+            // }
             $formSection = FormSection::where('id', $id)->firstOrFail();
             $options = json_decode($formSection->options, true);
             $options['embed'] = $validatedData['embed'];
             $options = json_encode($options);
             $formSection->update([
-                'button_text' => $validatedData['button_text'],
-                'name' => $validatedData['name'],
-                'description' => $validatedData['description'],
-                'text_align' => $validatedData['text_align'],
+                // 'button_text' => $validatedData['button_text'],
+                // 'name' => $validatedData['name'],
+                // 'description' => $validatedData['description'],
+                // 'text_align' => $validatedData['text_align'],
                 'options' => $options
             ]);
 
@@ -306,6 +307,26 @@ class SectionController extends Controller
         FormSection::where('id', $id)->firstOrFail()->update([
             'background_image' => $background_image
         ]);        
+    }
+
+    public function singleField(Request $request, string $id)
+    {
+        try{
+            Log::info($request);
+            $fillableColumns = (new FormSection)->getFillable();
+            $data = $request->validate([
+                'input' => 'required|in:' . implode(',', $fillableColumns),
+                'value' => 'nullable'
+            ]);
+
+            FormSection::where('id', $id)->firstOrFail()->update([
+                $data['input'] => $data['value']
+            ]);
+
+            return;
+        }catch(Exception $e){
+            Log::info($e);
+        }
     }
 
 
@@ -367,7 +388,8 @@ class SectionController extends Controller
             'order' => $newOrder,
             'name' => $formSection->name,
             'description' => $formSection->description,
-            'options' => $formSection->options
+            'options' => $formSection->options,
+            'text_align' => $formSection->text_align
         ]);
     }
 

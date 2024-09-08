@@ -6,6 +6,7 @@ use App\Http\Controllers\FieldController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\PublishFormController;
 use App\Http\Controllers\SectionController;
+use App\Models\SectionCategory;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -33,6 +34,7 @@ Route::middleware([
     Route::put('section/background/{id}', [SectionController::class, 'backgroundImage']);
     Route::put('design/background/{id}', [DesignController::class, 'setBackground']);
     Route::put('section/{id}', [SectionController::class, 'update']);
+    Route::put('section/single/{id}', [SectionController:: class, 'singleField']);
     Route::put('design/{id}', [DesignController::class, 'update']);
     Route::put('field/{id}', [FieldController::class, 'update']);
     Route::put('field/maxlength/{id}', [FieldController::class, 'maxlength']);
@@ -52,4 +54,5 @@ Route::middleware([
     Route::put('field/star/{id}', [FieldController::class, 'star']);
     Route::put('field/multiple/{id}', [FieldController::class, 'multiple']);
     Route::delete('form/{id}', [FormController::class, 'destroy']);
+    Route::get('forms/{id}', [PublishFormController::class, 'show']);
 });
