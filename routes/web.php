@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DesignController;
 use App\Http\Controllers\FieldController;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\FormFieldResponseController;
 use App\Http\Controllers\PublishFormController;
 use App\Http\Controllers\SectionController;
 use App\Models\SectionCategory;
@@ -19,6 +20,7 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+Route::get('forms/{id}', [PublishFormController::class, 'show']);
 
 Route::middleware([
     'auth:sanctum',
@@ -54,5 +56,5 @@ Route::middleware([
     Route::put('field/star/{id}', [FieldController::class, 'star']);
     Route::put('field/multiple/{id}', [FieldController::class, 'multiple']);
     Route::delete('form/{id}', [FormController::class, 'destroy']);
-    Route::get('forms/{id}', [PublishFormController::class, 'show']);
+    Route::post('formfieldresponse/{id}', [FormFieldResponseController::class, 'store']);
 });

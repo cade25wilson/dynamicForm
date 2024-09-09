@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Form;
+use App\Models\FormResponses;
 use App\Models\PublishedForm;
 use App\Models\PublishedFormDesign;
 use App\Models\PublishedFormField;
@@ -162,42 +163,38 @@ class PublishFormController extends Controller
                 ->with('design') 
                 ->firstOrFail();
 
-            // $formSections = PublishedFormSection::where('published_form_id', $form->id)
-            // ->join('section_types', 'published_form_sections.section_type_id', '=', 'section_types.id')
-            // ->select('published_form_sections.*', 'section_types.name as formsectionname')
-            // ->orderBy('published_form_sections.order')
-            // ->get()
-            // ->map(function ($section) {
-            //     if (is_string($section->options)) {
-            //         $section->options = json_decode($section->options, true);
-            //     }
-            //     return $section;
-            // });
+            $formResponse = FormResponses::create([
+                'form_id' => $id
+            ]);
             $formSections = PublishedFormSection::where('published_form_id', $form->id)
-    ->join('section_types', 'published_form_sections.section_type_id', '=', 'section_types.id')
-    ->select('published_form_sections.*', 'section_types.name as formsectionname')
-    ->orderBy('published_form_sections.order')
-    ->get()
-    ->map(function ($section) {
-        // Decode options if it's a string
-        if (is_string($section->options)) {
-            $section->options = json_decode($section->options, true);
-        }
-        return $section;
-    });
+                ->join('section_types', 'published_form_sections.section_type_id', '=', 'section_types.id')
+                ->select('published_form_sections.*', 'section_types.name as formsectionname')
+                ->orderBy('published_form_sections.order')
+                ->with(['publishedFormFields' => function ($query) {
+                    $query->orderBy('order', 'asc');
+                }])
+                ->get()
+                ->map(function ($section) {
+                    // Decode options if it's a string
+                    if (is_string($section->options)) {
+                        $section->options = json_decode($section->options, true);
+                    }
+                    // Rename publishedFormFields to form_fields
+                    $section->form_fields = $section->publishedFormFields;
+                    unset($section->publishedFormFields); // Remove the original publishedFormFields
 
-// Partition the collection into two: one with section_type_id != 2 and one with section_type_id == 2
-[$nonTypeTwo, $typeTwo] = $formSections->partition(function ($section) {
-    return $section->section_type_id !== 2;
-});
+                    return $section;
+                });
 
-// Merge non-type-2 sections first, then type-2 sections at the end
-$formSections = $nonTypeTwo->merge($typeTwo);
-
+            [$nonTypeTwo, $typeTwo] = $formSections->partition(function ($section) {
+                return $section->section_type_id !== 2;
+            });
+            $formSections = $nonTypeTwo->merge($typeTwo);
 
             return Inertia::render('PublishedForm', [
                 'form' => $form,
                 'form_sections' => $formSections,
+                'response_id' => $formResponse->id
             ]);
         }catch(Exception $e){
             Log::info($e);
