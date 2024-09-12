@@ -35,7 +35,7 @@
                   <iframe :src="page.props.current_section.options.embed" frameborder="0" marginheight="0" marginwidth="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen="" class="w-full max-w-2xl aspect-video mx-auto"></iframe>
               </div>
               <div>
-                <button type="button"
+                <button type="button" v-if="page.props.current_section.section_type_id != 2"
                 :style="{ color: page.props.form.design.button_text, backgroundColor: page.props.form.design.buttons }"
                   class="inline-flex items-center px-4 py-2 mt-8 border border-transparent text-base font-medium rounded-md text-white bg-gray-700 focus:outline-none focus:ring-0 focus:ring-offset-0 focus:ring-gray-500 button-text">
                   {{page.props.current_section.button_text}} &nbsp;

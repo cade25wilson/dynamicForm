@@ -72,11 +72,16 @@ class FormController extends Controller
                 'name' => 'Thank you! 🙌',
                 'order' => 0,
                 'description' => "That's all. You may now close this window.",
-                "button_text" => "exit",
+                "button_text" => "Create your own Form",
                 'text_align' => 'center',
                 'options' => json_encode([
                     'embed' => null,
-                    'color' => 'pink'
+                    'color' => 'pink',
+                    'end' => 'button',
+                    'button_link' => 'http://localhost:8000/',
+                    'redirect_url' => 'http://localhost:8000/',
+                    'redirect_message' => 'You will be redirected momentarily.',
+                    'redirect_delay' => 3
                 ]),
             ]);
             

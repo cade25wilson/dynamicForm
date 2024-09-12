@@ -1,7 +1,4 @@
 <template>
-    <!-- <CoverImage v-if="formSection.background_image != null" /> -->
-    <!-- <FormSectionName />
-    <FormSectionDescription /> -->
     <div class="mt-6">
     <div class="iti iti--allow-dropdown iti--show-flags">
         <div class="iti__flag-container" :style="{color: page.props.form.design.answers}">
@@ -11,8 +8,8 @@
             </div>
         </div>
         <input 
+            @blur=handleBlur(formSection.form_fields[0])
             type="text" 
-            disabled 
             class="block w-full border-0 border-b focus:ring-0 sm:text-sm bg-transparent iti__tel-input custom-input"
             autocomplete="off" 
             placeholder="(201) 555-0123" 
@@ -22,14 +19,13 @@
                 borderColor: page.props.form.design.answers
             }"
         >
+        <small v-if="errors[formSection.form_fields[0].id]" class="text-red-600">{{ errors[formSection.form_fields[0].id] }}</small>
     </div>
 </div>
 </template>
 <script setup>
 import { usePage } from '@inertiajs/vue3';
-import CoverImage from './CoverImage.vue';
-import FormSectionDescription from './FormSectionDescription.vue';
-import FormSectionName from './FormSectionName.vue';
+import { defineEmits, reactive, ref } from 'vue';
 
 const page = usePage();
 const props = defineProps({
@@ -38,6 +34,32 @@ const props = defineProps({
         required: false
     }
 });
+
+const emit = defineEmits(['updateResponse']);
+const isValid = ref(true); // Track if this section is valid
+const errors = reactive({});
+
+function handleBlur(field) {
+    const value = event.target.value;
+    if (field.type === 'tel' && !isValidPhoneNumber(value)) {
+        errors[field.id] = `Please enter a valid phone number.`;
+    } else {
+        delete errors[field.id];
+        updateResponse(field.id, value); // Call the response update when valid
+    }
+
+    isValid.value = Object.keys(errors).length === 0;
+    emit('validationState', isValid.value);
+}
+
+function isValidPhoneNumber(phone) {
+    const re = /^\+?[0-9\s\-().]{7,15}$/; // Basic regex to match common phone formats
+    return re.test(String(phone));
+}
+
+function updateResponse(fieldId, value) {
+    emit('updateResponse', { fieldId, value });
+}
 </script>
 
 <style scoped>

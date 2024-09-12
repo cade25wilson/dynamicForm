@@ -166,25 +166,35 @@ class PublishFormController extends Controller
             $formResponse = FormResponses::create([
                 'form_id' => $id
             ]);
-            $formSections = PublishedFormSection::where('published_form_id', $form->id)
-                ->join('section_types', 'published_form_sections.section_type_id', '=', 'section_types.id')
-                ->select('published_form_sections.*', 'section_types.name as formsectionname')
-                ->orderBy('published_form_sections.order')
-                ->with(['publishedFormFields' => function ($query) {
-                    $query->orderBy('order', 'asc');
-                }])
-                ->get()
-                ->map(function ($section) {
-                    // Decode options if it's a string
-                    if (is_string($section->options)) {
-                        $section->options = json_decode($section->options, true);
-                    }
-                    // Rename publishedFormFields to form_fields
-                    $section->form_fields = $section->publishedFormFields;
-                    unset($section->publishedFormFields); // Remove the original publishedFormFields
 
-                    return $section;
-                });
+            $formSections = PublishedFormSection::where('published_form_id', $form->id)
+            ->join('section_types', 'published_form_sections.section_type_id', '=', 'section_types.id')
+            ->select('published_form_sections.*', 'section_types.name as formsectionname')
+            ->orderBy('published_form_sections.order')
+            ->with(['publishedFormFields' => function ($query) {
+                $query->orderBy('order', 'asc');
+            }])
+            ->get()
+            ->map(function ($section) {
+                // Decode section options if it's a string
+                if (is_string($section->options)) {
+                    $section->options = json_decode($section->options, true);
+                }
+                
+                // Rename publishedFormFields to form_fields
+                $section->form_fields = $section->publishedFormFields;
+                unset($section->publishedFormFields); // Remove the original publishedFormFields
+
+                // Decode options for each form field
+                foreach ($section->form_fields as $field) {
+                    if (is_string($field->options)) {
+                        $field->options = json_decode($field->options, true);
+                    }
+                }
+
+                return $section;
+            });
+
 
             [$nonTypeTwo, $typeTwo] = $formSections->partition(function ($section) {
                 return $section->section_type_id !== 2;

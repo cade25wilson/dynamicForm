@@ -27,13 +27,14 @@
             </div>
         </div>
     </div>
-    <TextAlign v-if="![3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16].includes(page.props.current_section.section_type_id)" />
+    <ThankYouSection v-if="page.props.current_section.section_type_id == 2" />
+    <TextAlign v-if="![2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16].includes(page.props.current_section.section_type_id)" />
     <ContactDesign v-if="page.props.current_section.section_type_id===3" />
     <FormFields v-if="hasOneField && ![8, 9, 10].includes(page.props.current_section.section_type_id)"/>
     <SingleSelect v-if="[8, 9, 10].includes(page.props.current_section.section_type_id)" />
     <SchedulerOptions v-if="page.props.current_section.section_type_id == 12" />
     <StarFields v-if="page.props.current_section.section_type_id == 13"/>
-    <div class="mt-6">
+    <div class="mt-6" v-if="![2].includes(page.props.current_section.section_type_id)">
         <label for="text-cta-text-editor" class="block text-sm font-medium text-gray-700">
             Button Text 
         </label>
@@ -71,6 +72,7 @@ import SchedulerOptions from './SchedulerOptions.vue';
 import SingleSelect from './SingleSelect.vue';
 import StarFields from './StarFields.vue';
 import TextAlign from './TextAlign.vue';
+import ThankYouSection from './ThankYouSection.vue';
 
 const page = usePage(); 
 const editor = ref(false);

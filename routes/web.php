@@ -36,7 +36,8 @@ Route::middleware([
     Route::put('section/background/{id}', [SectionController::class, 'backgroundImage']);
     Route::put('design/background/{id}', [DesignController::class, 'setBackground']);
     Route::put('section/{id}', [SectionController::class, 'update']);
-    Route::put('section/single/{id}', [SectionController:: class, 'singleField']);
+    Route::put('section/single/{id}', [SectionController::class, 'singleField']);
+    Route::put('section/ending/{id}', [SectionController::class, 'updateEnding']);
     Route::put('design/{id}', [DesignController::class, 'update']);
     Route::put('field/{id}', [FieldController::class, 'update']);
     Route::put('field/maxlength/{id}', [FieldController::class, 'maxlength']);

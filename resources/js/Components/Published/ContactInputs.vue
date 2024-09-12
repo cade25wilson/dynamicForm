@@ -112,23 +112,6 @@ const singleFieldVisible = (index1, index2) => {
     return (fields[index1].show && !fields[index2].show) || (!fields[index1].show && fields[index2].show);
 };
 
-// Function to handle the blur event and perform validation
-// function handleBlur(field) {
-//     const value = event.target.value;
-
-//     // Validate input based on field type and requirements
-//     if (field.required && !value) {
-//         errors[field.id] = `${field.label} is required.`;
-//     } else if (field.type === 'email' && !isValidEmail(value)) {
-//         errors[field.id] = `Please enter a valid email address.`;
-//     } else if (field.type === 'tel' && !isValidPhoneNumber(value)) {
-//         errors[field.id] = `Please enter a valid phone number.`;
-//     } else {
-//         delete errors[field.id];
-//         updateResponse(field.id, value);
-//     }
-// }
-
 function handleBlur(field) {
     const value = event.target.value;
 
@@ -157,7 +140,6 @@ function isValidPhoneNumber(phone) {
     const re = /^\+?[0-9\s\-().]{7,15}$/; // Basic regex to match common phone formats
     return re.test(String(phone));
 }
-
 
 // Basic email validation
 function isValidEmail(email) {

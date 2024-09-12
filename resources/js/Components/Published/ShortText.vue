@@ -1,11 +1,8 @@
 <template>
-    <!-- <CoverImage v-if="formSection.background_image != null" :formSection="formSection"/> -->
-    <!-- <FormSectionName />
-    <FormSectionDescription /> -->
     <div class="mt-6">
-        <input 
+        <input
+            @blur=handleBlur(formSection.form_fields[0])
             type="text" 
-            disabled 
             class="custom-input block w-full px-0 border-0 border-b focus:ring-0 sm:text-sm bg-transparent" 
             :placeholder="formSection.form_fields[0].placeholder"
             :style="{
@@ -19,9 +16,7 @@
 
 <script setup>
 import { usePage } from '@inertiajs/vue3';
-import CoverImage from './CoverImage.vue';
-import FormSectionDescription from './FormSectionDescription.vue';
-import FormSectionName from './FormSectionName.vue';
+import { defineEmits } from 'vue';
 
 const page = usePage();
 const props = defineProps({
@@ -30,6 +25,17 @@ const props = defineProps({
         required: false
     }
 });
+
+const emit = defineEmits(['updateResponse']);
+
+function handleBlur(field) {
+    const value = event.target.value;
+    updateResponse(field.id, value);    
+}
+
+function updateResponse(fieldId, value) {
+    emit('updateResponse', { fieldId, value });
+}
 </script>
 
 <style scoped>

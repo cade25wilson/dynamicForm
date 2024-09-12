@@ -46,17 +46,28 @@ class SectionController extends Controller
         if (!in_array($data['SectionId'], [1, 2])) {
             $order = FormSection::where('form_id', $data['FormId'])->orderBy('order', 'desc')->first();
             $order = $order->order + 1;
-        }
+        }        
         
         $type = SectionType::where('id', $data['SectionId'])->first();
         $color = $this->getColor($data['SectionId']);
         $svg = $this->getSvg($data['SectionId']);
+        $json = ['color' => $color, 'svg' => $svg];
+        if ($data['SectionId'] == 2) {
+            $json = array_merge($json, [
+                'end' => 'button',
+                'button_link' => 'http://localhost:8000/',
+                'redirect_url' => 'http://localhost:8000/',
+                'redirect_message' => 'You will be redirected momentarily.',
+                'redirect_delay' => 3
+            ]);
+        }
+
         $textAlign = $this->getTextAlign($data['SectionId']);
         $section = FormSection::create([
             'form_id' => $data['FormId'],
             'section_type_id' => $data['SectionId'],
             'order' => $order,
-            'options' => json_encode(['color' => $color, 'svg' => $svg]),
+            'options' => json_encode(['color' => $color, 'svg' => $svg, 'end' => 'button', 'button_link' => 'http://localhost:8000/', 'redirect_url' => 'http://localhost:8000/', 'redirect_message' => 'You will be redirected momentarily.', 'redirect_delay' => 3]),
             'name' => $type->default_name,
             'text_align' => $textAlign
         ]);
@@ -329,6 +340,27 @@ class SectionController extends Controller
         }
     }
 
+    public function updateEnding(Request $request, string $id)
+    {
+        $data = $request->validate([
+            'jsonKey' => 'required|string',
+            'value' => 'required'
+        ]);
+
+        $formSection = FormSection::findOrFail($id);
+
+        $options = json_decode($formSection->options, true);
+
+        $options[$data['jsonKey']] = $data['value'];
+
+        $formSection->update([
+            'options' => json_encode($options)
+        ]);
+        
+
+        return response()->json(['message' => 'Options updated successfully.']);
+    }
+
 
     public function duplicate(string $id)
     {
@@ -377,7 +409,7 @@ class SectionController extends Controller
                 'error' => $e->getMessage()
             ]);
         }
-        return redirect('form/' . $formSection->form_id);
+        return redirect('form/' . $formSection ->form_id);
     }
 
     private function duplicateFormSection(FormSection $formSection, int $newOrder): FormSection

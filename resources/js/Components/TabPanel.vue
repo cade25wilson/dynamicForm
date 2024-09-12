@@ -285,7 +285,7 @@ function setActiveTab(tabName) {
 
 // Function to handle color picker close and save the design
 function handleColorPickerClose() {
-    router.put(`/design/${page.props.design.id}`, {
+    router.put(`/design/${page.props.form.design.id}`, {
         _token: page.props.csrf_token,
         background: props.design.background,
         questions: props.design.questions,

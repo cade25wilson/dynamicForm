@@ -1,4 +1,5 @@
 <template>
+  <!-- {{page}} -->
   <div
     class="relative lg:mx-6 mt-[4rem] bg-white custom-bg-color rounded-md h-[90vh] bg-cover bg-center bg-no-repeat custom-form-font"
     :style="{
@@ -27,10 +28,10 @@
               :formSection="currentSection"
               @updateResponse="handleUpdateResponse"
             />
-            <ShortText v-if="currentSection.section_type_id === 4" :formSection="currentSection" />
-            <LongText v-if="currentSection.section_type_id === 5" :formSection="currentSection" />
-            <PhoneSection v-if="currentSection.section_type_id === 6" :formSection="currentSection" />
-            <SingleSelectSection v-if="[8, 9].includes(currentSection.section_type_id)" :formSection="currentSection" />
+            <ShortText v-if="currentSection.section_type_id === 4" :formSection="currentSection" @updateResponse="handleUpdateResponse"/>
+            <LongText v-if="currentSection.section_type_id === 5" :formSection="currentSection" @updateResponse="handleUpdateResponse"/>
+            <PhoneSection @updateResponse="handleUpdateResponse" v-if="currentSection.section_type_id === 6" :formSection="currentSection" />
+            <SingleSelectSection @updateResponse="handleUpdateResponse" v-if="[8, 9].includes(currentSection.section_type_id)" :formSection="currentSection" />
             <DropDownSection v-if="[10].includes(currentSection.section_type_id)" :formSection="currentSection" />
             <DatePicker v-if="[11].includes(currentSection.section_type_id)" :formSection="currentSection" />
             <SchedulerSection v-if="[12].includes(currentSection.section_type_id)" :formSection="currentSection" />
@@ -46,7 +47,7 @@
 
           <!-- Next Section Button (Disable if there are validation errors) -->
           <div>
-            <button
+            <button v-if="currentSection.section_type_id != 2"
               type="button"
               @click="goToNextSection"
               :style="{ color: page.props.form.design.button_text, backgroundColor: page.props.form.design.buttons }"
@@ -59,6 +60,27 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
               </svg>
             </button>
+            <template v-else >
+              <a v-if="currentSection.options.end == 'button'" :href="currentSection.options.button_link" target="_top" class="inline-flex items-center px-4 py-2 mt-8 border border-transparent text-base font-medium rounded-md focus:outline-none focus:ring-0 focus:ring-offset-0 focus:ring-gray-500 text-white bg-gray-700 hover:opacity-80 custom-button-background-color custom-button-text-color"
+              :style="{ color: page.props.form.design.button_text, backgroundColor: page.props.form.design.buttons }"
+              >
+                {{ currentSection.button_text || 'Next' }} &nbsp; 
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                  </svg>
+              </a>
+              <div class="mt-6" v-else>
+                <svg class="animate-spin h-5 w-5 text-black custom-text-color mx-auto my-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+
+                <p class="text-sm text-gray-600 custom-text-color">
+                    {{currentSection.options.redirect_message}}
+                </p>
+              </div>
+
+            </template>
           </div>
         </div>
       </div>
@@ -93,7 +115,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watchEffect } from 'vue';
+import { ref, computed, watch, watchEffect } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 
 // Import form section components
@@ -159,6 +181,20 @@ watchEffect(() => {
   }
 });
 
+const redirectToLocalhost = (sectionData) => {
+      // Function to redirect and pass currentSection data
+      const timeout = sectionData.options.redirect_delay * 1000;
+      setTimeout(function() {
+        window.location.href = sectionData.options.redirect_url;
+      }, timeout);
+    };
+
+watch(() => currentSection.value.options.end, (newVal) => {
+    if (newVal !== 'button') {
+      redirectToLocalhost(currentSection.value); // Pass currentSection data to the function
+    }
+  });
+
 // Handle form field response updates
 function handleUpdateResponse({ fieldId, value }) {
   console.log('Field ID:', fieldId);
@@ -176,6 +212,10 @@ function handleUpdateResponse({ fieldId, value }) {
       value: value
     })
   });
+  console.log(currentSection);
+  if(currentSection.value.section_type_id == 8){
+    goToNextSection();
+  }
 }
 </script>
 
