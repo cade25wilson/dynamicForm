@@ -32,7 +32,7 @@
             <LongText v-if="currentSection.section_type_id === 5" :formSection="currentSection" @updateResponse="handleUpdateResponse"/>
             <PhoneSection @updateResponse="handleUpdateResponse" v-if="currentSection.section_type_id === 6" :formSection="currentSection" />
             <SingleSelectSection @updateResponse="handleUpdateResponse" v-if="[8, 9].includes(currentSection.section_type_id)" :formSection="currentSection" />
-            <DropDownSection v-if="[10].includes(currentSection.section_type_id)" :formSection="currentSection" />
+            <DropDownSection @updateResponse="handleUpdateResponse" v-if="[10].includes(currentSection.section_type_id)" :formSection="currentSection" />
             <DatePicker v-if="[11].includes(currentSection.section_type_id)" :formSection="currentSection" />
             <SchedulerSection v-if="[12].includes(currentSection.section_type_id)" :formSection="currentSection" />
             <StarSection v-if="[13].includes(currentSection.section_type_id)" :formSection="currentSection" />
@@ -86,7 +86,6 @@
       </div>
     </transition>
 
-    <!-- Navigation buttons (Bottom right corner) -->
     <div class="absolute bottom-5 sm:bottom-10 right-10 z-10">
       <button
         type="button"
@@ -182,7 +181,6 @@ watchEffect(() => {
 });
 
 const redirectToLocalhost = (sectionData) => {
-      // Function to redirect and pass currentSection data
       const timeout = sectionData.options.redirect_delay * 1000;
       setTimeout(function() {
         window.location.href = sectionData.options.redirect_url;
@@ -191,7 +189,7 @@ const redirectToLocalhost = (sectionData) => {
 
 watch(() => currentSection.value.options.end, (newVal) => {
     if (newVal !== 'button') {
-      redirectToLocalhost(currentSection.value); // Pass currentSection data to the function
+      redirectToLocalhost(currentSection.value);
     }
   });
 
@@ -204,15 +202,14 @@ function handleUpdateResponse({ fieldId, value }) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-CSRF-TOKEN': csrfToken // Pass the CSRF token in the headers
+      'X-CSRF-TOKEN': csrfToken
     },
     body: JSON.stringify({
-      _token: csrfToken, // Also include the token in the body if needed
+      _token: csrfToken,
       fieldId: fieldId,
       value: value
     })
   });
-  console.log(currentSection);
   if(currentSection.value.section_type_id == 8){
     goToNextSection();
   }
