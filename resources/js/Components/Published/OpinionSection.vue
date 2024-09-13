@@ -1,7 +1,4 @@
 <template>
-    <!-- <CoverImage v-if="formSection.background_image != null" /> -->
-    <!-- <FormSectionName />
-    <FormSectionDescription /> -->
     <div class="mt-6 grid grid-cols-10 gap-2">
         <button 
       v-for="number in 10" 
@@ -12,6 +9,7 @@
       }" 
       class="text-sm px-3 py-3 transition-all custom-answer-text-color-as-background-color-lightest-hover custom-answer-text-color border border-gray-500 custom-answer-text-color-as-border-color text-center rounded" 
       type="button"
+      @click="handleBlur(number)"
     >
       <span>{{ number }}</span>
     </button>
@@ -20,11 +18,9 @@
 
 <script setup>
 import { usePage } from '@inertiajs/vue3';
-import { ref } from 'vue';
-import CoverImage from './CoverImage.vue';
-import FormSectionDescription from './FormSectionDescription.vue';
-import FormSectionName from './FormSectionName.vue';
+import { defineEmits } from 'vue';
 
+const emit = defineEmits(['updateResponse']);
 const page = usePage();
 const props = defineProps({
     formSection: {
@@ -32,4 +28,12 @@ const props = defineProps({
         required: false
     }
 });
+
+function handleBlur(value) {
+    updateResponse(props.formSection.form_fields[0].id, value);    
+}
+
+function updateResponse(fieldId, value) {
+    emit('updateResponse', { fieldId, value });
+}
 </script>

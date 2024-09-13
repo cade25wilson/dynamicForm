@@ -36,7 +36,7 @@
             <DatePicker @updateResponse="handleUpdateResponse" v-if="[11].includes(currentSection.section_type_id)" :formSection="currentSection" />
             <SchedulerSection v-if="[12].includes(currentSection.section_type_id)" :formSection="currentSection" />
             <StarSection @updateResponse="handleUpdateResponse" v-if="[13].includes(currentSection.section_type_id)" :formSection="currentSection" />
-            <OpinionSection v-if="[14].includes(currentSection.section_type_id)" :formSection="currentSection" />
+            <OpinionSection @updateResponse="handleUpdateResponse" v-if="[14].includes(currentSection.section_type_id)" :formSection="currentSection" />
             <SignatureSection v-if="[15].includes(currentSection.section_type_id)" :formSection="currentSection" />
             <FileSection v-if="[16].includes(currentSection.section_type_id)" :formSection="currentSection" />
           </div>
@@ -45,7 +45,6 @@
             <iframe :src="currentSection.options.embed" frameborder="0" class="w-full max-w-2xl aspect-video mx-auto"></iframe>
           </div>
 
-          <!-- Next Section Button (Disable if there are validation errors) -->
           <div>
             <button v-if="currentSection.section_type_id != 2"
               type="button"
