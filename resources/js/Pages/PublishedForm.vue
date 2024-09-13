@@ -33,7 +33,7 @@
             <PhoneSection @updateResponse="handleUpdateResponse" v-if="currentSection.section_type_id === 6" :formSection="currentSection" />
             <SingleSelectSection @updateResponse="handleUpdateResponse" v-if="[8, 9].includes(currentSection.section_type_id)" :formSection="currentSection" />
             <DropDownSection @updateResponse="handleUpdateResponse" v-if="[10].includes(currentSection.section_type_id)" :formSection="currentSection" />
-            <DatePicker v-if="[11].includes(currentSection.section_type_id)" :formSection="currentSection" />
+            <DatePicker @updateResponse="handleUpdateResponse" v-if="[11].includes(currentSection.section_type_id)" :formSection="currentSection" />
             <SchedulerSection v-if="[12].includes(currentSection.section_type_id)" :formSection="currentSection" />
             <StarSection v-if="[13].includes(currentSection.section_type_id)" :formSection="currentSection" />
             <OpinionSection v-if="[14].includes(currentSection.section_type_id)" :formSection="currentSection" />
