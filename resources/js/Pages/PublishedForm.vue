@@ -35,7 +35,7 @@
             <DropDownSection @updateResponse="handleUpdateResponse" v-if="[10].includes(currentSection.section_type_id)" :formSection="currentSection" />
             <DatePicker @updateResponse="handleUpdateResponse" v-if="[11].includes(currentSection.section_type_id)" :formSection="currentSection" />
             <SchedulerSection v-if="[12].includes(currentSection.section_type_id)" :formSection="currentSection" />
-            <StarSection v-if="[13].includes(currentSection.section_type_id)" :formSection="currentSection" />
+            <StarSection @updateResponse="handleUpdateResponse" v-if="[13].includes(currentSection.section_type_id)" :formSection="currentSection" />
             <OpinionSection v-if="[14].includes(currentSection.section_type_id)" :formSection="currentSection" />
             <SignatureSection v-if="[15].includes(currentSection.section_type_id)" :formSection="currentSection" />
             <FileSection v-if="[16].includes(currentSection.section_type_id)" :formSection="currentSection" />

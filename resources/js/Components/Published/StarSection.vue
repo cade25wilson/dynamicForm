@@ -1,10 +1,8 @@
 <template>
-    <!-- <CoverImage v-if="formSection.background_image != null" /> -->
-    <!-- <FormSectionName />
-    <FormSectionDescription /> -->
     <div class="mt-6">
         <div class="flex items-center">
             <svg v-for="index in starsArray" :key="index" 
+                @click="handleBlur(formSection.form_fields[0], index)"
                 :style="{ color: page.props.form.design.answers }" 
                 class="size-11 cursor-pointer text-gray-700 custom-rating-color" 
                 xmlns="http://www.w3.org/2000/svg" 
@@ -21,16 +19,14 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, defineEmits } from 'vue';
 import { usePage } from '@inertiajs/vue3';
-import CoverImage from './CoverImage.vue';
-import FormSectionDescription from './FormSectionDescription.vue';
-import FormSectionName from './FormSectionName.vue';
 
 const page = usePage();
+const emit = defineEmits(['updateResponse']);
 
 const starsArray = computed(() => {
-    return Array.from({ length: formSection.form_fields[0].options.number_stars }, (_, i) => i + 1);
+    return Array.from({ length: props.formSection.form_fields[0].options.number_stars }, (_, i) => i + 1);
 });
 const props = defineProps({
     formSection: {
@@ -38,6 +34,14 @@ const props = defineProps({
         required: false
     }
 });
+
+function handleBlur(field, value) {
+    updateResponse(field.id, value);
+}
+
+function updateResponse(fieldId, value) {
+    emit('updateResponse', { fieldId, value });
+}
 </script>
 
 <style scoped>
