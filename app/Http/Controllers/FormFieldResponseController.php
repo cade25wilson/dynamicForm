@@ -6,6 +6,7 @@ use App\Models\FormFieldResponses;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class FormFieldResponseController extends Controller
 {
@@ -24,7 +25,7 @@ class FormFieldResponseController extends Controller
     {
         //
     }
-
+    
     /**
      * Store a newly created resource in storage.
      */
@@ -35,6 +36,16 @@ class FormFieldResponseController extends Controller
                 'fieldId' => 'required|exists:form_fields,id',
                 'value' => 'nullable'
             ]);
+
+            if($request->file('value')){
+                $file = $request->file('value');
+                $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $extension = $file->getClientOriginalExtension();
+                $filename = "{$originalName}-{$id}.{$extension}";
+                $file->move(public_path('signature'), $filename);
+                $data['value'] = "/signature/{$filename}";
+            }
+
             $formFieldResponse = FormFieldResponses::where('form_field_id', $data['fieldId'])
             ->where('response_id', $id)
             ->first();
@@ -82,8 +93,11 @@ class FormFieldResponseController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id, string $fieldId)
     {
-        //
+        if (file_exists(public_path("signature/signature-{$id}.svg"))) {
+            Storage::disk('public')->delete("signature/signature-{$id}.svg");
+        }
+        FormFieldResponses::where('response_id', $id)->where('form_field_id', $fieldId)->delete();
     }
 }

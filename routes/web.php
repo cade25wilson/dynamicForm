@@ -58,4 +58,5 @@ Route::middleware([
     Route::put('field/multiple/{id}', [FieldController::class, 'multiple']);
     Route::delete('form/{id}', [FormController::class, 'destroy']);
     Route::post('formfieldresponse/{id}', [FormFieldResponseController::class, 'store']);
+    Route::delete('formfieldresponse/{id}/{fieldId}', [FormFieldResponseController::class, 'destroy']);
 });
