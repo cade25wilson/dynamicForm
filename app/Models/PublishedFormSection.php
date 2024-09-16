@@ -22,7 +22,7 @@ class PublishedFormSection extends Model
         return $this->belongsTo(SectionType::class);
     }
 
-    public function publishedFormFields()
+    public function fields()
     {
         return $this->hasMany(PublishedFormField::class);
     }

@@ -101,9 +101,13 @@ function handleDelete() {
                             <div class="py-4 px-1 border-t border-gray-200 flex items-center justify-between">
                                 <div>
                                     <div class="flex items-center">
-                                        <span class="text-gray-400 cursor-default inline-block mx-2 text-xs py-1 px-2">
-                                            No responses
-                                        </span>
+                                        <Link :href="`/responses/${form.id}`" class="cursor-pointer">
+                                            <span class="text-gray-400 cursor-default inline-block mx-2 text-xs py-1 px-2 cursor-pointer">
+                                                {{ form.response_count === 0 ? 'No Responses' : 
+                                                form.response_count === 1 ? '1 Response' : 
+                                                `${form.response_count} Responses` }}
+                                            </span>
+                                        </Link>
                                     </div>
                                 </div>
                                 <div class="relative inline-block text-left">
@@ -123,6 +127,8 @@ function handleDelete() {
     </AppLayout>
 </template>
 
-<style scoped>
-/* Add your custom styles here */
+<style>
+.cursor-pointer:hover{
+    cursor: pointer;
+}
 </style>

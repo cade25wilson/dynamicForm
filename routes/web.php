@@ -5,6 +5,7 @@ use App\Http\Controllers\DesignController;
 use App\Http\Controllers\FieldController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\FormFieldResponseController;
+use App\Http\Controllers\FormResponseController;
 use App\Http\Controllers\PublishFormController;
 use App\Http\Controllers\SectionController;
 use App\Models\SectionCategory;
@@ -21,6 +22,7 @@ Route::get('/', function () {
     ]);
 });
 Route::get('forms/{id}', [PublishFormController::class, 'show']);
+Route::get('/responses/{id}', [FormResponseController::class, 'show']);
 
 Route::middleware([
     'auth:sanctum',
@@ -60,4 +62,5 @@ Route::middleware([
     Route::post('formfieldresponse/{id}', [FormFieldResponseController::class, 'store']);
     Route::post('formfieldresponse/files/{id}', [FormFieldResponseController::class, 'fileUpload']);
     Route::delete('formfieldresponse/{id}/{fieldId}', [FormFieldResponseController::class, 'destroy']);
+    Route::put('formresponse/complete', [FormResponseController::class, 'complete']);
 });

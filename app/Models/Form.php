@@ -39,4 +39,9 @@ class Form extends Model
     {
         return $this->hasOne(FormDesign::class);
     }
+
+    public function publishedForm()
+    {
+        return $this->hasOne(PublishedForm::class);
+    }
 }

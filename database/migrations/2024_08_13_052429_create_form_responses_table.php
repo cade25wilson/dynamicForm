@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('form_responses', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
             $table->foreignUuid('form_id')->constrained()->onDelete('cascade');
-            // $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
+            $table->boolean('is_complete')->default(false)->index();
             $table->timestamps();
         });
     }

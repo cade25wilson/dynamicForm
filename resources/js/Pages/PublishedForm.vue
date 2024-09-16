@@ -1,5 +1,4 @@
 <template>
-  <!-- {{page}} -->
   <div
     class="relative lg:mx-6 mt-[4rem] bg-white custom-bg-color rounded-md h-[90vh] bg-cover bg-center bg-no-repeat custom-form-font"
     :style="{
@@ -59,7 +58,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
               </svg>
             </button>
-            <template v-else >
+            <template v-else>
               <a v-if="currentSection.options.end == 'button'" :href="currentSection.options.button_link" target="_top" class="inline-flex items-center px-4 py-2 mt-8 border border-transparent text-base font-medium rounded-md focus:outline-none focus:ring-0 focus:ring-offset-0 focus:ring-gray-500 text-white bg-gray-700 hover:opacity-80 custom-button-background-color custom-button-text-color"
               :style="{ color: page.props.form.design.button_text, backgroundColor: page.props.form.design.buttons }"
               >
@@ -187,31 +186,55 @@ const redirectToLocalhost = (sectionData) => {
     };
 
 watch(() => currentSection.value.options.end, (newVal) => {
-    if (newVal !== 'button') {
-      redirectToLocalhost(currentSection.value);
-    }
-  });
+	if(newVal !== 'button'){
+		redirectToLocalhost(currentSection.value);
+	}
+});
+
+// Watch for changes in the current section and check if the section_type_id is 2
+watch(() => currentSection.value, (newSection) => {
+  if (newSection.section_type_id === 2) {
+    console.log('Current section is a Thank You section.');
+    completeResponse();
+  }
+});
+
+
+function completeResponse(){
+	const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+	fetch(`/formresponse/complete`, {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json',
+			'X-CSRF-TOKEN': csrfToken
+		},
+		body: JSON.stringify({
+			_token: csrfToken,
+			responseId: page.props.response_id
+		})
+	});
+}
 
 // Handle form field response updates
 function handleUpdateResponse({ fieldId, value }) {
-  console.log('Field ID:', fieldId);
-  console.log('Field Value:', value);
-  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-  fetch(`/formfieldresponse/${page.props.response_id}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRF-TOKEN': csrfToken
-    },
-    body: JSON.stringify({
-      _token: csrfToken,
-      fieldId: fieldId,
-      value: value
-    })
-  });
-  if(currentSection.value.section_type_id == 8){
-    goToNextSection();
-  }
+	console.log('Field ID:', fieldId);
+	console.log('Field Value:', value);
+	const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+	fetch(`/formfieldresponse/${page.props.response_id}`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'X-CSRF-TOKEN': csrfToken
+		},
+		body: JSON.stringify({
+			_token: csrfToken,
+			fieldId: fieldId,
+			value: value
+		})
+	});
+	if(currentSection.value.section_type_id == 8){
+		goToNextSection();
+	}
 }
 </script>
 

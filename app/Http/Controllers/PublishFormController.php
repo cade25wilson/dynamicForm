@@ -68,37 +68,6 @@ class PublishFormController extends Controller
                 'logo' => $form->design->logo
             ]);
 
-            // foreach ($form->sections as $section) {
-            //     $publishedSection = PublishedFormSection::create([
-            //         'id' => $section->id,
-            //         'published_form_id' => $publishedForm->id,
-            //         'section_type_id' => $section->section_type_id,
-            //         'order' => $section->order,
-            //         'name' => $section->name,
-            //         'description' => $section->description,
-            //         'button_text' => $section->button_text,
-            //         'background_image' => $section->background_image,
-            //         'text_align' => $section->text_align,
-            //         'options' => $section->options,
-            //     ]);
-        
-            //     if ($section->formFields) {
-            //         foreach ($section->formFields as $field) {
-            //             PublishedFormField::create([
-            //                 'id' => $field->id,
-            //                 'label' => $field->label,
-            //                 'placeholder' => $field->placeholder,
-            //                 'type' => $field->type,
-            //                 'required' => $field->required,
-            //                 'order' => $field->order,
-            //                 'show' => $field->show,
-            //                 'options' => $field->options,
-            //                 'published_form_section_id' => $publishedSection->id // Reference to the newly created section
-            //             ]);
-            //         }
-            //     }
-            // }
-
         $sectionsData = [];
         $fieldsData = [];
 

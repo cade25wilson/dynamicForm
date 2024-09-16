@@ -1,6 +1,5 @@
 <template>
     <div class="mt-6">
-        {{formSection}}
         <div :class="{
             'grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3': formSection.form_fields[0].options.align === 'horizontal',
             'space-y-3 inline-block': formSection.form_fields[0].options.align !== 'horizontal'
@@ -23,7 +22,7 @@
 
 <script setup>
 import { usePage } from '@inertiajs/vue3';
-import { defineEmits } from 'vue';
+import { defineEmits, ref } from 'vue';
 
 const page = usePage();
 const props = defineProps({
@@ -34,10 +33,19 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['updateResponse']);
+const selectedValues = ref([]);
 
 function handleBlur(field, value) {
-    console.log('field ' + field.id + ' value ' + value);
-    updateResponse(field.id, value);    
+    if (props.formSection.section_type_id === 9) {
+        if (selectedValues.value.includes(value)) {
+            selectedValues.value = selectedValues.value.filter(item => item !== value);
+        } else {
+            selectedValues.value.push(value);
+        }
+        updateResponse(field.id, selectedValues.value);
+    } else {
+        updateResponse(field.id, value);
+    }
 }
 
 function updateResponse(fieldId, value) {
