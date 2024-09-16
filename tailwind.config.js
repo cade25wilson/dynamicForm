@@ -20,6 +20,22 @@ export default {
             boxShadow: {
                 'bottom-left-right': '4px 4px 8px rgba(0, 0, 0, 0.3)',
             },
+            colors: {
+                'bright-green': {
+                  200: '#A4DE02', // Customize this color
+                },
+                'contessa': {
+                  300: '#C5832E', // Customize this color
+                },
+                'pale-violet': '#D291BC',
+                'bright-green': {
+                    200: '#A4C639',
+                },
+                'vivid-yellow': '#FFDD00',
+                'contessa': {
+                    300: '#C5832E',
+                },
+            },
         },
     },
     

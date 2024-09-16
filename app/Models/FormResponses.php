@@ -10,7 +10,7 @@ class FormResponses extends Model
 {
     use HasUuids;
     // The attributes that are mass assignable.
-    protected $fillable = ['form_id', 'user_id'];
+    protected $fillable = ['form_id', 'is_complete'];
 
     // Define the relationship with the Form model
     public function form()

@@ -75,7 +75,7 @@
                         </div>
                     </div>
                 </div> -->
-                <textarea data-editable="1" @blur="handleBlur" class="overflow-auto text-sm md:text-base text-gray-700" v-model="page.props.current_section.description"><div contenteditable="true" translate="no" class="tiptap ProseMirror" tabindex="0"><p><br class="ProseMirror-trailingBreak"></p></div></textarea>
+                <textarea data-editable="1" @keyup.enter="handleInput" @blur="handleInput" class="overflow-auto text-sm md:text-base text-gray-700" v-model="page.props.current_section.description"><div contenteditable="true" translate="no" class="tiptap ProseMirror" tabindex="0"><p><br class="ProseMirror-trailingBreak"></p></div></textarea>
             </div>
         </div>
     </div>
@@ -93,5 +93,20 @@ const urlLink = ref('');
 
 function handleBlur() {
     emit('blur');
+}
+const handleInput = () => {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    fetch(`/section/single/${page.props.current_section.id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken // Pass the CSRF token in the headers
+        },
+            body: JSON.stringify({
+            _token: csrfToken, // Also include the token in the body if needed
+            input: 'description',
+            value: page.props.current_section.description
+        })
+    });
 }
 </script>

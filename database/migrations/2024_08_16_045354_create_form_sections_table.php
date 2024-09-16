@@ -14,12 +14,12 @@ return new class extends Migration
     {
         Schema::create('form_sections', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
-            $table->foreignUuid('form_id')->constrained('forms')                                                                                                                                                                                                                                                                                                    ;
+            $table->foreignUuid('form_id')->constrained('forms')->onDelete('cascade');
             $table->foreignId('section_type_id')->constrained('section_types');
             $table->integer('order')->default(1)->index();
             $table->string('name')->nullable(true);
             $table->text('description')->nullable(true);
-            $table->string('button_text')->default('Continue');
+            $table->string('button_text')->nullable(true)->default('Continue');
             $table->string('background_image')->nullable(true);
             $table->string('text_align')->default('left');
             $table->json('options')->nullable(true);

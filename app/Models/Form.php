@@ -10,7 +10,7 @@ class Form extends Model
 {
     use HasUuids;
     // The attributes that are mass assignable.
-    protected $fillable = ['name', 'description', 'user_id'];
+    protected $fillable = ['name', 'user_id'];
 
     // Define the relationship with the User model
     public function user()
@@ -30,8 +30,18 @@ class Form extends Model
         return $this->hasMany(FormResponses::class);
     }
 
+    public function sections()
+    {
+        return $this->hasMany(FormSection::class);
+    }
+
     public function design()
     {
         return $this->hasOne(FormDesign::class);
+    }
+
+    public function publishedForm()
+    {
+        return $this->hasOne(PublishedForm::class);
     }
 }

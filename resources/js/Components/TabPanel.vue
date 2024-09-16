@@ -19,7 +19,7 @@
                             Design
                         </h4>
                         <p class="text-sm text-gray-500 mb-8">
-                            Use light or dark theme or make Youform your own by adding your brand color and logo.
+                            Use light or dark theme or make your own by adding your brand color and logo.
                         </p>
 
                         <div>
@@ -179,11 +179,19 @@
 
                             <label
                                 class="flex items-center mt-2 justify-center border border-gray-200 rounded-md p-6 hover:bg-gray-50 cursor-pointer">
-                                <span class="text-sm text-gray-500">
-                                    Select image
-                                </span>
+                                <template v-if="!page.props.form.design.background_image">
+                                    <span class="text-sm text-gray-500">
+                                        Select image
+                                    </span>
 
-                                <input type="file" accept="image/*" class="text-xs hidden">
+                                    <input type="file" accept="image/png, image/jpeg" class="text-xs hidden" @change="updateDesignBackground">
+                                </template>
+                                <template v-else>
+                                    <div class="h-16 w-auto">
+                                        <img :src="page.props.form.design.background_image" alt="bg image" class="h-full max-h-full w-auto max-w-full object-contain">
+                                        <input type="file" accept="image/png, image/jpeg" class="text-xs hidden" @change="updateDesignBackground">
+                                    </div>
+                                </template>
                             </label>
 
 
@@ -277,7 +285,7 @@ function setActiveTab(tabName) {
 
 // Function to handle color picker close and save the design
 function handleColorPickerClose() {
-    router.put(`/design/${props.design.id}`, {
+    router.put(`/design/${page.props.form.design.id}`, {
         _token: page.props.csrf_token,
         background: props.design.background,
         questions: props.design.questions,
@@ -361,6 +369,16 @@ function handleClickOutside(event) {
   if (dropdown.value && !dropdown.value.contains(event.target)) {
     opened.value = false;
   }
+}
+
+function updateDesignBackground(event) {
+    const file = event.target.files[0];
+    if (file) {
+        page.props.current_section.background_image = file;
+        router.put(`/design/background/${page.props.form.id}`, {
+            background_image: file,
+        });
+    }
 }
 // Initialize color pickers on component mount
 onMounted(() => {

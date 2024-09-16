@@ -4,7 +4,7 @@
         <div class="mt-4">
             <label for="text-title-editor" class="block text-sm font-medium text-gray-700">Title</label>
             <div class="mt-1">
-                <input @focus-question-input.window="$el.focus()" @keyup.enter="handleBlur" @blur="handleBlur" v-model="page.props.current_section.name" type="text" name="text-title-editor" id="text-title-editor" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm" placeholder="Write your title here...">
+                <input @focus-question-input.window="$el.focus()" @keyup.enter="updateField('name', page.props.current_section.name)" @blur="updateField('name', page.props.current_section.name)" v-model="page.props.current_section.name" type="text" name="text-title-editor" id="text-title-editor" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm" placeholder="Write your title here...">
             </div>
         </div>
         <DescriptionEditor @blur="handleBlur" />
@@ -15,30 +15,31 @@
                     Embed 
                 </label>
                 <div class="flex items-center space-x-2">
-                    <button class="bg-gray-100 hover:bg-gray-200 p-1 border border-gray-200 rounded-md" >
+                    <button class="bg-gray-100 hover:bg-gray-200 p-1 border border-gray-200 rounded-md" @click="showEmbed = !showEmbed">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
                         </svg>
                     </button>
                 </div>
             </div>              
-            <div class="mt-1" style="display: none;">
-                <input type="text"  name="embed-url-editor" id="embed-url-editor" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm" placeholder="E.g https://loom.com/share/a8014d4f0e3143159ea1aec4c85bf6hu">
+            <div class="mt-1" v-if="showEmbed">
+                <input type="text" @blur="handleBlur" v-model="page.props.current_section.options.embed" name="embed-url-editor" id="embed-url-editor" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm" placeholder="E.g https://www.milk.com/">
             </div>
         </div>
     </div>
-    <TextAlign v-if="![3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16].includes(page.props.current_section.section_type_id)" />
+    <ThankYouSection v-if="page.props.current_section.section_type_id == 2" />
+    <TextAlign v-if="![2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16].includes(page.props.current_section.section_type_id)" />
     <ContactDesign v-if="page.props.current_section.section_type_id===3" />
     <FormFields v-if="hasOneField && ![8, 9, 10].includes(page.props.current_section.section_type_id)"/>
     <SingleSelect v-if="[8, 9, 10].includes(page.props.current_section.section_type_id)" />
     <SchedulerOptions v-if="page.props.current_section.section_type_id == 12" />
     <StarFields v-if="page.props.current_section.section_type_id == 13"/>
-    <div class="mt-6">
+    <div class="mt-6" v-if="![2].includes(page.props.current_section.section_type_id)">
         <label for="text-cta-text-editor" class="block text-sm font-medium text-gray-700">
             Button Text 
         </label>
         <div class="mt-1">
-            <input type="text" @blur="handleBlur" v-model="page.props.current_section.button_text" name="text-cta-text-editor" id="text-cta-text-editor" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm" placeholder="Next">
+            <input type="text" @blur="updateField('button_text', page.props.current_section.button_text)" @keyup.enter="updateField('button_text', page.props.current_section.button_text)" v-model="page.props.current_section.button_text" name="text-cta-text-editor" id="text-cta-text-editor" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm" placeholder="Next">
         </div>
     </div>
     <div class="mt-6 pt-6" v-if="![8, 9, 10, 11, 12, 13, 14, 15, 16].includes(page.props.current_section.section_type_id)">
@@ -54,7 +55,7 @@
             <div class="h-10 w-auto" v-else>
                 <img :src="page.props.current_section.background_image" alt="Cover Image" class="h-full max-h-full w-auto max-w-full object-contain">
             </div>
-            <input type="file" accept="image/png, image/jpeg" class="text-xs hidden" @change="updateBackground">
+            <input type="file" accept="image/png, image/jpeg" class="text-xs hidden" @change="updateSectionBackground">
         </label>
     </div>
 </div>
@@ -71,10 +72,28 @@ import SchedulerOptions from './SchedulerOptions.vue';
 import SingleSelect from './SingleSelect.vue';
 import StarFields from './StarFields.vue';
 import TextAlign from './TextAlign.vue';
+import ThankYouSection from './ThankYouSection.vue';
 
 const page = usePage(); 
 const editor = ref(false);
 const urlLink = ref(null);
+const showEmbed = ref(false);
+
+function updateField(input, value){
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    fetch(`/section/single/${page.props.current_section.id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken // Pass the CSRF token in the headers
+        },
+            body: JSON.stringify({
+            _token: csrfToken, // Also include the token in the body if needed
+            input: input,
+            value: value
+        })
+    });
+}
 
 function handleBlur(){
     let embed;
@@ -88,19 +107,19 @@ function handleBlur(){
 
     router.put(`/section/${page.props.current_section.id}`, {
         _token: page.props.csrf_token,
-        button_text: page.props.current_section.button_text,
-        name: page.props.current_section.name,
-        description: page.props.current_section.description,
-        text_align: page.props.current_section.text_align,
+        // button_text: page.props.current_section.button_text,
+        // name: page.props.current_section.name,
+        // description: page.props.current_section.description,
+        // text_align: page.props.current_section.text_align,
         embed: embed
     });
 }
 
-function updateBackground(event) {
+function updateSectionBackground(event) {
     const file = event.target.files[0];
     if (file) {
         page.props.current_section.background_image = file;
-        router.put(`/background/${page.props.current_section.id}`, {
+        router.put(`/section/background/${page.props.current_section.id}`, {
             background_image: file,
         });
     }

@@ -44,22 +44,18 @@ import { usePage, router } from '@inertiajs/vue3';
 const page = usePage(); 
 
 function handleBlur(){
-    let embed;
-
-    // Check if 'options' exists and is not null
-    if (page.props.current_section.options) {
-        embed = page.props.current_section.options.embed || null;
-    } else {
-        embed = null;
-    }
-
-    router.put(`/section/${page.props.current_section.id}`, {
-        _token: page.props.csrf_token,
-        button_text: page.props.current_section.button_text,
-        name: page.props.current_section.name,
-        description: page.props.current_section.description,
-        text_align: page.props.current_section.text_align,
-        embed: embed
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    fetch(`/section/single/${page.props.current_section.id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken // Pass the CSRF token in the headers
+        },
+            body: JSON.stringify({
+            _token: csrfToken, // Also include the token in the body if needed
+            input: 'text_align',
+            value: page.props.current_section.text_align
+        })
     });
 }
 </script>
