@@ -64,11 +64,11 @@ class FormResponseController extends Controller
     public function show(string $id)
     {
         // Retrieve the form along with related published form, sections, and fields in one query
-        $form = Form::with(['publishedForm.sections.fields'])->findOrFail($id);
+        $form = Form::with(['publishedForm.sections.publishedFormFields'])->findOrFail($id);
 
         // Flatten fields across all sections into a collection and pluck 'label' and 'id'
         $publishedFormFields = $form->publishedForm->sections->flatMap(function ($section) {
-            return $section->fields;
+            return $section->publishedFormFields;
         })->pluck('label', 'id');
 
         // Retrieve all form responses
@@ -99,7 +99,33 @@ class FormResponseController extends Controller
             'form' => $formData
         ]);
     }
-
+    
+    public function showResponse(string $id, string $responseId)
+    {
+        // Retrieve the form along with related published form, sections, and fields in one query
+        $form = Form::with(['publishedForm.sections.publishedFormFields'])->findOrFail($id);
+    
+        // Flatten fields across all sections into a collection and pluck 'label' and 'id'
+        $publishedFormFields = $form->publishedForm->sections->flatMap(function ($section) {
+            return $section->publishedFormFields;
+        })->pluck('label', 'id');
+    
+        // Retrieve the individual form response by ID
+        $response = FormResponses::where('form_id', $id)->findOrFail($responseId);
+    
+        // Retrieve the field responses for the specific form response
+        $fieldResponses = FormFieldResponses::where('response_id', $response->id)
+            ->pluck('value', 'form_field_id');
+    
+        // Prepare associative array where headers are keys and row values are values
+        $responseData = [];
+        foreach ($publishedFormFields as $fieldId => $label) {
+            $responseData[$label] = $fieldResponses[$fieldId] ?? null;
+        }
+    
+        // Return the response data as JSON
+        return response()->json($responseData);
+    }
 
     /**
      * Show the form for editing the specified resource.

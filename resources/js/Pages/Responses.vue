@@ -6,7 +6,7 @@
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 md:flex md:items-center justify-between">
                     <div class="flex items-center col-span-1">
                         <h1 class="truncate pr-2 leading-tight tracking-tight text-gray-700">
-                            Submissions of My Form
+                            Submissions of {{page.props.form.name}}
                         </h1>
                         <svg class="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle  cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -52,7 +52,7 @@
                 <div class="bg-white px-6 rounded-md mx-1 mb-3 border-b border-gray-200">
                     <div class="">
                         <div class="">
-                            <nav x-data="" class="-mb-px flex space-x-8" aria-label="Tabs" data-has-alpine-state="true">                            
+                            <nav x-data="" class="-mb-px flex space-x-8" aria-label="Tabs">                            
                                 <a href="#" x-tooltip.raw="Completed submissions only." @click.prevent="resetSelection" class=" border-indigo-500 text-indigo-600  flex whitespace-nowrap border-b-2 py-4 px-1 text-sm">
                                     Completed
                                     <span class=" bg-indigo-100 text-indigo-600  ml-3 rounded-full py-0.5 px-2.5 text-xs inline-block">2</span>
@@ -72,7 +72,7 @@
                                 <thead class="bg-gray-50">
                                     <tr class="h-1">
                                         <th scope="col" class="border border-gray-200 text-left text-sm text-gray-700 sticky left-0 z-10 bg-gray-50 w-8 p-0" style="height: inherit">
-                                            <div class=" w-full h-full" :class="{ 'border-r border-gray-300': scrolledRight }" style="box-shadow: rgb(227, 227, 227) 1px 0px 0px;">
+                                            <div class=" w-full h-full" style="box-shadow: rgb(227, 227, 227) 1px 0px 0px;">
                                                 <div class="px-2 py-5 flex items-center truncate invisible">
                                                     Action
                                                 </div>
@@ -95,12 +95,12 @@
                                 <tbody class="bg-white">
                                     <tr 
                                         class="cursor-pointer hover:bg-gray-100 group h-1" 
-                                        @click="$dispatch('open-submission-modal', { submission_id: row.response_id })" 
                                         v-for="(row, rowIndex) in tableData.rows" 
                                         :key="row.response_id"
+                                        @click="openModal(row.response_id)" 
                                     >
                                         <td class="text-sm text-gray-900 sticky left-0 z-10 bg-white group-hover:bg-gray-100 w-8 border border-gray-200 p-0" >
-                                            <div class="w-full h-full flex items-center justify-center" :class="{ 'border-r border-gray-300': scrolledRight }" style="box-shadow: rgb(227, 227, 227) 1px 0px 0px;">
+                                            <div class="w-full h-full flex items-center justify-center" style="box-shadow: rgb(227, 227, 227) 1px 0px 0px;">
                                                 <label @click.stop="" class="cursor-pointer py-5 px-2 block text-center">
                                                     <input type="checkbox" :value="row.response_id" class="h-4 w-4 mx-auto rounded border-gray-300 text-gray-600 focus:ring-gray-600 focus:ring-0 cursor-pointer">
                                                 </label>
@@ -112,9 +112,14 @@
                                                 v-if="index !== 'response_id'"
                                                 :key="index"
                                             >
-                                                <div class="w-full h-full flex items-center justify-center" :class="{ 'border-r border-gray-300': scrolledRight }" style="box-shadow: rgb(227, 227, 227) 1px 0px 0px;">
-                                                    <label @click.stop="" class="cursor-pointer py-5 px-2 block text-center">
-                                                        {{ index }}
+                                                <div class="w-full h-full flex items-center justify-center" style="box-shadow: rgb(227, 227, 227) 1px 0px 0px;">
+                                                    <p class="truncate" v-if="field && field.includes('/signature/')">
+                                                        <a :href="field" class="underline hover:bg-gray-100 block w-full h-full rounded-md" target="_blank">
+                                                            <img :src="field" class="h-10">
+                                                        </a>
+                                                    </p>
+                                                    <label v-if="field && !field.includes('/signature/')" class="cursor-pointer py-5 px-2 block text-center">
+                                                        {{ field.length > 100 ? field.slice(0, 100) + '...' : field }}
                                                     </label>
                                                 </div>
                                             </td>
@@ -134,15 +139,98 @@
             </div>
         </div>
     </div>
-</div>
+    <div v-if="showModal" class="z-100" aria-modal="true">
+        <div x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed z-20 inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+        <div class="fixed inset-0 z-30 overflow-y-auto font-light">
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <div x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-5 sm:w-full sm:max-w-4xl mx-4">
+                    <div class="bg-white px-4 pt-5 pb-4 sm:px-14 sm:py-8">
+                        <div class="absolute mt-3 top-4 right-6 flex items-center justify-center space-x-3">
+                            <div class="flex items-center justify-center">
+                                <a href="#" x-tooltip.raw="Refill Link (Pro feature)" @click.prevent="toggleDropdown()" x-ref="linkBtn" class="inline-block p-1 hover:bg-gray-100 rounded-full">  
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"></path>
+                                    </svg>                                                               
+                                </a>
+                            </div>
+                            <a href="#" @click.prevent="close()" class="inline-block p-1 hover:bg-gray-100 rounded-full">  
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"></path>
+                                </svg>                                      
+                            </a>
+                        </div>
+                        {{responseData}}
+
+                        <h4 class="text-lg font-normal text-center">
+                            Submission Detail
+                        </h4>
+                        <div class="my-10 max-w-lg mx-auto" wire:loading.remove="" wire:target="setSubmission">
+                            <div>
+                                <div class="text-sm mb-4 text-gray-500">
+                                    <span>
+                                        Sep 15, 2024 10:53 pm
+                                    </span>
+                                    •
+                                    <span>
+                                        <!-- 16 hours ago -->
+                                    </span>
+                                </div>
+                                <div class="py-4"
+                                    v-for="(row, rowIndex) in responseData"
+                                >
+                                    <strong class="font-normal flex items-center mb-1"> 
+                                        <span class="pl-2">
+                                            {{rowIndex}}
+                                        </span>
+                                    </strong> 
+                                    <div class="pl-6 text-gray-600">
+                                        <div>{{ row }}</div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
 </FormLayout>
     
 </template>
 
 <script setup>
     import { usePage } from '@inertiajs/vue3'
-    const page = usePage()
+    import { ref } from 'vue';
     import FormLayout from '@/Layouts/FormLayout.vue';
+
+    const page = usePage()
+    const showModal = ref(false);
+    const responseData = ref(null);
+    async function openModal(responseId) {
+        showModal.value = true;
+        try {
+            const response = await fetch(`/responses/${page.props.form.id}/${responseId}`, {
+                method: 'GET',
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            // Assuming the response is in JSON format
+            const data = await response.json();
+            responseData.value = data;
+            console.log(data);
+
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        }
+    }
+    function close(){
+        showModal.value = false;
+    }
 
     const props = defineProps({
         tableData: Object,

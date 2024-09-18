@@ -21,8 +21,9 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
-Route::get('forms/{id}', [PublishFormController::class, 'show']);
 Route::get('/responses/{id}', [FormResponseController::class, 'show']);
+Route::get('forms/{id}', [PublishFormController::class, 'show']);
+Route::get('responses/{id}/{responseId}', [FormResponseController::class, 'showResponse']);
 
 Route::middleware([
     'auth:sanctum',
