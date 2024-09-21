@@ -12,6 +12,8 @@ use App\Models\PublishedFormSection;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class FormResponseController extends Controller
@@ -102,29 +104,68 @@ class FormResponseController extends Controller
     
     public function showResponse(string $id, string $responseId)
     {
-        // Retrieve the form along with related published form, sections, and fields in one query
         $form = Form::with(['publishedForm.sections.publishedFormFields'])->findOrFail($id);
-    
-        // Flatten fields across all sections into a collection and pluck 'label' and 'id'
         $publishedFormFields = $form->publishedForm->sections->flatMap(function ($section) {
             return $section->publishedFormFields;
         })->pluck('label', 'id');
-    
-        // Retrieve the individual form response by ID
+
         $response = FormResponses::where('form_id', $id)->findOrFail($responseId);
-    
-        // Retrieve the field responses for the specific form response
         $fieldResponses = FormFieldResponses::where('response_id', $response->id)
             ->pluck('value', 'form_field_id');
     
-        // Prepare associative array where headers are keys and row values are values
         $responseData = [];
         foreach ($publishedFormFields as $fieldId => $label) {
-            $responseData[$label] = $fieldResponses[$fieldId] ?? null;
+            $responseData['data'][$label] = $fieldResponses[$fieldId] ?? null;
         }
-    
-        // Return the response data as JSON
+
+        $responseData['time'] = date('M j, Y g:i a', strtotime($response->updated_at));
         return response()->json($responseData);
+    }
+
+    public function download(string $id, Request $request)
+    {
+        $data = $request->validate([
+            'responses' => 'array|nullable' // Array of response IDs or null
+        ]);
+
+        $form = Form::with(['publishedForm.sections.publishedFormFields'])->findOrFail($id);
+
+        $publishedFormFields = $form->publishedForm->sections->flatMap(function ($section) {
+            return $section->publishedFormFields;
+        })->pluck('label', 'id');
+
+        if (empty($data['responses'])) {
+            $formResponses = FormResponses::where('form_id', $id)->get();
+        } else {
+            $formResponses = FormResponses::where('form_id', $id)
+                ->whereIn('id', $data['responses'])
+                ->get();
+        }
+
+        $csvData = [];
+        $csvData[] = array_merge(['Response ID'], $publishedFormFields->values()->all()); // Headers
+
+        foreach ($formResponses as $response) {
+            $row = [$response->id];
+            $fieldResponses = FormFieldResponses::where('response_id', $response->id)
+                ->pluck('value', 'form_field_id');
+
+            foreach ($publishedFormFields as $fieldId => $label) {
+                $row[] = $fieldResponses[$fieldId] ?? null;
+            }
+
+            $csvData[] = $row;
+        }
+
+        $fileName = 'form_responses_' . $form->id . '.csv';
+        $handle = fopen(storage_path("app/{$fileName}"), 'w');
+
+        foreach ($csvData as $line) {
+            fputcsv($handle, $line);
+        }
+        fclose($handle);
+
+        return Response::download(storage_path("app/{$fileName}"), $fileName)->deleteFileAfterSend(true);
     }
 
     /**

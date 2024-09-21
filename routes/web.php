@@ -64,4 +64,5 @@ Route::middleware([
     Route::post('formfieldresponse/files/{id}', [FormFieldResponseController::class, 'fileUpload']);
     Route::delete('formfieldresponse/{id}/{fieldId}', [FormFieldResponseController::class, 'destroy']);
     Route::put('formresponse/complete', [FormResponseController::class, 'complete']);
+    Route::post('responses/download/{id}', [FormResponseController::class, 'download']);
 });

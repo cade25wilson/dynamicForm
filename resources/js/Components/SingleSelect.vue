@@ -67,8 +67,8 @@ function updateHorizontal() {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json', // Optional: To specify that you expect a JSON response
-            'X-CSRF-TOKEN': getCsrfToken() // Include the CSRF token in the headers
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': getCsrfToken()
         },
         body: JSON.stringify({
             align: alignParam
