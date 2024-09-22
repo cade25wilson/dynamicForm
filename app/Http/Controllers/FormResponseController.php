@@ -5,20 +5,14 @@ namespace App\Http\Controllers;
 use App\Exports\FormResponsesExport;
 use App\Models\Form;
 use App\Models\FormFieldResponses;
-use App\Models\FormFields;
 use App\Models\FormResponses;
-use App\Models\PublishedForm;
-use App\Models\PublishedFormField;
-use App\Models\PublishedFormSection;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class FormResponseController extends Controller
 {
@@ -69,37 +63,41 @@ class FormResponseController extends Controller
      */
     public function show(string $id)
     {
-        // Retrieve the form along with related published form, sections, and fields in one query
-        $form = Form::with(['publishedForm.sections.publishedFormFields'])->findOrFail($id);
-
-        // Flatten fields across all sections into a collection and pluck 'label' and 'id'
+        // Eager load all necessary relationships
+        $form = Form::with([
+            'publishedForm.sections.publishedFormFields',
+            'responses.fieldResponses' // Eager load field responses
+        ])->findOrFail($id);
+    
+        // Flatten published form fields
         $publishedFormFields = $form->publishedForm->sections->flatMap(function ($section) {
             return $section->publishedFormFields;
         })->pluck('label', 'id');
-
-        // Retrieve all form responses
-        $formResponses = FormResponses::where('form_id', $id)->get();
-
-        // Prepare table headers and rows
+    
+        // Prepare table data
         $tableData = [
             'headers' => $publishedFormFields->values()->all(),
             'rows' => []
         ];
-
-        // Loop through each form response
-        foreach ($formResponses as $response) {
-            $row = ['response_id' => $response->id];
-            $fieldResponses = FormFieldResponses::where('response_id', $response->id)
-                ->pluck('value', 'form_field_id');
-
-            foreach ($publishedFormFields as $fieldId => $label) {
-                $row[] = $fieldResponses[$fieldId] ?? null;
-            }
-            $tableData['rows'][] = $row;
+    
+        // Check if there are responses
+        if ($form->responses) {
+            // Transform responses and their field responses
+            $tableData['rows'] = $form->responses->map(function ($response) use ($publishedFormFields) {
+                $row = ['response_id' => $response->id];
+                $fieldResponses = $response->fieldResponses->pluck('value', 'form_field_id');
+    
+                foreach ($publishedFormFields as $fieldId => $label) {
+                    $row[] = $fieldResponses[$fieldId] ?? null;
+                }
+    
+                return $row;
+            })->toArray();
         }
+    
+        // Get form data
         $formData = $form->only(['id', 'name']);
-
-        // Pass the data to the view
+    
         return Inertia::render('Responses', [
             'tableData' => $tableData,
             'form' => $formData
@@ -137,26 +135,31 @@ class FormResponseController extends Controller
             return $section->publishedFormFields;
         })->pluck('label', 'id');
     
-        if (empty($data['responses'])) {
-            $formResponses = FormResponses::where('form_id', $id)->get();
-        } else {
-            $formResponses = FormResponses::where('form_id', $id)
-                ->whereIn('id', $data['responses'])
-                ->get();
-        }
+        $formResponses = $this->getData($data['responses'], $id);
     
-        // Use the export class to generate the spreadsheet
         $export = new FormResponsesExport($formResponses, $publishedFormFields);
         $spreadsheet = $export->generate();
     
-        $fileName = 'form_responses_' . $form->id . '.xlsx';
+        $fileName = 'form_responses_' . $form->name . '.xlsx';
         $writer = new Xlsx($spreadsheet);
         $filePath = storage_path("app/{$fileName}");
         $writer->save($filePath);
     
         return response()->download($filePath)->deleteFileAfterSend(true);
     }
-    
+
+    private function getData(?array $response, string $id): Collection
+    {
+        if (empty($response)) {
+            $formResponses = FormResponses::where('form_id', $id)->get();
+        } else {
+            $formResponses = FormResponses::where('form_id', $id)
+                ->whereIn('id', $response)
+                ->get();
+        }
+        return $formResponses;   
+    }
+     
     /**
      * Show the form for editing the specified resource.
      */

@@ -7,10 +7,6 @@
                         <h1 class="truncate pr-2 leading-tight tracking-tight text-gray-700">
                             Submissions of {{page.props.form.name}}
                         </h1>
-                        <svg class="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle  cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
                     </div>
                     <div class="flex items-center space-x-3">
                         <button v-if="checkedResponses.length" @click="showDeleteModal = true" type="button" class="inline-flex mt-4 md:mt-0 items-center rounded-md border border-transparent bg-red-600 text-white px-4 py-2 text-xs  shadow-sm hover:bg-red-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
@@ -63,10 +59,10 @@
                                 <thead class="bg-gray-50">
                                     <tr class="h-1">
                                         <th scope="col" class="border border-gray-200 text-left text-sm text-gray-700 sticky left-0 z-10 bg-gray-50 w-8 p-0" style="height: inherit">
-                                            <div class=" w-full h-full" style="box-shadow: rgb(227, 227, 227) 1px 0px 0px;">
-                                                <div class="px-2 py-5 flex items-center truncate invisible">
-                                                    Action
-                                                </div>
+                                            <div class="w-full h-full flex items-center justify-center" style="box-shadow: rgb(227, 227, 227) 1px 0px 0px;">
+                                                <label @click.stop="" class="cursor-pointer py-5 px-2 block text-center">
+                                                    <input @change="selectAll()" type="checkbox" class="h-4 w-4 mx-auto rounded border-gray-300 text-gray-600 focus:ring-gray-600 focus:ring-0 cursor-pointer">
+                                                </label>
                                             </div>
                                         </th>
                                         <th scope="col" class="border border-gray-200 py-3 font-normal pl-4 pr-4 text-left text-sm text-gray-700 sm:pl-6 " v-for="header in tableData.headers"> 
@@ -235,6 +231,8 @@
     const showDeleteModal = ref(false);
     const responseData = ref(null);
     const checkedResponses = ref([]);
+    const allSelected = ref(false);
+
     async function openModal(responseId) {
         showModal.value = true;
         try {
@@ -280,7 +278,7 @@
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'responses-file.xlsx';
+        a.download = `form_responses_${page.props.form.name}.xlsx`;
         document.body.appendChild(a);
         a.click();
         a.remove();
@@ -288,6 +286,18 @@
 
     function getCsrfToken() {
         return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    }
+
+    function selectAll() {
+        allSelected.value = !allSelected.value; // Toggle the select-all state
+
+        if (allSelected.value) {
+            // Select all responses
+            checkedResponses.value = props.tableData.rows.map(row => row.response_id);
+        } else {
+            // Unselect all responses
+            checkedResponses.value = [];
+        }
     }
 
     async function deleteSubmissions() {

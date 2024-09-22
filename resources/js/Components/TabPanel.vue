@@ -225,6 +225,17 @@
     <div v-if="activeTab === 'Logic'" class="p-4">
         <!-- Content for Logic tab goes here -->
     </div>
+    <div v-if="activeTab === 'Connections'">
+        <div class="shadow-md bg-white h-screen overflow-y-auto py-4 px-6 pb-32">
+            <div>
+                <div>
+                    <div>
+                        
+                    </div>
+                </div>
+            </div>  
+        </div>
+    </div>
 </template>
 
 <script setup>
@@ -251,6 +262,7 @@ const tabs = ref([
     { name: 'Content' },
     { name: 'Design' },
     { name: 'Logic' },
+    { name: 'Connections'},
 ]);
 
 // Manage the active tab state
