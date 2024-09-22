@@ -262,7 +262,7 @@ const tabs = ref([
     { name: 'Content' },
     { name: 'Design' },
     { name: 'Logic' },
-    { name: 'Connections'},
+    // { name: 'Connections'},
 ]);
 
 // Manage the active tab state

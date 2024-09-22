@@ -19,7 +19,7 @@
                         </div>
                     </div>
                     <div class="grid grid-cols-6 col-span-4 px-1 py-1 space-x-1 text-sm font-medium tracking-normal text-center rounded-lg  d-none">
-                        <Link :href="`/form/${page.props.form.id}`"  class="inline-block text-center text-xs border border-transparent  bg-white text-blue-600 font-semibold  rounded-lg px-2 py-1 cursor-pointer hover:bg-slate-200 transition-all">  
+                        <!-- <Link :href="`/form/${page.props.form.id}`"  class="inline-block text-center text-xs border border-transparent  bg-white text-blue-600 font-semibold  rounded-lg px-2 py-1 cursor-pointer hover:bg-slate-200 transition-all">  
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mx-auto text-blue-600">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75a4.5 4.5 0 0 1-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 1 1-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 0 1 6.336-4.486l-3.276 3.276a3.004 3.004 0 0 0 2.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852Z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M4.867 19.125h.008v.008h-.008v-.008Z"></path>
@@ -44,7 +44,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"></path>
                             </svg>              
                             <span class="pt-1">Share</span>
-                        </a>
+                        </a> -->
                         <Link :href="`/responses/${page.props.form.id}`" class="inline-block text-center text-xs border border-transparent  rounded-lg px-2 py-1 cursor-pointer hover:bg-slate-200 transition-all">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mx-auto text-green-600">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5m.75-9 3-3 2.148 2.148A12.061 12.061 0 0 1 16.5 7.605"></path>
@@ -224,10 +224,10 @@ const publish = () => {
     })
     .then(data => {
         console.log('Success:', data);
-        // if(!hasPublished){
+        if(!hasPublished){
             showPublished.value = true;
-            // generateDownloadLink();
-        // }
+            generateDownloadLink();
+        }
     })
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
@@ -235,14 +235,13 @@ const publish = () => {
 };
 
 function copyPageUrl(){
-    navigator.clipboard.writeText(`http://localhost:8000/${page.props.form.id}`)
-        .then(() => {
-            console.log('Text copied to clipboard');
-        })
-        .catch(err => {
-            console.error('Failed to copy text: ', err);
-        });
-
+    navigator.clipboard.writeText(`http://localhost:8000/forms/${page.props.form.id}`)
+    .then(() => {
+        console.log('Text copied to clipboard');
+    })
+    .catch(err => {
+        console.error('Failed to copy text: ', err);
+    });
 }
 
 function downloadQrCode(){
