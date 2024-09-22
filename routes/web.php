@@ -65,4 +65,5 @@ Route::middleware([
     Route::delete('formfieldresponse/{id}/{fieldId}', [FormFieldResponseController::class, 'destroy']);
     Route::put('formresponse/complete', [FormResponseController::class, 'complete']);
     Route::post('responses/download/{id}', [FormResponseController::class, 'download']);
+    Route::delete('responses/destroy', [FormResponseController::class, 'destroy']);
 });

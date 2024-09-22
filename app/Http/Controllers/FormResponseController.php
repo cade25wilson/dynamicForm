@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\FormResponsesExport;
 use App\Models\Form;
 use App\Models\FormFieldResponses;
 use App\Models\FormFields;
@@ -15,6 +16,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class FormResponseController extends Controller
 {
@@ -125,15 +129,14 @@ class FormResponseController extends Controller
     public function download(string $id, Request $request)
     {
         $data = $request->validate([
-            'responses' => 'array|nullable' // Array of response IDs or null
+            'responses' => 'array|nullable'
         ]);
-
+        
         $form = Form::with(['publishedForm.sections.publishedFormFields'])->findOrFail($id);
-
         $publishedFormFields = $form->publishedForm->sections->flatMap(function ($section) {
             return $section->publishedFormFields;
         })->pluck('label', 'id');
-
+    
         if (empty($data['responses'])) {
             $formResponses = FormResponses::where('form_id', $id)->get();
         } else {
@@ -141,33 +144,19 @@ class FormResponseController extends Controller
                 ->whereIn('id', $data['responses'])
                 ->get();
         }
-
-        $csvData = [];
-        $csvData[] = array_merge(['Response ID'], $publishedFormFields->values()->all()); // Headers
-
-        foreach ($formResponses as $response) {
-            $row = [$response->id];
-            $fieldResponses = FormFieldResponses::where('response_id', $response->id)
-                ->pluck('value', 'form_field_id');
-
-            foreach ($publishedFormFields as $fieldId => $label) {
-                $row[] = $fieldResponses[$fieldId] ?? null;
-            }
-
-            $csvData[] = $row;
-        }
-
-        $fileName = 'form_responses_' . $form->id . '.csv';
-        $handle = fopen(storage_path("app/{$fileName}"), 'w');
-
-        foreach ($csvData as $line) {
-            fputcsv($handle, $line);
-        }
-        fclose($handle);
-
-        return Response::download(storage_path("app/{$fileName}"), $fileName)->deleteFileAfterSend(true);
+    
+        // Use the export class to generate the spreadsheet
+        $export = new FormResponsesExport($formResponses, $publishedFormFields);
+        $spreadsheet = $export->generate();
+    
+        $fileName = 'form_responses_' . $form->id . '.xlsx';
+        $writer = new Xlsx($spreadsheet);
+        $filePath = storage_path("app/{$fileName}");
+        $writer->save($filePath);
+    
+        return response()->download($filePath)->deleteFileAfterSend(true);
     }
-
+    
     /**
      * Show the form for editing the specified resource.
      */
@@ -187,8 +176,15 @@ class FormResponseController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        //
+        $data = $request->validate([
+            'responses' => 'array|required'
+        ]);
+        try{
+            FormResponses::destroy($data['responses']);
+        } catch(Exception $e){
+            Log::info($e);
+        }
     }
 }
