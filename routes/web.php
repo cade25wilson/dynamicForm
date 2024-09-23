@@ -10,8 +10,10 @@ use App\Http\Controllers\PublishFormController;
 use App\Http\Controllers\SectionController;
 use App\Models\SectionCategory;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Laravel\Cashier\Http\Controllers\WebhookController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -24,7 +26,7 @@ Route::get('/', function () {
 Route::get('/responses/{id}', [FormResponseController::class, 'show']);
 Route::get('forms/{id}', [PublishFormController::class, 'show']);
 Route::get('responses/{id}/{responseId}', [FormResponseController::class, 'showResponse']);
-
+Route::post('stripe/webhook', [WebhookController::class, 'handleWebhook']);
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -66,4 +68,13 @@ Route::middleware([
     Route::put('formresponse/complete', [FormResponseController::class, 'complete']);
     Route::post('responses/download/{id}', [FormResponseController::class, 'download']);
     Route::delete('responses/destroy', [FormResponseController::class, 'destroy']);
+
+    Route::get('/subscription-checkout', function (Request $request) {
+        return $request->user()
+            ->newSubscription('prod_QtqNreZkn0r9bV', 'price_1Q22gkKy0dYEsuj8SUXTW1EL')
+            ->checkout([
+                'success_url' => route('dashboard'),
+                'cancel_url' => route('dashboard'),
+            ]);
+    });
 });
