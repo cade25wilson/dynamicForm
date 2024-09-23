@@ -245,13 +245,11 @@ import "@melloware/coloris/dist/coloris.css";
 import Coloris from "@melloware/coloris";
 import { usePage, router } from '@inertiajs/vue3';
 
-const page = usePage();  // Get page context, especially for the CSRF token
+const page = usePage();
 const dropdown = ref(null);
 
-// Initialize Coloris for color pickers
 Coloris.init();
 
-// Define props (design data)
 const props = defineProps({
     design: Object,
     current_section: Object,
