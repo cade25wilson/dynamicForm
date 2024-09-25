@@ -103,9 +103,9 @@ function handleDelete() {
                                     <div class="flex items-center">
                                         <Link :href="`/responses/${form.id}`" class="cursor-pointer">
                                             <span class="text-gray-400 cursor-default inline-block mx-2 text-xs py-1 px-2 cursor-pointer">
-                                                {{ form.response_count === 0 ? 'No Responses' : 
-                                                form.response_count === 1 ? '1 Response' : 
-                                                `${form.response_count} Responses` }}
+                                                {{ form.responses_count === 0 ? 'No Responses' : 
+                                                form.responses_count === 1 ? '1 Response' : 
+                                                `${form.responses_count} Responses` }}
                                             </span>
                                         </Link>
                                     </div>

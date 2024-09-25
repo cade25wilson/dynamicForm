@@ -141,14 +141,14 @@
             </div>
             <div class="max-w-md mx-auto">
                 <div class="flex items-center mt-2 justify-center" data-has-alpine-state="true">
-                    <input type="text" readonly="" :value="`http://localhost:8000/forms/${page.props.form.id}`" class="block w-80 rounded-md rounded-r-none border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6">
+                    <input type="text" readonly="" :value="`https://buildmyform.com/forms/${page.props.form.id}`" class="block w-80 rounded-md rounded-r-none border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6">
                     <button @click="copyPageUrl()" class="flex items-center rounded-md rounded-l-none border border-transparent bg-coral px-4 py-1.5 text-sm font-medium text-black shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">                                  
                         Copy
                     </button>
                 </div>
             </div>
             <div class="mt-4 flex items-center justify-center space-x-3">
-                <Link :href="`http://localhost:8000/forms/${page.props.form.id}`" target="_blank" class="inline-block p-1" x-tooltip.raw="Open form in new tab">
+                <Link :href="`https://buildmyform.com/forms/${page.props.form.id}`" target="_blank" class="inline-block p-1" x-tooltip.raw="Open form in new tab">
                     <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 30 30" class="w-7 h-7">
                         <path d="M 25.980469 2.9902344 A 1.0001 1.0001 0 0 0 25.869141 3 L 20 3 A 1.0001 1.0001 0 1 0 20 5 L 23.585938 5 L 13.292969 15.292969 A 1.0001 1.0001 0 1 0 14.707031 16.707031 L 25 6.4140625 L 25 10 A 1.0001 1.0001 0 1 0 27 10 L 27 4.1269531 A 1.0001 1.0001 0 0 0 25.980469 2.9902344 z M 6 7 C 4.9069372 7 4 7.9069372 4 9 L 4 24 C 4 25.093063 4.9069372 26 6 26 L 21 26 C 22.093063 26 23 25.093063 23 24 L 23 14 L 23 11.421875 L 21 13.421875 L 21 16 L 21 24 L 6 24 L 6 9 L 14 9 L 16 9 L 16.578125 9 L 18.578125 7 L 16 7 L 14 7 L 6 7 z"></path>
                     </svg>
@@ -210,7 +210,7 @@ defineProps({
 const page = usePage();
 const showPublished = ref(false);
 const showQrCode = ref(false);
-const qrCodeValue = ref(`http://localhost:8000/forms/${page.props.form.id}`) // Dynamic QR code value
+const qrCodeValue = ref(`https://buildmyform.com/forms/${page.props.form.id}`);
 
 const publish = () => {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -235,7 +235,7 @@ const publish = () => {
 };
 
 function copyPageUrl(){
-    navigator.clipboard.writeText(`http://localhost:8000/forms/${page.props.form.id}`)
+    navigator.clipboard.writeText(`https://buildmyform.com/forms/${page.props.form.id}`);
     .then(() => {
         console.log('Text copied to clipboard');
     })

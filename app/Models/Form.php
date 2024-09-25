@@ -18,12 +18,6 @@ class Form extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Define the relationship with the FormField model
-    // public function fields()
-    // {
-    //     return $this->hasMany(FormFields::class);
-    // }
-
     // Define the relationship with the FormResponse model
     public function responses()
     {

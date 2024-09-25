@@ -6,9 +6,11 @@ use App\Exports\FormResponsesExport;
 use App\Models\Form;
 use App\Models\FormFieldResponses;
 use App\Models\FormResponses;
+use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -97,10 +99,12 @@ class FormResponseController extends Controller
     
         // Get form data
         $formData = $form->only(['id', 'name']);
-    
+        $isPro = User::where('id', Auth::id())->firstOrFail()->isPro();
+        
         return Inertia::render('Responses', [
             'tableData' => $tableData,
-            'form' => $formData
+            'form' => $formData,
+            'isPro' => $isPro
         ]);
     }
     

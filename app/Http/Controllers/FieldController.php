@@ -360,7 +360,6 @@ class FieldController extends Controller
                 'number_stars' => 'numeric|min:3|max:10',
             ]);
             
-
             $formField = FormFields::where('id', $id)->firstOrFail();
             $options = json_decode($formField->options, true);
             $options['number_stars'] = $data['number_stars'];

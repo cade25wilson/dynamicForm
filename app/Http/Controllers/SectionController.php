@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Form;
 use App\Models\FormFields;
 use App\Models\FormSection;
 use App\Models\SectionType;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\JsonEncodingException;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -55,8 +54,8 @@ class SectionController extends Controller
         if ($data['SectionId'] == 2) {
             $json = array_merge($json, [
                 'end' => 'button',
-                'button_link' => 'http://localhost:8000/',
-                'redirect_url' => 'http://localhost:8000/',
+                'button_link' => 'https://buildmyform.com/',
+                'redirect_url' => 'https://buildmyform.com/',
                 'redirect_message' => 'You will be redirected momentarily.',
                 'redirect_delay' => 3
             ]);
@@ -67,7 +66,7 @@ class SectionController extends Controller
             'form_id' => $data['FormId'],
             'section_type_id' => $data['SectionId'],
             'order' => $order,
-            'options' => json_encode(['color' => $color, 'svg' => $svg, 'end' => 'button', 'button_link' => 'http://localhost:8000/', 'redirect_url' => 'http://localhost:8000/', 'redirect_message' => 'You will be redirected momentarily.', 'redirect_delay' => 3]),
+            'options' => json_encode(['color' => $color, 'svg' => $svg, 'end' => 'button', 'button_link' => 'https://buildmyform.com/', 'redirect_url' => 'https://buildmyform.com/', 'redirect_message' => 'You will be redirected momentarily.', 'redirect_delay' => 3]),
             'name' => $type->default_name,
             'text_align' => $textAlign
         ]);
@@ -391,6 +390,7 @@ class SectionController extends Controller
     {
         try {
             $formSection = FormSection::where('id', $id)->firstOrFail();
+            $isPro = User::where('id', Auth::id())->firstOrFail()->isPro();
             $formId = $formSection->form_id;
             $formSection->delete();
     
@@ -406,7 +406,8 @@ class SectionController extends Controller
             return redirect('form/' . $formSection->form_id);
         } catch (Exception $e) {
             return Inertia::render('Form', [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'isPro' => $isPro
             ]);
         }
         return redirect('form/' . $formSection ->form_id);

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Form;
-use App\Models\FormResponses;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -15,13 +15,15 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $forms = Form::where('user_id', Auth::id())->get();
-        foreach($forms as $form){
-            $form['response_count'] = FormResponses::where('form_id', $form->id)->count();
-        }
+        $isPro = User::where('id', Auth::id())->firstOrFail()->isPro();
+        $forms = Form::where('user_id', Auth::id())
+        ->withCount('responses')
+        ->get();
+    
         return Inertia::render('Dashboard', [
             'forms' => $forms,
-        ]);    
+            'isPro' => $isPro
+        ]);
     }
 
     /**

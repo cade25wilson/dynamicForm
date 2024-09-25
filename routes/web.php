@@ -8,12 +8,23 @@ use App\Http\Controllers\FormFieldResponseController;
 use App\Http\Controllers\FormResponseController;
 use App\Http\Controllers\PublishFormController;
 use App\Http\Controllers\SectionController;
-use App\Models\SectionCategory;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Cashier\Http\Controllers\WebhookController;
+use Illuminate\Support\Facades\Mail;
+
+Route::get('/email', function () {
+    $i=1;
+    while ($i <= 10){
+        Mail::raw('This is a test email.', function ($message) {
+            $message->to('cade25wilson@gmail.com')
+                    ->subject('Test Email');
+        });
+    }
+    $i++;
+});
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -71,7 +82,7 @@ Route::middleware([
 
     Route::get('/subscription-checkout', function (Request $request) {
         return $request->user()
-            ->newSubscription('prod_QtqNreZkn0r9bV', 'price_1Q22gkKy0dYEsuj8SUXTW1EL')
+            ->newSubscription('prod_QtoXI3snwvM3H9', 'price_1Q20uCKy0dYEsuj84gazH5RT')
             ->checkout([
                 'success_url' => route('dashboard'),
                 'cancel_url' => route('dashboard'),

@@ -7,6 +7,7 @@ use App\Models\FormDesign;
 use App\Models\FormSection;
 use App\Models\PublishedForm;
 use App\Models\SectionCategory;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -78,8 +79,8 @@ class FormController extends Controller
                     'embed' => null,
                     'color' => 'pink',
                     'end' => 'button',
-                    'button_link' => 'http://localhost:8000/',
-                    'redirect_url' => 'http://localhost:8000/',
+                    'button_link' => 'https://buildmyform.com/',
+                    'redirect_url' => 'https://buildmyform.com/',
                     'redirect_message' => 'You will be redirected momentarily.',
                     'redirect_delay' => 3
                 ]),
@@ -97,6 +98,7 @@ class FormController extends Controller
 
     public function show(string $uuid)
     {
+        $isPro = User::where('id', Auth::id())->firstOrFail()->isPro();
         $section = request()->query('section');
         $form = Form::where('id', $uuid)
                 ->with('design') 
@@ -145,13 +147,15 @@ class FormController extends Controller
                 'section_types' => $category->sectionTypes,
             ];
         });
+        $isPro = User::where('id', Auth::id())->firstOrFail()->isPro();
 
         return Inertia::render('Form', [
             'form' => $form,
             'form_sections' => $formSections,
             'groupedSectionTypes' => $groupedSectionTypes,
             'current_section' => $currentSection,
-            'has_published_form' => $hasPublishedForm
+            'has_published_form' => $hasPublishedForm,
+            'isPro' => $isPro
         ]);
     }
 
