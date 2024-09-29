@@ -105,7 +105,9 @@ class FormController extends Controller
         if ($currentSection) {
             $currentSection->options = json_decode($currentSection->options, true);
             foreach ($currentSection->formFields as $formField) {
-                $formField->options = json_decode($formField->options, true);
+                if($formField->options){
+                    $formField->options = json_decode($formField->options, true);
+                }
             }
         }
         // Your original query
