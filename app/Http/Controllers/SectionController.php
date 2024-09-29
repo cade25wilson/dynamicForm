@@ -16,63 +16,51 @@ use Inertia\Inertia;
 class SectionController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'SectionId' => 'required|exists:section_types,id',
-            'FormId' => 'required|exists:forms,id',
-        ]);
-
-        $order = 0;
-        if (!in_array($data['SectionId'], [1, 2])) {
-            $order = FormSection::where('form_id', $data['FormId'])->orderBy('order', 'desc')->first();
-            $order = $order->order + 1;
-        }        
-        
-        $type = SectionType::where('id', $data['SectionId'])->first();
-        $color = $this->getColor($data['SectionId']);
-        $svg = $this->getSvg($data['SectionId']);
-        $json = ['color' => $color, 'svg' => $svg];
-        if ($data['SectionId'] == 2) {
-            $json = array_merge($json, [
-                'end' => 'button',
-                'button_link' => 'https://buildmyform.com/',
-                'redirect_url' => 'https://buildmyform.com/',
-                'redirect_message' => 'You will be redirected momentarily.',
-                'redirect_delay' => 3
+        try{
+            $data = $request->validate([
+                'SectionId' => 'required|exists:section_types,id',
+                'FormId' => 'required|exists:forms,id',
             ]);
+
+            $order = 0;
+            if (!in_array($data['SectionId'], [1, 2])) {
+                $order = FormSection::where('form_id', $data['FormId'])->orderBy('order', 'desc')->first();
+                $order = $order->order + 1;
+            }        
+            
+            $type = SectionType::where('id', $data['SectionId'])->first();
+            $color = $this->getColor($data['SectionId']);
+            $svg = $this->getSvg($data['SectionId']);
+            $json = ['color' => $color, 'svg' => $svg];
+            if ($data['SectionId'] == 2) {
+                $json = array_merge($json, [
+                    'end' => 'button',
+                    'button_link' => 'https://buildmyform.com/',
+                    'redirect_url' => 'https://buildmyform.com/',
+                    'redirect_message' => 'You will be redirected momentarily.',
+                    'redirect_delay' => 3
+                ]);
+            }
+
+            $textAlign = $this->getTextAlign($data['SectionId']);
+            $section = FormSection::create([
+                'form_id' => $data['FormId'],
+                'section_type_id' => $data['SectionId'],
+                'order' => $order,
+                'options' => json_encode(['color' => $color, 'svg' => $svg, 'end' => 'button', 'button_link' => 'https://buildmyform.com/', 'redirect_url' => 'https://buildmyform.com/', 'redirect_message' => 'You will be redirected momentarily.', 'redirect_delay' => 3]),
+                'name' => $type->default_name,
+                'text_align' => $textAlign
+            ]);
+
+            $this->generateFormFields($section->id, $type);
+            return redirect('/form/' . $data['FormId'] . '?section=' . $section->id);
+        } catch(Exception $e){
+            Log::error($e);
         }
-
-        $textAlign = $this->getTextAlign($data['SectionId']);
-        $section = FormSection::create([
-            'form_id' => $data['FormId'],
-            'section_type_id' => $data['SectionId'],
-            'order' => $order,
-            'options' => json_encode(['color' => $color, 'svg' => $svg, 'end' => 'button', 'button_link' => 'https://buildmyform.com/', 'redirect_url' => 'https://buildmyform.com/', 'redirect_message' => 'You will be redirected momentarily.', 'redirect_delay' => 3]),
-            'name' => $type->default_name,
-            'text_align' => $textAlign
-        ]);
-
-        $this->generateFormFields($section->id, $type);
-        return redirect('/form/' . $data['FormId'] . '?section=' . $section->id);
     }
 
     private function getColor($id){
@@ -239,21 +227,6 @@ class SectionController extends Controller
         }    
         return $textAlign;
     }
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -275,30 +248,34 @@ class SectionController extends Controller
 
             return;
         } catch(Exception $e){
-            Log::info($e);
+            Log::error($e);;
         }
     }
 
     public function backgroundImage(string $id, Request $request)
     {
-        $request->validate([
-            'background_image' => 'nullable|file'
-        ]);
-        
-        $background_image = null;
-        if($request->file('background_image')){
-            $file = $request->file('background_image');
-            $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            $extension = $file->getClientOriginalExtension();
-            $filename = "{$originalName}-{$id}.{$extension}";
+        try{
+            $request->validate([
+                'background_image' => 'nullable|file'
+            ]);
+            
+            $background_image = null;
+            if($request->file('background_image')){
+                $file = $request->file('background_image');
+                $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $extension = $file->getClientOriginalExtension();
+                $filename = "{$originalName}-{$id}.{$extension}";
 
-            $file->move(public_path('cover_images'), $filename);
-            $background_image = "/cover_images/{$filename}";
+                $file->move(public_path('cover_images'), $filename);
+                $background_image = "/cover_images/{$filename}";
+            }
+
+            FormSection::where('id', $id)->firstOrFail()->update([
+                'background_image' => $background_image
+            ]);
+        } catch (Exception $e){
+            Log::error($e);
         }
-
-        FormSection::where('id', $id)->firstOrFail()->update([
-            'background_image' => $background_image
-        ]);        
     }
 
     public function singleField(Request $request, string $id)
@@ -317,29 +294,31 @@ class SectionController extends Controller
 
             return;
         }catch(Exception $e){
-            Log::info($e);
+            Log::error($e);;
         }
     }
 
     public function updateEnding(Request $request, string $id)
     {
-        $data = $request->validate([
-            'jsonKey' => 'required|string',
-            'value' => 'required'
-        ]);
+        try{
+            $data = $request->validate([
+                'jsonKey' => 'required|string',
+                'value' => 'required'
+            ]);
 
-        $formSection = FormSection::findOrFail($id);
+            $formSection = FormSection::findOrFail($id);
 
-        $options = json_decode($formSection->options, true);
+            $options = json_decode($formSection->options, true);
 
-        $options[$data['jsonKey']] = $data['value'];
+            $options[$data['jsonKey']] = $data['value'];
 
-        $formSection->update([
-            'options' => json_encode($options)
-        ]);
-        
-
-        return response()->json(['message' => 'Options updated successfully.']);
+            $formSection->update([
+                'options' => json_encode($options)
+            ]);
+            return response(204);
+        } catch(Exception $e){
+            Log::error($e);
+        }
     }
 
 

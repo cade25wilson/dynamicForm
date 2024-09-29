@@ -46,6 +46,7 @@
                         <li v-for="(sectionType, idx) in category.section_types" :key="idx">
                           <button
                             @click="selectSectionType(sectionType)"
+                            @dblclick="submit(sectionType)"
                             :class="getButtonClass(sectionType)"
                             class="w-full rounded-md px-4 py-2 text-left flex items-center"
                           >

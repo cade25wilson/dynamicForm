@@ -1,9 +1,7 @@
 <template>
     <div>
         <Head :title="title" />
-
         <Banner />
-
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
             <nav class="grid grid-cols-12 py-2 px-4 text-gray-700 bg-white border-b border-slate-200 dark:bg-gray-900">
                     <div class="flex items-center col-span-4">
@@ -235,7 +233,7 @@ const publish = () => {
 };
 
 function copyPageUrl(){
-    navigator.clipboard.writeText(`https://buildmyform.com/forms/${page.props.form.id}`);
+    navigator.clipboard.writeText(`https://buildmyform.com/forms/${page.props.form.id}`)
     .then(() => {
         console.log('Text copied to clipboard');
     })

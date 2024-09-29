@@ -18,22 +18,6 @@ use Inertia\Inertia;
 class FormController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
- 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -124,16 +108,16 @@ class FormController extends Controller
                 $formField->options = json_decode($formField->options, true);
             }
         }
-
+        // Your original query
         $formSections = FormSection::where('form_id', $uuid)
-            ->join('section_types', 'form_sections.section_type_id', '=', 'section_types.id')
-            ->select('form_sections.*', 'section_types.name as formsectionname')
-            ->orderBy('form_sections.order')
-            ->get()
-            ->map(function ($section) {
-                $section->options = json_decode($section->options, true);
-                return $section;
-            });
+                    ->join('section_types', 'form_sections.section_type_id', '=', 'section_types.id')
+                    ->select('form_sections.*', 'section_types.name as formsectionname')
+                    ->orderBy('form_sections.order')
+                    ->get()
+                    ->map(function ($section) {
+                        $section->options = json_decode($section->options, true);
+                        return $section;
+                    });
 
         $sectionCategories = SectionCategory::with(['sectionTypes' => function ($query) {
             $query->where('show', true)->select('id', 'name', 'section_category_id');
@@ -141,12 +125,17 @@ class FormController extends Controller
 
         $hasPublishedForm = PublishedForm::where('form_id', $uuid)->exists();
 
-        $groupedSectionTypes = $sectionCategories->map(function ($category) {
-            return [
-                'category_name' => $category->name,
-                'section_types' => $category->sectionTypes,
-            ];
-        });
+        $groupedSectionTypes = $sectionCategories
+            ->filter(function ($category) {
+                return $category->name !== 'Null';
+            })
+            ->map(function ($category) {
+                return [
+                    'category_name' => $category->name,
+                    'section_types' => $category->sectionTypes,
+                ];
+            });
+
         $isPro = User::where('id', Auth::id())->firstOrFail()->isPro();
 
         return Inertia::render('Form', [
@@ -160,22 +149,6 @@ class FormController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
@@ -184,8 +157,7 @@ class FormController extends Controller
             Form::destroy($id);
             return;
         }catch(Exception $e){
-            Log::info($e);
-            return response(500);
+            Log::error($e);;
         }
     }
 }

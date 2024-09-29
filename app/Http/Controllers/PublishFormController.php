@@ -17,22 +17,6 @@ use Inertia\Inertia;
 class PublishFormController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(string $uuid)
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(string $uuid)
@@ -115,7 +99,7 @@ class PublishFormController extends Controller
             return response()->noContent();
         } catch(Exception $e){
             DB::rollBack();
-            Log::info($e);
+            Log::error($e);;
         }
         
         return $form;
@@ -175,31 +159,7 @@ class PublishFormController extends Controller
                 'response_id' => $formResponse->id
             ]);
         }catch(Exception $e){
-            Log::info($e);
+            Log::error($e);;
         }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

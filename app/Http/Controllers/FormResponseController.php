@@ -31,40 +31,15 @@ class FormResponseController extends Controller
             Log::error($e);
         }
     }
-
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
+    
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        // Eager load all necessary relationships
         $form = Form::with([
             'publishedForm.sections.publishedFormFields',
-            'responses.fieldResponses' // Eager load field responses
+            'responses.fieldResponses'
         ])->findOrFail($id);
     
         $publishedFormFields = $form->publishedForm->sections->flatMap(function ($section) {
@@ -76,9 +51,7 @@ class FormResponseController extends Controller
             'rows' => []
         ];
     
-        // Check if there are responses
         if ($form->responses) {
-            // Transform responses and their field responses
             $tableData['rows'] = $form->responses->map(function ($response) use ($publishedFormFields) {
                 $row = ['response_id' => $response->id];
                 $fieldResponses = $response->fieldResponses->pluck('value', 'form_field_id');
@@ -103,46 +76,54 @@ class FormResponseController extends Controller
     
     public function showResponse(string $id, string $responseId)
     {
-        $form = Form::with(['publishedForm.sections.publishedFormFields'])->findOrFail($id);
-        $publishedFormFields = $form->publishedForm->sections->flatMap(function ($section) {
-            return $section->publishedFormFields;
-        })->pluck('label', 'id');
+        try{
+            $form = Form::with(['publishedForm.sections.publishedFormFields'])->findOrFail($id);
+            $publishedFormFields = $form->publishedForm->sections->flatMap(function ($section) {
+                return $section->publishedFormFields;
+            })->pluck('label', 'id');
 
-        $response = FormResponses::where('form_id', $id)->findOrFail($responseId);
-        $fieldResponses = FormFieldResponses::where('response_id', $response->id)
-            ->pluck('value', 'form_field_id');
-    
-        $responseData = [];
-        foreach ($publishedFormFields as $fieldId => $label) {
-            $responseData['data'][$label] = $fieldResponses[$fieldId] ?? null;
+            $response = FormResponses::where('form_id', $id)->findOrFail($responseId);
+            $fieldResponses = FormFieldResponses::where('response_id', $response->id)
+                ->pluck('value', 'form_field_id');
+        
+            $responseData = [];
+            foreach ($publishedFormFields as $fieldId => $label) {
+                $responseData['data'][$label] = $fieldResponses[$fieldId] ?? null;
+            }
+
+            $responseData['time'] = date('M j, Y g:i a', strtotime($response->updated_at));
+            return response()->json($responseData);
+        } catch(Exception $e){
+            Log::error($e);
         }
-
-        $responseData['time'] = date('M j, Y g:i a', strtotime($response->updated_at));
-        return response()->json($responseData);
     }
 
     public function download(string $id, Request $request)
     {
-        $data = $request->validate([
-            'responses' => 'array|nullable'
-        ]);
+        try{
+            $data = $request->validate([
+                'responses' => 'array|nullable'
+            ]);
+            
+            $form = Form::with(['publishedForm.sections.publishedFormFields'])->findOrFail($id);
+            $publishedFormFields = $form->publishedForm->sections->flatMap(function ($section) {
+                return $section->publishedFormFields;
+            })->pluck('label', 'id');
         
-        $form = Form::with(['publishedForm.sections.publishedFormFields'])->findOrFail($id);
-        $publishedFormFields = $form->publishedForm->sections->flatMap(function ($section) {
-            return $section->publishedFormFields;
-        })->pluck('label', 'id');
-    
-        $formResponses = $this->getData($data['responses'], $id);
-    
-        $export = new FormResponsesExport($formResponses, $publishedFormFields);
-        $spreadsheet = $export->generate();
-    
-        $fileName = 'form_responses_' . $form->name . '.xlsx';
-        $writer = new Xlsx($spreadsheet);
-        $filePath = storage_path("app/{$fileName}");
-        $writer->save($filePath);
-    
-        return response()->download($filePath)->deleteFileAfterSend(true);
+            $formResponses = $this->getData($data['responses'], $id);
+        
+            $export = new FormResponsesExport($formResponses, $publishedFormFields);
+            $spreadsheet = $export->generate();
+        
+            $fileName = 'form_responses_' . $form->name . '.xlsx';
+            $writer = new Xlsx($spreadsheet);
+            $filePath = storage_path("app/{$fileName}");
+            $writer->save($filePath);
+        
+            return response()->download($filePath)->deleteFileAfterSend(true);
+        } catch(Exception $e){
+            Log::error($e);
+        }
     }
 
     private function getData(?array $response, string $id): Collection
@@ -156,35 +137,19 @@ class FormResponseController extends Controller
         }
         return $formResponses;   
     }
-     
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Request $request)
     {
-        $data = $request->validate([
-            'responses' => 'array|required'
-        ]);
         try{
+            $data = $request->validate([
+                'responses' => 'array|required'
+            ]);        
             FormResponses::destroy($data['responses']);
         } catch(Exception $e){
-            Log::info($e);
+            Log::error($e);;
         }
     }
 }
