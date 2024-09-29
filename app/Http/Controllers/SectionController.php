@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\FormFields;
 use App\Models\FormSection;
 use App\Models\SectionType;
+use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -261,33 +261,15 @@ class SectionController extends Controller
     public function update(Request $request, string $id)
     {
         try{
-            Log::info($request);
             $validatedData = $request->validate([
-                // 'button_text' => 'string|required',
-                // 'name' => 'string|nullable',
-                // 'description' => 'string|nullable',
-                // 'text_align' => 'string|required',
                 'embed' => 'nullable|url'
             ]);
 
-            // if (!$validatedData['embed']){
-            //     FormSection::where('id', $id)->firstOrFail()->update([
-            //         'button_text' => $validatedData['button_text'],
-            //         'name' => $validatedData['name'],
-            //         'description' => $validatedData['description'],
-            //         'text_align' => $validatedData['text_align'],
-            //     ]);
-            //     return;
-            // }
             $formSection = FormSection::where('id', $id)->firstOrFail();
             $options = json_decode($formSection->options, true);
             $options['embed'] = $validatedData['embed'];
             $options = json_encode($options);
             $formSection->update([
-                // 'button_text' => $validatedData['button_text'],
-                // 'name' => $validatedData['name'],
-                // 'description' => $validatedData['description'],
-                // 'text_align' => $validatedData['text_align'],
                 'options' => $options
             ]);
 

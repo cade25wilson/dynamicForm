@@ -8,7 +8,6 @@ use App\Models\PublishedForm;
 use App\Models\PublishedFormDesign;
 use App\Models\PublishedFormField;
 use App\Models\PublishedFormSection;
-use App\Models\SectionCategory;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

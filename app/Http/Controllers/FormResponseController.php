@@ -11,7 +11,6 @@ use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -27,11 +26,8 @@ class FormResponseController extends Controller
                 'responseId' => 'required|exists:form_responses,id',
             ]);
 
-            // Update the 'is_complete' field in the 'form_responses' table
             FormResponses::where('id', $data['responseId'])->update(['is_complete' => true]);
-            
         } catch (Exception $e) {
-            // Log the error
             Log::error($e);
         }
     }
@@ -71,12 +67,10 @@ class FormResponseController extends Controller
             'responses.fieldResponses' // Eager load field responses
         ])->findOrFail($id);
     
-        // Flatten published form fields
         $publishedFormFields = $form->publishedForm->sections->flatMap(function ($section) {
             return $section->publishedFormFields;
         })->pluck('label', 'id');
     
-        // Prepare table data
         $tableData = [
             'headers' => $publishedFormFields->values()->all(),
             'rows' => []
@@ -97,7 +91,6 @@ class FormResponseController extends Controller
             })->toArray();
         }
     
-        // Get form data
         $formData = $form->only(['id', 'name']);
         $isPro = User::where('id', Auth::id())->firstOrFail()->isPro();
         
