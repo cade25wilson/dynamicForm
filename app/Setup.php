@@ -2,8 +2,8 @@
 
 namespace App;
 
-use app\Models\FormFields;
-use app\Models\FormSection;
+use App\Models\FormFields;
+use App\Models\FormSection;
 use Illuminate\Database\Eloquent\Collection;
 
 trait Setup
