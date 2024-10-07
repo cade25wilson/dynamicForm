@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DesignController;
+use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\FieldController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\FormFieldResponseController;
@@ -79,7 +80,7 @@ Route::middleware([
     Route::put('formresponse/complete', [FormResponseController::class, 'complete']);
     Route::post('responses/download/{id}', [FormResponseController::class, 'download']);
     Route::delete('responses/destroy', [FormResponseController::class, 'destroy']);
-
+    Route::get('download/file_uploads/{id}', [DownloadController::class, 'fileUploads']);
     Route::get('/subscription-checkout', function (Request $request) {
         return $request->user()
             ->newSubscription('prod_QtoXI3snwvM3H9', 'price_1Q20uCKy0dYEsuj84gazH5RT')

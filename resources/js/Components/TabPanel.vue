@@ -1,11 +1,14 @@
 <template #default="{ activeTab, setActiveTab }">
-    <div class="flex justify-between border-b">
+   <div class="grid grid-cols-3 border-b">
         <button v-for="(tab, index) in tabs" :key="index"
-            :class="{ 'border-indigo-500 text-indigo-600': activeTab === tab.name }" @click="setActiveTab(tab.name)"
-            class="px-4 py-2 text-sm font-medium text-gray-500 border-b-2">
+            :class="{ 'border-indigo-500 text-indigo-600': activeTab === tab.name }" 
+            @click="setActiveTab(tab.name)"
+            class="px-4 py-2 text-sm font-medium text-gray-500 border-b-2 col-span-1">
             {{ tab.name }}
         </button>
+        <div class="col-span-1"></div> 
     </div>
+
 
     <div v-if="activeTab === 'Content'" class="p-4 bg-white">
         <ContentTab :current_section="current_section" :design="design"/>
@@ -18,7 +21,7 @@
                         <h4 class="text-xl font-semibold mb-1">
                             Design
                         </h4>
-                        <p class="text-sm text-gray-500 mb-8">
+                        <!-- <p class="text-sm text-gray-500 mb-8">
                             Use light or dark theme or make your own by adding your brand color and logo.
                         </p>
 
@@ -61,7 +64,7 @@
                                     </span>
                                 </button>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="mt-4 flex items-center justify-between">
                             <label class="block text-sm font-medium text-gray-700 pr-1">Background</label>
@@ -133,7 +136,7 @@
                                 Note: Any changes made in the Design tab will be saved &amp; published automatically.
                             </p>
                         </div>
-                        <div class="mt-6" ref="dropdown">
+                        <!-- <div class="mt-6" ref="dropdown">
                             <div>
                                 <label for="font-selector"
                                     class="block relative text-sm font-medium text-gray-700">Font</label>
@@ -151,16 +154,45 @@
                                     class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
                                     @input="handleSearch" placeholder="Search fonts...">
 
-                                <ul v-if="opened" class="absolute inset-auto min-w-72 max-h-80 text-sm scroll-smooth z-10 mt-1 overflow-y-auto rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                    <li v-for="font in fonts" :key="font" @click="selectFont(font)"
-                                        :style="{ fontFamily: font }"
-                                        class="relative border hover:bg-gray-100 cursor-pointer select-none mx-10 md:mx-auto py-2 pl-3 pr-9 border-gray-300">
-                                        <span :class="selectedFont === font ? 'font-semibold' : 'font-normal'"
-                                            class="block truncate">{{ font }}</span>
-                                    </li>
-                                </ul>
+                                    <ul v-if="opened" class="fixed inset-auto min-w-72 max-h-80 text-sm scroll-smooth z-10 mt-1 overflow-y-auto rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                        <li v-for="font in fonts" :key="font" @click="selectFont(font)"
+                                            :style="{ fontFamily: font }"
+                                            class="relative border hover:bg-gray-100 cursor-pointer select-none mx-10 md:mx-auto py-2 pl-3 pr-9 border-gray-300">
+                                            <span :class="selectedFont === font ? 'font-semibold' : 'font-normal'"
+                                                class="block truncate">{{ font }}</span>
+                                        </li>
+                                    </ul>
+
                             </div>
-                        </div>
+                        </div> -->
+
+                        <div class="mt-6" ref="dropdown">
+    <div>
+        <label for="font-selector" class="block relative text-sm font-medium text-gray-700">Font</label>
+        <button @click="toggleDropdown" type="button"
+            class="relative w-full cursor-default rounded-md mt-1 py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-gray-600 sm:text-sm sm:leading-6 bg-transparent">
+            <span class="block truncate">{{ selectedFont }}</span>
+            <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                <svg class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clip-rule="evenodd"></path>
+                </svg>
+            </span>
+        </button>
+
+        <input type="text" v-if="opened" @keydown.enter.window="handleEnter" @keydown.esc.window="handleEscape"
+            class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
+            @input="handleSearch" placeholder="Search fonts...">
+
+        <ul v-if="opened" class="fixed inset-auto min-w-72 max-h-80 text-sm scroll-smooth z-10 mt-1 overflow-y-auto rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <li v-for="font in fonts" :key="font" @click="selectFont(font)"
+                :style="{ fontFamily: font }"
+                class="relative border hover:bg-gray-100 cursor-pointer select-none mx-10 md:mx-auto py-2 pl-3 pr-9 border-gray-300">
+                <span :class="selectedFont === font ? 'font-semibold' : 'font-normal'" class="block truncate">{{ font }}</span>
+            </li>
+        </ul>
+    </div>
+</div>
+
                         <div class="mt-6 border-t border-gray-200 pt-6">
                             <div class="flex items-center justify-between">
                                 <p class="flex items-center text-sm font-medium text-gray-700">
@@ -251,7 +283,7 @@ const props = defineProps({
 const tabs = ref([
     { name: 'Content' },
     { name: 'Design' },
-    { name: 'Logic' },
+    // { name: 'Logic' },
     // { name: 'Connections'},
 ]);
 
@@ -433,7 +465,10 @@ onBeforeUnmount(() => {
 
 
 <style scoped>
-ul{ 
-    position: fixed;
+ul {
+    position: absolute; /* Change from fixed to absolute */
+    z-index: 10; /* Ensure it stays on top of other elements */
+    max-height: 20vh; /* Limit the height for scrolling */
+    overflow-y: auto; /* Enable scrolling if the list is too long */
 }
 </style>

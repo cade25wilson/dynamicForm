@@ -162,4 +162,16 @@ class FormController extends Controller
             Log::error($e);;
         }
     }
+
+    public function update(Request $request, string $id)
+    {
+        try{
+            $data = $request->validate([
+                'name' => 'string|required'
+            ]);
+            Form::findOrFail($id)->update(['name' => $data['name']]);
+        } catch (Exception $e){
+            Log::error($e);
+        }
+    }
 }

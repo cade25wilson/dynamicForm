@@ -1,10 +1,7 @@
 <template>
   <div
-    class="relative lg:mx-6 mt-[4rem] bg-white custom-bg-color rounded-md h-[90vh] bg-cover bg-center bg-no-repeat custom-form-font"
-    :style="{
-      backgroundColor: page.props.form.design.background,
-      backgroundImage: page.props.form.design.background_image ? `url(${page.props.form.design.background_image})` : 'none'
-    }"
+    class="relative lg:mx-6 mt-[4rem] rounded-md h-[90vh] bg-cover bg-center bg-no-repeat custom-form-font"
+
   >
     <transition name="fade" mode="out-in">
       <div v-if="currentSection" :key="currentSection.id" class="h-full flex items-center justify-center mx-auto">
@@ -112,7 +109,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, watchEffect } from 'vue';
+import { ref, computed, watch, watchEffect, onMounted, onBeforeUnmount } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 
 // Import form section components
@@ -145,6 +142,22 @@ const hasValidationErrors = ref(false);
 
 // Ref to the container where validation messages might appear
 const validationContainer = ref(null);
+
+
+onMounted(() => {
+  document.body.style.backgroundColor = page.props.form.design.background;
+  if (page.props.form.design.background_image) {
+    document.body.style.backgroundImage = `url(${page.props.form.design.background_image})`;
+    document.body.style.backgroundSize = 'cover'; // Optional: makes the background cover the entire body
+    document.body.style.backgroundPosition = 'center'; // Optional: centers the background image
+  }
+});
+
+// Cleanup on unmount
+onBeforeUnmount(() => {
+  document.body.style.backgroundColor = ''; // Reset background color
+  document.body.style.backgroundImage = ''; // Reset background image
+});
 
 // Computed property to get the current section
 const currentSection = computed(() => {

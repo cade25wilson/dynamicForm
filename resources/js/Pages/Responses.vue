@@ -39,14 +39,14 @@
                 <div class="bg-white px-6 rounded-md mx-1 mb-3 border-b border-gray-200">
                     <div class="">
                         <div class="">
-                            <nav x-data="" class="-mb-px flex space-x-8" aria-label="Tabs">                            
-                                <a href="#" x-tooltip.raw="Completed submissions only." @click.prevent="resetSelection" class=" border-indigo-500 text-indigo-600  flex whitespace-nowrap border-b-2 py-4 px-1 text-sm">
+                            <nav class="-mb-px flex space-x-8" aria-label="Tabs">                            
+                                <a @click="updateResponses('completed')" id="completeresponses" class="border-indigo-500 text-indigo-600 flex whitespace-nowrap border-b-2 py-4 px-1 text-sm">
                                     Completed
-                                    <span class=" bg-indigo-100 text-indigo-600  ml-3 rounded-full py-0.5 px-2.5 text-xs inline-block">{{page.props.tableData.rows.length}}</span>
+                                    <span id="completespan" class="bg-indigo-100 text-indigo-600  ml-3 rounded-full py-0.5 px-2.5 text-xs inline-block">{{page.props.completed}}</span>
                                 </a>
-                                <a href="#" x-tooltip.raw="In this tab you can view even those submissions which were not completed by your users. Only available in Youform PRO." class=" border-transparent text-gray-500 hover:border-gray-200 hover:text-gray-700  flex whitespace-nowrap border-b-2 py-4 px-1 text-sm" aria-current="page">
+                                <a @click="updateResponses('partial')" id="partialresponses" class="border-transparent text-gray-500 hover:border-gray-200 hover:text-gray-700  flex whitespace-nowrap border-b-2 py-4 px-1 text-sm" aria-current="page">
                                     Partial
-                                    <span class=" bg-gray-100 text-gray-900  ml-3 rounded-full py-0.5 px-2.5 text-xs inline-block">0</span>
+                                    <span id="partialspan" class="bg-gray-100 text-gray-900  ml-3 rounded-full py-0.5 px-2.5 text-xs inline-block">{{page.props.partial}}</span>
                                 </a>
                             </nav>
                         </div>
@@ -54,7 +54,7 @@
                 </div>  
                 <div class="-my-2 overflow-x-auto">
                     <div class="inline-block min-w-full max-w-6xl py-2 align-middle">
-                        <div class="overflow-auto shadow mx-1 ring-1 ring-black md:rounded-lg relative">
+                        <div class="overflow-auto shadow mx-1 ring-1 ring-black md:rounded-lg relative" style="max-height: 800px;">
                             <table class="min-w-full break-words border-collapse border border-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr class="h-1">
@@ -82,7 +82,7 @@
                                 <tbody class="bg-white">
                                     <tr 
                                         class="cursor-pointer hover:bg-gray-100 group h-1" 
-                                        v-for="(row, rowIndex) in tableData.rows" 
+                                        v-for="(row, rowIndex) in shownResponses" 
                                         :key="row.response_id"
                                         @click="openModal(row.response_id)" 
                                     >
@@ -93,7 +93,7 @@
                                                 </label>
                                             </div>
                                         </td>
-                                        <template v-for="(field, index) in row">
+                                        <template v-for="(field, index) in shownResponses[rowIndex]">
                                             <td 
                                                 class="text-sm text-gray-900 sticky left-0 z-10 bg-white group-hover:bg-gray-100 w-8 border border-gray-200 p-0" 
                                                 v-if="index !== 'response_id'"
@@ -105,7 +105,10 @@
                                                             <img :src="field" class="h-10">
                                                         </a>
                                                     </p>
-                                                    <label v-if="field && !field.includes('/signature/')" class="cursor-pointer py-5 px-2 block text-center">
+                                                    <template v-else-if="field && field.includes('/file_uploads/')">
+                                                        <a href="#" @click.prevent.stop="downloadFiles(field)">Download file(s)</a>
+                                                    </template>
+                                                    <label v-else v-if="field"class="cursor-pointer py-5 px-2 block text-center">
                                                         {{ field.length > 100 ? field.slice(0, 100) + '...' : field }}
                                                     </label>
                                                 </div>
@@ -156,63 +159,65 @@
     </div>
 
     <div v-if="showModal" class="z-100" aria-modal="true">
-        <div class="fixed inset-0 z-30 overflow-y-auto font-light">
-            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-5 sm:w-full sm:max-w-4xl mx-4">
-                    <div class="bg-white px-4 pt-5 pb-4 sm:px-14 sm:py-8" v-if="responseData">
-                        <div class="absolute mt-3 top-4 right-6 flex items-center justify-center space-x-3">
-                            <div class="flex items-center justify-center">
-                                <a href="#" @click.prevent="toggleDropdown()" class="inline-block p-1 hover:bg-gray-100 rounded-full">  
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"></path>
-                                    </svg>                                                               
-                                </a>
-                            </div>
-                            <a href="#" @click.prevent="close()" class="inline-block p-1 hover:bg-gray-100 rounded-full">  
+    <div class="fixed inset-0 z-30 overflow-y-auto font-light backdrop-blur bg-black bg-opacity-50">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-5 sm:w-full sm:max-w-4xl mx-4">
+                <div class="bg-white px-4 pt-5 pb-4 sm:px-14 sm:py-8" v-if="responseData">
+                    <div class="absolute mt-3 top-4 right-6 flex items-center justify-center space-x-3">
+                        <div class="flex items-center justify-center">
+                            <a href="#" @click.prevent="toggleDropdown()" class="inline-block p-1 hover:bg-gray-100 rounded-full">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"></path>
-                                </svg>                                      
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"></path>
+                                </svg>
                             </a>
                         </div>
-                        <h4 class="text-lg font-normal text-center">
-                            Submission Detail
-                        </h4>
-                        <div class="my-10 max-w-lg mx-auto">
-                            <div>
-                                <div class="text-sm mb-4 text-gray-500">
-                                    <span>
-                                        {{responseData.time}}
+                        <a href="#" @click.prevent="close()" class="inline-block p-1 hover:bg-gray-100 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"></path>
+                            </svg>
+                        </a>
+                    </div>
+                    <h4 class="text-lg font-normal text-center">
+                        Submission Detail
+                    </h4>
+                    <div class="my-10 max-w-lg mx-auto">
+                        <div>
+                            <div class="text-sm mb-4 text-gray-500">
+                                <span>
+                                    {{responseData.time}}
+                                </span>
+                                •
+                                <span>
+                                    <!-- 16 hours ago -->
+                                </span>
+                            </div>
+                            <div class="py-4" v-for="(row, rowIndex) in responseData.data">
+                                <strong class="font-normal flex items-center mb-1">
+                                    <span class="pl-2">
+                                        {{rowIndex}}
                                     </span>
-                                    •
-                                    <span>
-                                        <!-- 16 hours ago -->
-                                    </span>
-                                </div>
-                                <div class="py-4"
-                                    v-for="(row, rowIndex) in responseData.data"
-                                >
-                                    <strong class="font-normal flex items-center mb-1"> 
-                                        <span class="pl-2">
-                                            {{rowIndex}}
-                                        </span>
-                                    </strong> 
-                                    <div class="pl-6 text-gray-600">
-                                        <template v-if="row && row.includes('/signature/')">
-                                            <a :href="row" target="_blank" download="" class="py-2 hover:bg-gray-50 w-40 min-h-10 mt-2 inline-block border border-gray-300 border-dashed rounded-md">
-                                                <img :src="row">
-                                            </a>
-                                        </template>
-                                        <div v-else>{{ row }}</div>
-                                    </div>
+                                </strong>
+                                <div class="pl-6 text-gray-600">
+                                    <template v-if="row && row.includes('/signature/')">
+                                        <a :href="row" target="_blank" download="" class="py-2 hover:bg-gray-50 w-40 min-h-10 mt-2 inline-block border border-gray-300 border-dashed rounded-md">
+                                            <img :src="row">
+                                        </a>
+                                    </template>
+                                    <template v-else-if="row && row.includes('/file_uploads/')">
+                                        <a href="#" @click="downloadFiles(row)">Download file(s)</a>
+                                    </template>
+                                    <div v-else>{{ row }}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                 </div>
             </div>
         </div>
-        </div>
     </div>
+</div>
+
 </FormLayout>
     
 </template>
@@ -232,6 +237,36 @@
     const responseData = ref(null);
     const checkedResponses = ref([]);
     const allSelected = ref(false);
+    const shownResponses = ref(page.props.completeResponses)
+
+    async function downloadFiles(row) {
+        try {
+            // Ensure that 'row' contains the file name or correct identifier
+            const response = await fetch(`/download${row}`, {
+                method: 'GET',
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            // Convert the response to a Blob and create a download URL
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            
+            // Create an anchor tag for the download
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'file';
+            document.body.appendChild(a);
+            a.click();
+
+            window.URL.revokeObjectURL(url);
+            a.remove();
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        }
+    }
 
     async function openModal(responseId) {
         showModal.value = true;
@@ -292,8 +327,7 @@
         allSelected.value = !allSelected.value; // Toggle the select-all state
 
         if (allSelected.value) {
-            // Select all responses
-            checkedResponses.value = props.tableData.rows.map(row => row.response_id);
+            checkedResponses.value = shownResponses.value.map(row => row.response_id);
         } else {
             // Unselect all responses
             checkedResponses.value = [];
@@ -324,4 +358,70 @@
         showDeleteModal.value = false;
     }
 
+    async function checkPro(){
+        if (!page.props.isPro){
+            console.log('not pro');
+            return false;
+        }
+        return true;
+    }
+
+    async function updateResponses(type){
+        const completedresponses = document.getElementById('completeresponses');
+        const completespan = document.getElementById('completespan');
+        const partialresponses = document.getElementById('partialresponses');
+        const partialspan = document.getElementById('partialspan');
+        if (type === 'completed') {
+            shownResponses.value = page.props.completeResponses;
+            completedresponses.classList.remove('border-transparent', 'text-gray-500');
+            completedresponses.classList.add('border-indigo-500', 'text-indigo-600');
+            completespan.classList.remove('bg-gray-100', 'text-gray-900');
+            completespan.classList.add('bg-indigo-100', 'text-indigo-600');
+            partialresponses.classList.add('border-transparent', 'text-gray-500');
+            partialresponses.classList.remove('border-indigo-500', 'text-indigo-600');
+            partialspan.classList.remove('bg-indigo-100', 'text-indigo-600');
+            partialspan.classList.add('bg-gray-100', 'text-gray-900');
+        } else {
+            const isPro = checkPro();
+            if (!isPro){
+                return;
+            }
+            shownResponses.value = page.props.partialResponses;
+            partialresponses.classList.remove('border-transparent', 'text-gray-500');
+            partialresponses.classList.add('border-indigo-500', 'text-indigo-600');
+            partialspan.classList.add('bg-indigo-100', 'text-indigo-600');
+            partialspan.classList.remove('bg-gray-100', 'text-gray-900');
+            completedresponses.classList.add('border-transparent', 'text-gray-500');
+            completedresponses.classList.remove('border-indigo-500', 'text-indigo-600');
+            completespan.classList.add('bg-gray-100', 'text-gray-900');
+            completespan.classList.remove('bg-indigo-100', 'text-indigo-600');
+        }
+        allSelected.value = false;
+    }
 </script>
+
+<style scoped>
+    a {
+        cursor: pointer;
+    }
+
+
+
+    /* Custom scrollbar for WebKit browsers (like Chrome, Safari) */
+.overflow-y-auto::-webkit-scrollbar {
+    width: 8px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+</style>

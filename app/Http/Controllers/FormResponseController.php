@@ -41,36 +41,46 @@ class FormResponseController extends Controller
             'publishedForm.sections.publishedFormFields',
             'responses.fieldResponses'
         ])->findOrFail($id);
-    
+        $formData = $form->only(['id', 'name']);
+        $isPro = User::where('id', Auth::id())->firstOrFail()->isPro();
+
         $publishedFormFields = $form->publishedForm->sections->flatMap(function ($section) {
             return $section->publishedFormFields;
         })->pluck('label', 'id');
     
         $tableData = [
             'headers' => $publishedFormFields->values()->all(),
-            'rows' => []
         ];
     
-        if ($form->responses) {
-            $tableData['rows'] = $form->responses->map(function ($response) use ($publishedFormFields) {
-                $row = ['response_id' => $response->id];
-                $fieldResponses = $response->fieldResponses->pluck('value', 'form_field_id');
+        $mapResponseToRow = function ($response) use ($publishedFormFields) {
+            $row = ['response_id' => $response->id];
+            $fieldResponses = $response->fieldResponses->pluck('value', 'form_field_id');
     
-                foreach ($publishedFormFields as $fieldId => $label) {
-                    $row[] = $fieldResponses[$fieldId] ?? null;
-                }
+            foreach ($publishedFormFields as $fieldId => $label) {
+                $row[] = $fieldResponses[$fieldId] ?? null;
+            }
     
-                return $row;
-            })->toArray();
-        }
+            return $row;
+        };
     
-        $formData = $form->only(['id', 'name']);
-        $isPro = User::where('id', Auth::id())->firstOrFail()->isPro();
-        
+        // Filter completed and partial responses and map them to rows
+        $completedResponses = $form->responses->filter(function ($response) {
+            return $response->is_complete;
+        })->map($mapResponseToRow);
+    
+        $partialResponses = $form->responses->filter(function ($response) {
+            return !$response->is_complete;
+        })->map($mapResponseToRow);
+    
+        // Return the view with completed and partial responses as well
         return Inertia::render('Responses', [
             'tableData' => $tableData,
             'form' => $formData,
-            'isPro' => $isPro
+            'isPro' => $isPro,
+            'completed' => $completedResponses->count(),
+            'partial' => $partialResponses->count(),
+            'completeResponses' => $completedResponses->toArray(),
+            'partialResponses' => $partialResponses->toArray()    
         ]);
     }
     

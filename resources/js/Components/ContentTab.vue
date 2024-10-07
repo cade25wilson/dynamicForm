@@ -128,7 +128,7 @@ const hasOneField = computed(() => {
 
 <style>
     .container {
-        height: 88vh;
+        height: 92vh;
         overflow: hidden;
     }
 
@@ -190,7 +190,6 @@ const hasOneField = computed(() => {
     .scrollable-content {
         height: 100%;
         overflow-y: auto;
-        padding-right: 16px;
         box-sizing: content-box;
     }
 </style>        
