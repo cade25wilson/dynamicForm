@@ -5,14 +5,14 @@
                 v-for="index in starsArray" 
                 :key="index" 
                 @click="handleRatingClick(index)" 
-                :style="{ color: page.props.form.design.answers }" 
+                :style="{ color: page.props.form.design.star_rating }" 
                 class="size-11 cursor-pointer text-gray-700 custom-rating-color" 
                 xmlns="http://www.w3.org/2000/svg" 
                 fill="none" 
                 viewBox="0 0 24 24" 
                 stroke-width="1" 
                 :fill="getFillColor(index)" 
-                :stroke="getStrokeColor(index)"
+                stroke="currentColor"
             >
                 <title>{{ index }}</title>
                 <path stroke-linecap="round" stroke-linejoin="round" 
@@ -53,12 +53,7 @@ function handleRatingClick(index) {
 
 // Function to get the fill color based on the current rating
 function getFillColor(index) {
-    return index <= currentRating.value ? 'yellow' : 'none';  // Yellow for selected stars, none for others
-}
-
-// Function to get the stroke color based on the current rating
-function getStrokeColor(index) {
-    return index <= currentRating.value ? 'yellow' : 'currentColor';  // Yellow for selected stars, default color for others
+    return index <= currentRating.value ? page.props.form.design.star_rating : 'none';  // Fill with custom color for selected stars, none for others
 }
 
 // Emit the selected value to parent component

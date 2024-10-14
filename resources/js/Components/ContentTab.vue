@@ -87,7 +87,7 @@ function updateField(input, value){
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': csrfToken
         },
-            body: JSON.stringify({
+        body: JSON.stringify({
             _token: csrfToken,
             input: input,
             value: value

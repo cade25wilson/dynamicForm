@@ -26,19 +26,20 @@
                         </Link>
 
                         <Link 
-                        :href="`/settings/${page.props.form.id}`" 
+                        :href="`/connect/${page.props.form.id}`" 
                         class="inline-block text-center text-xs border border-transparent rounded-lg px-2 py-1 cursor-pointer hover:bg-slate-200 transition-all"
-                        :class="{ 'bg-white text-blue-600 font-semibold': isActive(`/settings/${page.props.form.id}`) }"
+                        :class="{ 'bg-white text-blue-600 font-semibold': isActive(`/connect/${page.props.form.id}`) }"
                         >
                             <span class="pt-1">Connect</span>
                         </Link>
 
-                        <a 
+                        <Link
+                        :href="`/share/${page.props.form.id}`"
                         class="inline-block text-center text-xs border border-transparent rounded-lg px-2 py-1 cursor-pointer hover:bg-slate-200 transition-all"
-                        :class="{ 'bg-white text-blue-600 font-semibold': isActive('share') }"
+                        :class="{ 'bg-white text-blue-600 font-semibold': isActive(`/share/${page.props.form.id}`) }"
                         >
                             <span class="pt-1">Share</span>
-                        </a>
+                        </Link>
 
                         <Link 
                         :href="`/responses/${page.props.form.id}`" 

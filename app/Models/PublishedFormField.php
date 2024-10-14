@@ -17,7 +17,6 @@ class PublishedFormField extends Model
         return $this->belongsTo(PublishedFormSection::class);
     }
 
-    // Define the relationship with the FormFieldResponse model
     public function responses()
     {
         return $this->hasMany(FormFieldResponses::class);

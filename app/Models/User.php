@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -13,7 +14,6 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
-use PhpOffice\PhpSpreadsheet\Calculation\Logical\Boolean;
 
 class User extends Authenticatable
 {
@@ -81,14 +81,13 @@ class User extends Authenticatable
         return $this->hasMany(FormResponses::class);
     }    
 
-    public function subscriptions()
+    public function subscriptions(): HasMany
     {
         return $this->hasMany(Subscription::class, 'user_id');
     }
 
     public function isPro(): bool
     {
-        // Check if the user has a subscription and it's active
         return $this->subscriptions()
                     ->where('stripe_status', 'active')
                     ->exists();

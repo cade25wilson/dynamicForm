@@ -5,7 +5,7 @@
     <div class="mt-6">
         <div class="flex items-center">
             <svg v-for="index in starsArray" :key="index" 
-                :style="{ color: page.props.form.design.answers }" 
+                :style="{ color: page.props.form.design.star_rating }" 
                 class="size-11 cursor-pointer text-gray-700 custom-rating-color" 
                 xmlns="http://www.w3.org/2000/svg" 
                 fill="none" 

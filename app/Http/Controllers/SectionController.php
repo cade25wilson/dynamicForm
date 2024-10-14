@@ -117,7 +117,6 @@ class SectionController extends Controller
     public function singleField(Request $request, string $id)
     {
         try{
-            Log::info($request);
             $fillableColumns = (new FormSection)->getFillable();
             $data = $request->validate([
                 'input' => 'required|in:' . implode(',', $fillableColumns),

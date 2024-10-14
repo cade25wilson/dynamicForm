@@ -1,7 +1,14 @@
 <template>
+  <div v-if="page.props.form.design.progress_bar" class="absolute top-0 left-0 right-0 z-10" @update-progress-bar.window="handleProgressBarUpdate">
+    <div>
+        <div class="bg-gray-200 custom-bg-color-light-nonhover h-1" role="progressbar" :aria-valuenow="width" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+            <div class="bg-gray-700 custom-button-background-color h-1 text-center opacity-80" :style="`width: ${progressPercentage}%; transition: width 1s;`">
+            </div>
+        </div>
+    </div>
+</div>
   <div
     class="relative lg:mx-6 mt-[4rem] rounded-md h-[90vh] bg-cover bg-center bg-no-repeat custom-form-font"
-
   >
     <transition name="fade" mode="out-in">
       <div v-if="currentSection" :key="currentSection.id" class="h-full flex items-center justify-center mx-auto">
@@ -81,7 +88,7 @@
       </div>
     </transition>
 
-    <div class="absolute bottom-5 sm:bottom-10 right-10 z-10">
+    <div v-if="page.props.form.design.navigation" class="absolute bottom-5 sm:bottom-10 right-10 z-10">
       <button
         type="button"
         title="Go up"
@@ -164,6 +171,13 @@ const currentSection = computed(() => {
   return page.props.form_sections[currentIndex.value];
 });
 
+// Computed property to calculate the progress percentage
+const progressPercentage = computed(() => {
+  if (page.props.form_sections.length === 0) return 0; // Prevent division by zero
+  return ((currentIndex.value + 1) / page.props.form_sections.length) * 100;
+});
+
+
 // Function to go to the next section
 const goToNextSection = () => {
   const errorElements = validationContainer.value.querySelectorAll('.text-red-600');
@@ -223,7 +237,8 @@ function completeResponse(){
 		},
 		body: JSON.stringify({
 			_token: csrfToken,
-			responseId: page.props.response_id
+			responseId: page.props.response_id,
+      formid: page.props.form.id
 		})
 	});
 }

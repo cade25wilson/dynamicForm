@@ -48,7 +48,10 @@ class PublishFormController extends Controller
                 'star_rating' => $form->design->star_rating,
                 'font' => $form->design->font,
                 'background_image' => $form->design->background_image,
-                'logo' => $form->design->logo
+                'logo' => $form->design->logo,
+                'progress_bar' => $form->design->progress_bar,
+                'captcha' => $form->design->captcha,
+                'navigation' => $form->design->navigation
             ]);
 
         $sectionsData = [];

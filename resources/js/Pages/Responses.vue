@@ -158,7 +158,7 @@
         </div>
     </div>
 
-    <div v-if="showModal" class="z-100" aria-modal="true">
+    <div v-if="showModal" class="z-100" aria-modal="true" @keydown.esc="showModal=false" tabindex="0">
     <div class="fixed inset-0 z-30 overflow-y-auto font-light backdrop-blur bg-black bg-opacity-50">
         <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
             <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-5 sm:w-full sm:max-w-4xl mx-4">

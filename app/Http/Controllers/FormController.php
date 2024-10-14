@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Form;
 use App\Models\FormDesign;
+use App\Models\FormIntegrations;
 use App\Models\FormSection;
 use App\Models\PublishedForm;
 use App\Models\SectionCategory;
@@ -68,6 +69,10 @@ class FormController extends Controller
                     'redirect_message' => 'You will be redirected momentarily.',
                     'redirect_delay' => 3
                 ]),
+            ]);
+
+            FormIntegrations::create([
+                'form_id' => $form->id
             ]);
             
             DB::commit();
@@ -171,6 +176,40 @@ class FormController extends Controller
             ]);
             Form::findOrFail($id)->update(['name' => $data['name']]);
         } catch (Exception $e){
+            Log::error($e);
+        }
+    }
+
+    public function connect(string $id)
+    {
+        try{
+            $form = Form::where('id', $id)
+                    ->with('formIntegration') 
+                    ->firstOrFail();
+            $hasPublishedForm = PublishedForm::where('form_id', $id)->exists();
+            $isPro = User::where('id', Auth::id())->firstOrFail()->isPro();
+            return Inertia::render('Connect', [
+                'form' => $form,
+                'has_published_form' => $hasPublishedForm,
+                'isPro' => $isPro
+            ]);
+        }catch(Exception $e){
+            Log::error($e);
+        }
+    }
+
+    public function share(string $id)
+    {
+        try{
+            $form = Form::findOrFail($id)->only(['id', 'name']);
+            $hasPublishedForm = PublishedForm::where('form_id', $id)->exists();
+            $isPro = User::where('id', Auth::id())->firstOrFail()->isPro();
+            return Inertia::render('Share', [
+                'form' => $form,
+                'has_published_form' => $hasPublishedForm,
+                'isPro' => $isPro
+            ]);
+        }catch(Exception $e){
             Log::error($e);
         }
     }

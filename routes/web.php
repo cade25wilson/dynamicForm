@@ -7,6 +7,7 @@ use App\Http\Controllers\FieldController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\FormFieldResponseController;
 use App\Http\Controllers\FormResponseController;
+use App\Http\Controllers\IntegrationController;
 use App\Http\Controllers\PublishFormController;
 use App\Http\Controllers\SectionController;
 use Illuminate\Foundation\Application;
@@ -44,6 +45,8 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+    Route::get('/connect/{id}', [FormController::class, 'connect']);
+    Route::get('/share/{id}', [FormController::class, 'share']);
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('form', FormController::class);
     Route::delete('section/{id}', [SectionController::class, 'destroy'])->name('section.destroy');
@@ -56,6 +59,7 @@ Route::middleware([
     Route::put('section/single/{id}', [SectionController::class, 'singleField']);
     Route::put('section/ending/{id}', [SectionController::class, 'updateEnding']);
     Route::put('design/{id}', [DesignController::class, 'update']);
+    Route::put('design/settings/{id}', [DesignController::class, 'updateSettings']);
     Route::put('field/{id}', [FieldController::class, 'update']);
     Route::put('field/maxlength/{id}', [FieldController::class, 'maxlength']);
     Route::put('field/option/{id}', [FieldController::class, 'option']);
@@ -89,4 +93,5 @@ Route::middleware([
                 'cancel_url' => route('dashboard'),
             ]);
     });
+    Route::put('integrations/webhook/{id}', [IntegrationController::class, 'webhook']);
 });

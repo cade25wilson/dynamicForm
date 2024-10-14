@@ -12,6 +12,28 @@ class DesignController extends Controller
     /**
      * Update the specified resource in storage.
      */
+
+    public function updateSettings(Request $request, string $id)
+    {
+        Log::info($request);
+        try {
+            $fillableColumns = (new FormDesign)->getFillable();
+            $data = $request->validate([
+                'input' => 'required|in:' . implode(',', $fillableColumns),
+                'value' => 'boolean'
+            ]);
+
+            FormDesign::where('id', $id)->firstOrFail()->update([
+                $data['input'] => $data['value']
+            ]);
+
+            return response(null, 204);
+        } catch(Exception $e){
+            Log::error($e);
+            return response(null, 500);
+        }
+    }
+    
     public function update(Request $request, string $id)
     {
         try{
