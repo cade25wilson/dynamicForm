@@ -78,6 +78,9 @@ Route::middleware([
     Route::put('field/star/{id}', [FieldController::class, 'star']);
     Route::put('field/multiple/{id}', [FieldController::class, 'multiple']);
     Route::delete('form/{id}', [FormController::class, 'destroy']);
+    Route::put('form/close/{id}', [FormController::class, 'close']);
+    Route::put('form/close_by/{id}', [FormController::class, 'close_by']);
+    Route::put('form/close_by_submission/{id}', [FormController::class, 'close_by_submission']);
     Route::post('formfieldresponse/{id}', [FormFieldResponseController::class, 'store']);
     Route::post('formfieldresponse/files/{id}', [FormFieldResponseController::class, 'fileUpload']);
     Route::delete('formfieldresponse/{id}/{fieldId}', [FormFieldResponseController::class, 'destroy']);

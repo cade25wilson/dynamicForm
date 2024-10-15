@@ -15,6 +15,9 @@ return new class extends Migration
         Schema::create('forms', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
             $table->string('name', 100);
+            $table->boolean('closed')->default(false);
+            $table->date('close_by')->nullable(true)->default(null);
+            $table->integer('close_by_submissions')->nullable(true)->default(null);
             // $table->text('description')->default('Mind filling out this form?');
             // $table->string('embed')->nullable(true);
             // $table->enum('text_align',['left', 'center', 'right'])->default('left');

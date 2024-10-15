@@ -9,7 +9,7 @@ class PublishedForm extends Model
 {
     use HasUuids;
     // The attributes that are mass assignable.
-    protected $fillable = ['id', 'form_id', 'name', 'user_id'];
+    protected $fillable = ['id', 'form_id', 'name', 'user_id', 'closed', 'close_by', 'close_by_submissions'];
 
     // Define the relationship with the User model
     public function user()

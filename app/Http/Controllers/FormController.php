@@ -18,6 +18,54 @@ use Inertia\Inertia;
 
 class FormController extends Controller
 {
+    public function close(Request $request, string $id)
+    {
+        try{
+            $data = $request->validate([
+                'closed' => 'boolean|required'
+            ]);
+            Form::where('id', $id)->firstOrFail()->update([
+                'closed' => $data['closed']
+            ]);
+            return response(null,204);
+        } catch(Exception $e){
+            Log::error($e);
+            return response(null,500);
+        }
+    }
+
+    public function close_by(Request $request, string $id)
+    {
+        try{
+            $data = $request->validate([
+                'close_by' => 'date|nullable'
+            ]);
+            Form::where('id', $id)->firstOrFail()->update([
+                'close_by' => $data['close_by']
+            ]);
+            return response(null,204);
+        } catch(Exception $e){
+            Log::error($e);
+            return response(null,500);
+        }
+    }
+    
+    public function close_by_submission(Request $request, string $id)
+    {
+        try{
+            $data = $request->validate([
+                'close_by_submission' => 'int|nullable'
+            ]);
+            Form::where('id', $id)->firstOrFail()->update([
+                'close_by_submissions' => $data['close_by_submission']
+            ]);
+            return response(null,204);
+        } catch(Exception $e){
+            Log::error($e);
+            return response(null,500);
+        }
+    }
+    
     /**
      * Store a newly created resource in storage.
      */

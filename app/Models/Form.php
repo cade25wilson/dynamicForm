@@ -13,7 +13,7 @@ class Form extends Model
 {
     use HasUuids;
     // The attributes that are mass assignable.
-    protected $fillable = ['name', 'user_id'];
+    protected $fillable = ['name', 'user_id', 'closed', 'close_by', 'close_by_submissions'];
 
     // Define the relationship with the User model
     public function user(): BelongsTo

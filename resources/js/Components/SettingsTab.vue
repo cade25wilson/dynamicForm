@@ -113,36 +113,96 @@
           </button>
           <div v-show="dropdowns.access" class="ml-4">
             <!-- Access Content Here -->
-            <p>Access content goes here...</p>
-          </div>
-        </div>
+			<div class="mt-6 space-y-3">
+				<div class="flex flex-col items-center justify-between p-6 border border-gray-300 shadow-lg rounded-xl bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100">
+					<h4 class="text-xl font-bold text-gray-800 mb-4">
+						Close Form
+					</h4>
+					<label class="relative inline-flex items-center cursor-pointer">
+						<input type="checkbox" @change="handleCloseForm($event.target.checked)" class="sr-only peer">
+						<div class="w-12 h-12 bg-gray-400 peer-checked:bg-blue-500 rounded-full border-4 border-gray-200 peer-checked:border-blue-600 flex items-center justify-center transition-all duration-300 ease-in-out">
+							<svg class="w-6 h-6 text-white transform transition-transform duration-300 ease-in-out peer-checked:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+							</svg>
+						</div>
+					</label>
+					<p class="mt-4 text-sm text-gray-600">Toggle Close Form</p>
+				</div>
+
+				<div class="flex flex-col items-center justify-between p-6 border border-gray-300 shadow-lg rounded-xl bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100">
+					<h4 class="text-xl font-bold text-gray-800 mb-4">
+						Close Form By Date
+					</h4>
+					<!-- Toggle Switch to Enable/Disable the Date Input -->
+					<label class="relative inline-flex items-center cursor-pointer mb-4">
+						<input type="checkbox" v-model="showCloseBy" @change="handlecloseby($event.target.checked)" class="sr-only peer">
+						<div class="w-12 h-12 bg-gray-400 peer-checked:bg-blue-500 rounded-full border-4 border-gray-200 peer-checked:border-blue-600 flex items-center justify-center transition-all duration-300 ease-in-out">
+							<svg class="w-6 h-6 text-white transform transition-transform duration-300 ease-in-out peer-checked:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+							</svg>
+						</div>
+					</label>
+					<p class="text-sm text-gray-600" v-if="!page.props.form.close_by">Click to enable date input</p>
+
+					<!-- Date Input -->
+					<input type="date" v-model="page.props.form.close_by" @change="checkCloseDate" 
+						:disabled="!showCloseBy"
+						class="mt-4 p-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:border-blue-500"
+					>
+				</div>
+
+
+				<div class="flex flex-col items-center justify-between p-6 border border-gray-300 shadow-lg rounded-xl bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100">
+					<h4 class="text-xl font-bold text-gray-800 mb-4">
+						Close Form By Submissions
+					</h4>
+					<!-- Toggle Switch to Enable/Disable the Submissions Input -->
+					<label class="relative inline-flex items-center cursor-pointer mb-4">
+						<input type="checkbox" v-model="showCloseBySubmissions" @change="handleCloseBySubmissions($event.target.checked)" class="sr-only peer">
+						<div class="w-12 h-12 bg-gray-400 peer-checked:bg-blue-500 rounded-full border-4 border-gray-200 peer-checked:border-blue-600 flex items-center justify-center transition-all duration-300 ease-in-out">
+							<svg class="w-6 h-6 text-white transform transition-transform duration-300 ease-in-out peer-checked:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+							</svg>
+						</div>
+					</label>
+					<p class="text-sm text-gray-600" v-if="!page.props.form.close_by_submissions">Click to enable submission limit input</p>
+
+					<!-- Number Input for Submissions -->
+					<input type="number" v-model="page.props.form.close_by_submissions" @blur="handleSubmissionsClose"
+					    @keyup.enter="handleSubmissionsClose" 
+						:disabled="!showCloseBySubmissions"
+						class="mt-4 p-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:border-blue-500"
+						placeholder="Enter submission limit"
+					>
+				</div>
+			</div>
+		</div>
+	</div>
 
         <!-- Hidden Fields -->
-        <div>
-          <button @click="toggleDropdown('hiddenFields')" class="flex justify-between w-full py-2 text-left">
-            <span>Hidden Fields</span>
-            <svg :class="dropdowns.hiddenFields ? 'rotate-180' : ''" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-          <div v-show="dropdowns.hiddenFields" class="ml-4">
-            <!-- Hidden Fields Content Here -->
-            <p>Hidden fields content goes here...</p>
-          </div>
-        </div>
+        <!-- <div>
+			<button @click="toggleDropdown('hiddenFields')" class="flex justify-between w-full py-2 text-left">
+				<span>Hidden Fields</span>
+				<svg :class="dropdowns.hiddenFields ? 'rotate-180' : ''" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+				</svg>
+			</button>
+			<div v-show="dropdowns.hiddenFields" class="ml-4">
+				<p>Hidden fields content goes here...</p>
+			</div>
+        </div> -->
 
         <!-- Link Settings -->
         <div>
-          <button @click="toggleDropdown('linkSettings')" class="flex justify-between w-full py-2 text-left">
-            <span>Link Settings</span>
-            <svg :class="dropdowns.linkSettings ? 'rotate-180' : ''" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-          <div v-show="dropdowns.linkSettings" class="ml-4">
-            <!-- Link Settings Content Here -->
-            <p>Link settings content goes here...</p>
-          </div>
+			<button @click="toggleDropdown('linkSettings')" class="flex justify-between w-full py-2 text-left">
+				<span>Link Settings</span>
+				<svg :class="dropdowns.linkSettings ? 'rotate-180' : ''" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+				</svg>
+			</button>
+			<div v-show="dropdowns.linkSettings" class="ml-4">
+				<p>Link settings content goes here...</p>
+			</div>
         </div>
 
       </div>
@@ -151,7 +211,7 @@
 </template>
 <script setup>
 import { usePage } from '@inertiajs/vue3';
-import { reactive } from 'vue';
+import { ref, reactive } from 'vue';
 
 const page = usePage();
 
@@ -167,6 +227,9 @@ const toggleDropdown = (dropdown) => {
     dropdowns[dropdown] = !dropdowns[dropdown];
 };
 
+const showCloseBy = ref(page.props.form.close_by !== null ? true : false);
+const showCloseBySubmissions = ref(page.props.form.close_by_submissions !== null ? true : false);
+
 async function handleChange(item, value) {
 	const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 	const response = await fetch(`/design/settings/${page.props.form.design.id}`, {
@@ -178,6 +241,99 @@ async function handleChange(item, value) {
 		body: JSON.stringify({
 			'input': item,
 			'value': value
+		})
+	});
+
+	if (!response.ok) {
+		throw new Error('Network response was not ok');
+	}
+}
+
+async function handleCloseForm(value){
+	const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+	const response = await fetch(`/form/close/${page.props.form.id}`, {
+		method: 'PUT',
+		headers: {
+			'Content-type': 'application/json',
+			'X-CSRF-TOKEN': csrfToken
+		},
+		body: JSON.stringify({
+			closed: value
+		})
+	});
+
+	if (!response.ok) {
+		throw new Error('Network response was not ok');
+	}
+}
+
+async function handlecloseby(value){
+	if(value==false){
+		const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+		const response = await fetch(`/form/close_by/${page.props.form.id}`, {
+			method: 'PUT',
+			headers: {
+				'Content-type': 'application/json',
+				'X-CSRF-TOKEN': csrfToken
+			},
+			body: JSON.stringify({
+				close_by: null
+			})
+		});
+
+		if (!response.ok) {
+			throw new Error('Network response was not ok');
+		}
+	}
+}
+
+async function handleCloseBySubmissions(value){
+	if(value==false){
+		const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+		const response = await fetch(`/form/close_by/${page.props.form.id}`, {
+			method: 'PUT',
+			headers: {
+				'Content-type': 'application/json',
+				'X-CSRF-TOKEN': csrfToken
+			},
+			body: JSON.stringify({
+				close_by: page.props.form.close_by
+			})
+		});
+
+		if (!response.ok) {
+			throw new Error('Network response was not ok');
+		}
+	}
+}
+async function checkCloseDate(){
+	const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+	const response = await fetch(`/form/close_by/${page.props.form.id}`, {
+		method: 'PUT',
+		headers: {
+			'Content-type': 'application/json',
+			'X-CSRF-TOKEN': csrfToken
+		},
+		body: JSON.stringify({
+			close_by: page.props.form.close_by
+		})
+	});
+
+	if (!response.ok) {
+		throw new Error('Network response was not ok');
+	}
+}
+
+async function handleSubmissionsClose(){
+	const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+	const response = await fetch(`/form/close_by_submission/${page.props.form.id}`, {
+		method: 'PUT',
+		headers: {
+			'Content-type': 'application/json',
+			'X-CSRF-TOKEN': csrfToken
+		},
+		body: JSON.stringify({
+			close_by_submission: page.props.form.close_by_submissions
 		})
 	});
 
