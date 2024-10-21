@@ -10,6 +10,7 @@ use App\Http\Controllers\FormResponseController;
 use App\Http\Controllers\IntegrationController;
 use App\Http\Controllers\PublishFormController;
 use App\Http\Controllers\SectionController;
+use App\Http\Controllers\UtmController;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -88,6 +89,9 @@ Route::middleware([
     Route::post('responses/download/{id}', [FormResponseController::class, 'download']);
     Route::delete('responses/destroy', [FormResponseController::class, 'destroy']);
     Route::get('download/file_uploads/{id}', [DownloadController::class, 'fileUploads']);
+    Route::post('utmfields/{id}', [UtmController::class, 'store']);
+    Route::delete('utmfields/{id}', [UtmController::class, 'destroy']);
+    Route::post('/utm-response/{id}', [UtmController::class, 'response']);
     Route::get('/subscription-checkout', function (Request $request) {
         return $request->user()
             ->newSubscription('prod_QtoXI3snwvM3H9', 'price_1Q20uCKy0dYEsuj84gazH5RT')

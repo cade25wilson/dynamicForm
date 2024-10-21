@@ -74,9 +74,9 @@
 					<div class="flex items-center justify-between p-4 border border-gray-100 rounded-md">
 						<div class="flex items-center space-x-2">
 							<h4>
-								Show "Powered By Youform" 
+								Show "Powered By BuildMyForm" 
 							</h4>
-							<span class="text-xs py-0.5 px-2 font-normal rounded-md bg-pink-600 text-white" title="Allowed in PRO plan">
+							<span class="text-xs py-0.5 px-2 font-normal rounded-md bg-red-600 text-white" title="Allowed in PRO plan">
 								PRO
 							</span>
 						</div>
@@ -119,7 +119,7 @@
 						Close Form
 					</h4>
 					<label class="relative inline-flex items-center cursor-pointer">
-						<input type="checkbox" @change="handleCloseForm($event.target.checked)" class="sr-only peer">
+						<input type="checkbox" v-model="page.props.form.closed" @change="handleCloseForm($event.target.checked)" class="sr-only peer">
 						<div class="w-12 h-12 bg-gray-400 peer-checked:bg-blue-500 rounded-full border-4 border-gray-200 peer-checked:border-blue-600 flex items-center justify-center transition-all duration-300 ease-in-out">
 							<svg class="w-6 h-6 text-white transform transition-transform duration-300 ease-in-out peer-checked:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -180,7 +180,7 @@
 	</div>
 
         <!-- Hidden Fields -->
-        <!-- <div>
+        <div>
 			<button @click="toggleDropdown('hiddenFields')" class="flex justify-between w-full py-2 text-left">
 				<span>Hidden Fields</span>
 				<svg :class="dropdowns.hiddenFields ? 'rotate-180' : ''" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -188,9 +188,9 @@
 				</svg>
 			</button>
 			<div v-show="dropdowns.hiddenFields" class="ml-4">
-				<p>Hidden fields content goes here...</p>
+				<HiddenFields />
 			</div>
-        </div> -->
+        </div>
 
         <!-- Link Settings -->
         <div>
@@ -212,6 +212,7 @@
 <script setup>
 import { usePage } from '@inertiajs/vue3';
 import { ref, reactive } from 'vue';
+import HiddenFields from './HiddenFields.vue';
 
 const page = usePage();
 
@@ -227,6 +228,7 @@ const toggleDropdown = (dropdown) => {
     dropdowns[dropdown] = !dropdowns[dropdown];
 };
 
+const showClosed = ref(page.props.form.closed !== null ? true : false);
 const showCloseBy = ref(page.props.form.close_by !== null ? true : false);
 const showCloseBySubmissions = ref(page.props.form.close_by_submissions !== null ? true : false);
 

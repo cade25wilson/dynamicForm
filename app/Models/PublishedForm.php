@@ -21,11 +21,6 @@ class PublishedForm extends Model
     {
         return $this->hasOne(Form::class);
     }
-    // Define the relationship with the FormField model
-    // public function fields()
-    // {
-    //     return $this->hasMany(FormFields::class);
-    // }
 
     public function sections()
     {
@@ -33,7 +28,11 @@ class PublishedForm extends Model
     }
 
     // Define the relationship with the FormResponse model
-
+    public function utmParameters()
+    {
+        return $this->hasMany(FormUtmParameter::class);
+    }
+    
     public function design()
     {
         return $this->hasOne(PublishedFormDesign::class);

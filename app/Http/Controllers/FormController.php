@@ -6,6 +6,7 @@ use App\Models\Form;
 use App\Models\FormDesign;
 use App\Models\FormIntegrations;
 use App\Models\FormSection;
+use App\Models\FormUtmParameter;
 use App\Models\PublishedForm;
 use App\Models\SectionCategory;
 use App\Models\User;
@@ -119,6 +120,8 @@ class FormController extends Controller
                 ]),
             ]);
 
+            $this->AddUtmParameters($form->id);
+
             FormIntegrations::create([
                 'form_id' => $form->id
             ]);
@@ -131,6 +134,21 @@ class FormController extends Controller
         }
 
         return redirect('/form/' . $form->id);
+    }
+
+    private function AddUtmParameters(string $formId): void 
+    {
+        $utmKeys = ['utm_source', 'utm_term', 'utm_content', 'utm_medium', 'utm_campaign', 'email'];
+        $utmData = [];
+        foreach ($utmKeys as $utmKey){
+            $utmData[] = [
+                'form_id' => $formId,
+                'utm_key' => $utmKey,
+                'created_at' => now(),
+                'updated_at' => now()
+            ];            
+        }
+        FormUtmParameter::insert($utmData);
     }
 
     public function show(string $uuid)
@@ -191,6 +209,7 @@ class FormController extends Controller
                 ];
             });
 
+        $utmParameters = FormUtmParameter::where('form_id', $form->id)->pluck('utm_key');
         $isPro = User::where('id', Auth::id())->firstOrFail()->isPro();
 
         return Inertia::render('Form', [
@@ -199,6 +218,7 @@ class FormController extends Controller
             'groupedSectionTypes' => $groupedSectionTypes,
             'current_section' => $currentSection,
             'has_published_form' => $hasPublishedForm,
+            'utm_parameters' => $utmParameters,
             'isPro' => $isPro
         ]);
     }

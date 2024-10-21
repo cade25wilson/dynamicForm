@@ -3,19 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Form;
-use App\Models\FormResponses;
 use App\Models\PublishedForm;
 use App\Models\PublishedFormDesign;
 use App\Models\PublishedFormField;
 use App\Models\PublishedFormSection;
+use App\PublishedFormHelper;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class PublishFormController extends Controller
 {
+    use PublishedFormHelper;
     /**
      * Store a newly created resource in storage.
      */
@@ -26,15 +26,18 @@ class PublishFormController extends Controller
             PublishedForm::where('form_id', $uuid)->delete();
             
             $form = Form::with([
-                'design', // Load the form design
-                'sections.formFields' // Load all sections with their corresponding fields
+                'design',
+                'sections.formFields'
             ])->find($uuid);
 
             $publishedForm = PublishedForm::create([
                 'name' => $form->name,
                 'description' => $form->description,
                 'user_id' => $form->user_id,
-                'form_id' => $form->id
+                'form_id' => $form->id,
+                'closed' => $form->closed,
+                'close_by' => $form->close_by,
+                'close_by_submission' => $form->close_by_submission
             ]);
 
             PublishedFormDesign::create([
@@ -52,60 +55,60 @@ class PublishFormController extends Controller
                 'progress_bar' => $form->design->progress_bar,
                 'captcha' => $form->design->captcha,
                 'navigation' => $form->design->navigation
+
             ]);
 
-        $sectionsData = [];
-        $fieldsData = [];
+            $sectionsData = [];
+            $fieldsData = [];
 
-        foreach ($form->sections as $section) {
-            $sectionsData[] = [
-                'id' => $section->id,
-                'published_form_id' => $publishedForm->id,
-                'section_type_id' => $section->section_type_id,
-                'order' => $section->order,
-                'name' => $section->name,
-                'description' => $section->description,
-                'button_text' => $section->button_text,
-                'background_image' => $section->background_image,
-                'text_align' => $section->text_align,
-                'options' => $section->options,
-                'created_at' => now(), // If your table requires timestamps
-                'updated_at' => now()
-            ];
+            foreach ($form->sections as $section) {
+                $sectionsData[] = [
+                    'id' => $section->id,
+                    'published_form_id' => $publishedForm->id,
+                    'section_type_id' => $section->section_type_id,
+                    'order' => $section->order,
+                    'name' => $section->name,
+                    'description' => $section->description,
+                    'button_text' => $section->button_text,
+                    'background_image' => $section->background_image,
+                    'text_align' => $section->text_align,
+                    'options' => $section->options,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ];
 
-            if ($section->formFields) {
-                foreach ($section->formFields as $field) {
-                    $fieldsData[] = [
-                        'id' => $field->id,
-                        'label' => $field->label,
-                        'placeholder' => $field->placeholder,
-                        'type' => $field->type,
-                        'required' => $field->required,
-                        'order' => $field->order,
-                        'show' => $field->show,
-                        'options' => $field->options,
-                        'published_form_section_id' => $section->id,
-                        'created_at' => now(), // If your table requires timestamps
-                        'updated_at' => now()
-                    ];
+                if ($section->formFields) {
+                    foreach ($section->formFields as $field) {
+                        $fieldsData[] = [
+                            'id' => $field->id,
+                            'label' => $field->label,
+                            'placeholder' => $field->placeholder,
+                            'type' => $field->type,
+                            'required' => $field->required,
+                            'order' => $field->order,
+                            'show' => $field->show,
+                            'options' => $field->options,
+                            'published_form_section_id' => $section->id,
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ];
+                    }
                 }
             }
-        }
 
-        PublishedFormSection::insert($sectionsData);
+            PublishedFormSection::insert($sectionsData);
 
-        if (!empty($fieldsData)) {
-            PublishedFormField::insert($fieldsData);
-        }
+            if (!empty($fieldsData)) {
+                PublishedFormField::insert($fieldsData);
+            }
 
             DB::commit();
             return response()->noContent();
         } catch(Exception $e){
             DB::rollBack();
             Log::error($e);;
+            return response()->json(['error' => 'Unable to create PublishedForm'], 500);
         }
-        
-        return $form;
     }
 
     /**
@@ -114,55 +117,21 @@ class PublishFormController extends Controller
     public function show(string $id)
     {
         try{
-            $form = PublishedForm::where('form_id', $id)
-                ->with('design') 
-                ->firstOrFail();
-
-            $formResponse = FormResponses::create([
-                'form_id' => $id
-            ]);
-
-            $formSections = PublishedFormSection::where('published_form_id', $form->id)
-            ->join('section_types', 'published_form_sections.section_type_id', '=', 'section_types.id')
-            ->select('published_form_sections.*', 'section_types.name as formsectionname')
-            ->orderBy('published_form_sections.order')
-            ->with(['publishedFormFields' => function ($query) {
-                $query->orderBy('order', 'asc');
-            }])
-            ->get()
-            ->map(function ($section) {
-                // Decode section options if it's a string
-                if (is_string($section->options)) {
-                    $section->options = json_decode($section->options, true);
-                }
-                
-                // Rename publishedFormFields to form_fields
-                $section->form_fields = $section->publishedFormFields;
-                unset($section->publishedFormFields); // Remove the original publishedFormFields
-
-                // Decode options for each form field
-                foreach ($section->form_fields as $field) {
-                    if (is_string($field->options)) {
-                        $field->options = json_decode($field->options, true);
-                    }
-                }
-
-                return $section;
-            });
-
-
-            [$nonTypeTwo, $typeTwo] = $formSections->partition(function ($section) {
-                return $section->section_type_id !== 2;
-            });
-            $formSections = $nonTypeTwo->merge($typeTwo);
-
+            $form = $this->getCachedPublishedForm($id);
+            $is_closed = $this->CheckIsClosed($form);
+            $utmParameters = $this->GetUtmParameters($form->form_id);
+            $formResponseId = $this->CreateFormResponse($is_closed, $id);
+            $formSections = $this->getFormSections($form->id);
             return Inertia::render('PublishedForm', [
                 'form' => $form,
                 'form_sections' => $formSections,
-                'response_id' => $formResponse->id
+                'response_id' => $formResponseId,
+                'utm_parameters' => $utmParameters,
+                'is_closed' => $is_closed
             ]);
         }catch(Exception $e){
-            Log::error($e);;
+            Log::error($e);
+            return response()->json(['error' => 'Unable to fetch PublishedForm'], 500);
         }
     }
 }
