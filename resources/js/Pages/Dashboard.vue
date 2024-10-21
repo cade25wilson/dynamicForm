@@ -84,6 +84,7 @@ function handleDelete() {
                 </div>
             </div>
         </div>
+        <!-- <iframe src="http://localhost:8000/forms/9d1f7428-bbd5-4569-b520-c8135caf3133" loading="lazy" width="100%" height="700" frameborder="0" marginheight="0" marginwidth="0"></iframe> -->
         <!-- <div v-else>
             <p class="py-10 text-center text-sm text-gray-500">
                 No forms created yet. <a href="#" @click.prevent="openModal" class="text-blue-600 hover:underline">Create one now</a>
@@ -103,9 +104,9 @@ function handleDelete() {
                                     <div class="flex items-center">
                                         <Link :href="`/responses/${form.id}`" class="cursor-pointer">
                                             <span class="text-gray-400 cursor-default inline-block mx-2 text-xs py-1 px-2 cursor-pointer">
-                                                {{ form.response_count === 0 ? 'No Responses' : 
-                                                form.response_count === 1 ? '1 Response' : 
-                                                `${form.response_count} Responses` }}
+                                                {{ form.responses_count === 0 ? 'No Responses' : 
+                                                form.responses_count === 1 ? '1 Response' : 
+                                                `${form.responses_count} Responses` }}
                                             </span>
                                         </Link>
                                     </div>

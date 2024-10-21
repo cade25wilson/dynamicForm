@@ -7,7 +7,7 @@
             type="text" 
             disabled 
             class="custom-input block w-full px-0 border-0 border-b focus:ring-0 sm:text-sm bg-transparent" 
-            :placeholder="page.props.current_section.form_fields[0].placeholder"
+            :placeholder="page.props.current_section.form_fields[0].placeholder || ''"
             :style="{
                 '--custom-placeholder-color': page.props.form.design.answers,
                 color: page.props.form.design.answers, 

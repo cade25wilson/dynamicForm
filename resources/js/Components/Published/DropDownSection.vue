@@ -31,7 +31,7 @@
         aria-labelledby="listbox-label"
       >
         <li
-          v-for="(choice, index) in formSection.form_fields[0].options.choices"
+          v-for="(choice, index) in randomizedChoices"
           :key="index"
           @click="selectOption(choice)"
           class="text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9 hover:bg-gray-200 hover:text-gray-800"
@@ -46,7 +46,7 @@
 
 <script setup>
 import { usePage } from '@inertiajs/vue3';
-import { defineEmits, ref } from 'vue';
+import { defineEmits, ref, computed } from 'vue';
 
 const showOptions = ref(false);
 const selectedOption = ref(null);
@@ -57,6 +57,21 @@ const props = defineProps({
     type: Object,
     required: false,
   },
+});
+
+// Shuffle function
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]; // Swap
+  }
+  return array;
+}
+
+// Computed property to get randomized choices
+const randomizedChoices = computed(() => {
+  const choices = props.formSection?.form_fields[0]?.options?.choices;
+  return props.formSection?.form_fields[0]?.options?.random ? shuffleArray([...choices]) : choices;
 });
 
 const selectOption = (choice) => {

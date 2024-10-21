@@ -10,66 +10,51 @@ use Illuminate\Support\Facades\Log;
 class DesignController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
+
+    public function updateSettings(Request $request, string $id)
+    {
+        Log::info($request);
+        try {
+            $fillableColumns = (new FormDesign)->getFillable();
+            $data = $request->validate([
+                'input' => 'required|in:' . implode(',', $fillableColumns),
+                'value' => 'boolean'
+            ]);
+
+            FormDesign::where('id', $id)->firstOrFail()->update([
+                $data['input'] => $data['value']
+            ]);
+
+            return response(null, 204);
+        } catch(Exception $e){
+            Log::error($e);
+            return response(null, 500);
+        }
+    }
+    
     public function update(Request $request, string $id)
     {
-        $validatedData = $request->validate([
-            'background' => 'required|string|regex:/^#[0-9A-Fa-f]{6}$/',
-            'questions' => 'required|string|regex:/^#[0-9A-Fa-f]{6}$/',
-            'answers' => 'required|string|regex:/^#[0-9A-Fa-f]{6}$/',
-            'buttons' => 'required|string|regex:/^#[0-9A-Fa-f]{6}$/',
-            'button_text' => 'required|string|regex:/^#[0-9A-Fa-f]{6}$/',
-            'star_rating' => 'required|string|regex:/^#[0-9A-Fa-f]{6}$/',
-            'font' => 'required|string|max:255',
-            'logo' => 'nullable|string',
-            'form_id' => 'required|string'
-        ]);
-    
-        // Proceed with updating the design
-        $design = FormDesign::findOrFail($id);
-        $design->update($validatedData);
-        return;
+        try{
+            $validatedData = $request->validate([
+                'background' => 'required|hex_color',
+                'questions' => 'required|hex_color',
+                'answers' => 'required|hex_color',
+                'buttons' => 'required|hex_color',
+                'button_text' => 'required|hex_color',
+                'star_rating' => 'required|hex_color',
+                'font' => 'required|string|max:255',
+                'logo' => 'nullable|string',
+                'form_id' => 'required|string'
+            ]);
+        
+            $design = FormDesign::findOrFail($id);
+            $design->update($validatedData);
+            return;
+        } catch(Exception $e){
+            Log::error($e);;
+        }
     }
 
     public function setBackground(Request $request, string $id)
@@ -89,16 +74,7 @@ class DesignController extends Controller
 
             FormDesign::where('form_id', $id)->update(['background_image' => $background_image]);
         } catch(Exception $e){
-            Log::info($e);
+            Log::error($e);;
         }
-    }
-    
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

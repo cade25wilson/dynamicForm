@@ -6,13 +6,16 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "google/apiclient": "^2.18",
         "inertiajs/inertia-laravel": "^1.0",
+        "laravel/cashier": "^15.4",
         "laravel/framework": "^11.9",
         "laravel/jetstream": "^5.1",
         "laravel/octane": "^2.5",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "phpoffice/phpspreadsheet": "^1.29",
+        "resend/resend-php": "^0.13.0",
         "spiral/roadrunner-cli": "^2.6.0",
         "spiral/roadrunner-http": "^3.3.0",
         "tightenco/ziggy": "^2.0"

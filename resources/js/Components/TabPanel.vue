@@ -1,11 +1,14 @@
 <template #default="{ activeTab, setActiveTab }">
-    <div class="flex justify-between border-b">
+   <div class="grid grid-cols-3 border-b">
         <button v-for="(tab, index) in tabs" :key="index"
-            :class="{ 'border-indigo-500 text-indigo-600': activeTab === tab.name }" @click="setActiveTab(tab.name)"
-            class="px-4 py-2 text-sm font-medium text-gray-500 border-b-2">
+            :class="{ 'border-indigo-500 text-indigo-600': activeTab === tab.name }" 
+            @click="setActiveTab(tab.name)"
+            class="px-4 py-2 text-sm font-medium text-gray-500 border-b-2 col-span-1">
             {{ tab.name }}
         </button>
+        <div class="col-span-1"></div> 
     </div>
+
 
     <div v-if="activeTab === 'Content'" class="p-4 bg-white">
         <ContentTab :current_section="current_section" :design="design"/>
@@ -18,50 +21,6 @@
                         <h4 class="text-xl font-semibold mb-1">
                             Design
                         </h4>
-                        <p class="text-sm text-gray-500 mb-8">
-                            Use light or dark theme or make your own by adding your brand color and logo.
-                        </p>
-
-                        <div>
-                            <div class="grid grid-cols-3 gap-2">
-                                <button @click="saveTheme('light')"
-                                    class="col-span-1 p-2 rounded-md bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-auto" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
-                                        </path>
-                                    </svg>
-                                    <span class="text-xs text-center">
-                                        Light
-                                    </span>
-                                </button>
-                                <button @click="saveTheme('dark')"
-                                    class="col-span-1 p-2 rounded-md bg-gray-700 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 text-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-auto" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
-                                        </path>
-                                    </svg>
-                                    <span class="text-xs text-center">
-                                        Dark
-                                    </span>
-                                </button>
-                                <button @click="saveTheme('custom')"
-                                    class="col-span-1 p-2 rounded-md bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-gray-500 text-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-auto" fill="none"
-                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M6 13.5V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 9.75V10.5">
-                                        </path>
-                                    </svg>
-                                    <span class="text-xs text-center">
-                                        Custom
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
 
                         <div class="mt-4 flex items-center justify-between">
                             <label class="block text-sm font-medium text-gray-700 pr-1">Background</label>
@@ -133,10 +92,10 @@
                                 Note: Any changes made in the Design tab will be saved &amp; published automatically.
                             </p>
                         </div>
+                       
                         <div class="mt-6" ref="dropdown">
                             <div>
-                                <label for="font-selector"
-                                    class="block relative text-sm font-medium text-gray-700">Font</label>
+                                <label for="font-selector" class="block relative text-sm font-medium text-gray-700">Font</label>
                                 <button @click="toggleDropdown" type="button"
                                     class="relative w-full cursor-default rounded-md mt-1 py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-gray-600 sm:text-sm sm:leading-6 bg-transparent">
                                     <span class="block truncate">{{ selectedFont }}</span>
@@ -151,28 +110,20 @@
                                     class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
                                     @input="handleSearch" placeholder="Search fonts...">
 
-                                <ul v-if="opened" class="absolute inset-auto min-w-72 max-h-80 text-sm scroll-smooth z-10 mt-1 overflow-y-auto rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <ul v-if="opened" class="fixed inset-auto min-w-72 max-h-80 text-sm scroll-smooth z-10 mt-1 overflow-y-auto rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                     <li v-for="font in fonts" :key="font" @click="selectFont(font)"
                                         :style="{ fontFamily: font }"
                                         class="relative border hover:bg-gray-100 cursor-pointer select-none mx-10 md:mx-auto py-2 pl-3 pr-9 border-gray-300">
-                                        <span :class="selectedFont === font ? 'font-semibold' : 'font-normal'"
-                                            class="block truncate">{{ font }}</span>
+                                        <span :class="selectedFont === font ? 'font-semibold' : 'font-normal'" class="block truncate">{{ font }}</span>
                                     </li>
                                 </ul>
                             </div>
                         </div>
+
                         <div class="mt-6 border-t border-gray-200 pt-6">
                             <div class="flex items-center justify-between">
                                 <p class="flex items-center text-sm font-medium text-gray-700">
                                     <span class="pr-1">Background Image </span>
-                                    <svg class="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg"
-                                        fill="none" viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                            stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                        </path>
-                                    </svg>
                                 </p>
 
                             </div>
@@ -225,17 +176,9 @@
     <div v-if="activeTab === 'Logic'" class="p-4">
         <!-- Content for Logic tab goes here -->
     </div>
-    <div v-if="activeTab === 'Connections'">
-        <div class="shadow-md bg-white h-screen overflow-y-auto py-4 px-6 pb-32">
-            <div>
-                <div>
-                    <div>
-                        
-                    </div>
-                </div>
-            </div>  
-        </div>
-    </div>
+    <SettingsTab v-if="activeTab === 'Settings'">
+    </SettingsTab>
+
 </template>
 
 <script setup>
@@ -244,14 +187,13 @@ import ContentTab from '@/Components/ContentTab.vue';
 import "@melloware/coloris/dist/coloris.css";
 import Coloris from "@melloware/coloris";
 import { usePage, router } from '@inertiajs/vue3';
+import SettingsTab from './SettingsTab.vue';
 
-const page = usePage();  // Get page context, especially for the CSRF token
+const page = usePage();
 const dropdown = ref(null);
 
-// Initialize Coloris for color pickers
 Coloris.init();
 
-// Define props (design data)
 const props = defineProps({
     design: Object,
     current_section: Object,
@@ -261,8 +203,7 @@ const props = defineProps({
 const tabs = ref([
     { name: 'Content' },
     { name: 'Design' },
-    { name: 'Logic' },
-    // { name: 'Connections'},
+    { name: 'Settings' },
 ]);
 
 // Manage the active tab state
@@ -295,22 +236,42 @@ function setActiveTab(tabName) {
     activeTab.value = tabName;
 }
 
-// Function to handle color picker close and save the design
-function handleColorPickerClose() {
-    router.put(`/design/${page.props.form.design.id}`, {
-        _token: page.props.csrf_token,
-        background: props.design.background,
-        questions: props.design.questions,
-        answers: props.design.answers,
-        buttons: props.design.buttons,
-        button_text: props.design.button_text,
-        star_rating: props.design.star_rating,
-        font: selectedFont.value,
-        background_image: props.design.background_image,
-        logo: props.design.logo,
-        form_id: props.design.form_id
-    });
+async function handleColorPickerClose() {
+    try {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const response = await fetch(`/design/${page.props.form.design.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({
+                _token: page.props.csrf_token,
+                background: props.design.background,
+                questions: props.design.questions,
+                answers: props.design.answers,
+                buttons: props.design.buttons,
+                button_text: props.design.button_text,
+                star_rating: props.design.star_rating,
+                font: selectedFont.value,
+                background_image: props.design.background_image,
+                logo: props.design.logo,
+                form_id: props.design.form_id
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Success:', data);
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
 }
+
 
 // Function to initialize Coloris color pickers
 function initializeColorPickers() {
@@ -406,7 +367,10 @@ onBeforeUnmount(() => {
 
 
 <style scoped>
-ul{ 
-    position: fixed;
+ul {
+    position: absolute; /* Change from fixed to absolute */
+    z-index: 10; /* Ensure it stays on top of other elements */
+    max-height: 20vh; /* Limit the height for scrolling */
+    overflow-y: auto; /* Enable scrolling if the list is too long */
 }
 </style>

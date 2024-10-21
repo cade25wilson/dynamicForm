@@ -43,7 +43,7 @@ class FormFieldResponseController extends Controller
             ]);
     
         } catch (Exception $e) {
-            Log::info($e);
+            Log::error($e);;
         }
     }
     
@@ -80,9 +80,8 @@ class FormFieldResponseController extends Controller
                 'form_field_id' => $data['fieldId'],
                 'value' => $data['value']
             ]);
-
         }catch(Exception $e){
-            Log::info($e);
+            Log::error($e);;
         }
     }
 
@@ -91,9 +90,13 @@ class FormFieldResponseController extends Controller
      */
     public function destroy(string $id, string $fieldId)
     {
-        if (file_exists(public_path("signature/signature-{$id}.svg"))) {
-            Storage::disk('public')->delete("signature/signature-{$id}.svg");
+        try{
+            if (file_exists(public_path("signature/signature-{$id}.svg"))) {
+                Storage::disk('public')->delete("signature/signature-{$id}.svg");
+            }
+            FormFieldResponses::where('response_id', $id)->where('form_field_id', $fieldId)->delete();
+        } catch(Exception $e){
+            Log::error($e);
         }
-        FormFieldResponses::where('response_id', $id)->where('form_field_id', $fieldId)->delete();
     }
 }

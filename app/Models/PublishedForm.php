@@ -9,7 +9,7 @@ class PublishedForm extends Model
 {
     use HasUuids;
     // The attributes that are mass assignable.
-    protected $fillable = ['id', 'form_id', 'name', 'user_id'];
+    protected $fillable = ['id', 'form_id', 'name', 'user_id', 'closed', 'close_by', 'close_by_submissions'];
 
     // Define the relationship with the User model
     public function user()
@@ -21,11 +21,6 @@ class PublishedForm extends Model
     {
         return $this->hasOne(Form::class);
     }
-    // Define the relationship with the FormField model
-    // public function fields()
-    // {
-    //     return $this->hasMany(FormFields::class);
-    // }
 
     public function sections()
     {
@@ -33,7 +28,11 @@ class PublishedForm extends Model
     }
 
     // Define the relationship with the FormResponse model
-
+    public function utmParameters()
+    {
+        return $this->hasMany(FormUtmParameter::class);
+    }
+    
     public function design()
     {
         return $this->hasOne(PublishedFormDesign::class);

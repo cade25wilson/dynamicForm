@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Form;
 use App\Models\FormDesign;
+use App\Models\FormIntegrations;
 use App\Models\FormSection;
+use App\Models\FormUtmParameter;
 use App\Models\PublishedForm;
 use App\Models\SectionCategory;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,22 +19,54 @@ use Inertia\Inertia;
 
 class FormController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function close(Request $request, string $id)
     {
-        //
-    }
- 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        try{
+            $data = $request->validate([
+                'closed' => 'boolean|required'
+            ]);
+            Form::where('id', $id)->firstOrFail()->update([
+                'closed' => $data['closed']
+            ]);
+            return response(null,204);
+        } catch(Exception $e){
+            Log::error($e);
+            return response(null,500);
+        }
     }
 
+    public function close_by(Request $request, string $id)
+    {
+        try{
+            $data = $request->validate([
+                'close_by' => 'date|nullable'
+            ]);
+            Form::where('id', $id)->firstOrFail()->update([
+                'close_by' => $data['close_by']
+            ]);
+            return response(null,204);
+        } catch(Exception $e){
+            Log::error($e);
+            return response(null,500);
+        }
+    }
+    
+    public function close_by_submission(Request $request, string $id)
+    {
+        try{
+            $data = $request->validate([
+                'close_by_submission' => 'int|nullable'
+            ]);
+            Form::where('id', $id)->firstOrFail()->update([
+                'close_by_submissions' => $data['close_by_submission']
+            ]);
+            return response(null,204);
+        } catch(Exception $e){
+            Log::error($e);
+            return response(null,500);
+        }
+    }
+    
     /**
      * Store a newly created resource in storage.
      */
@@ -78,11 +113,17 @@ class FormController extends Controller
                     'embed' => null,
                     'color' => 'pink',
                     'end' => 'button',
-                    'button_link' => 'http://localhost:8000/',
-                    'redirect_url' => 'http://localhost:8000/',
+                    'button_link' => 'https://buildmyform.com/',
+                    'redirect_url' => 'https://buildmyform.com/',
                     'redirect_message' => 'You will be redirected momentarily.',
                     'redirect_delay' => 3
                 ]),
+            ]);
+
+            $this->AddUtmParameters($form->id);
+
+            FormIntegrations::create([
+                'form_id' => $form->id
             ]);
             
             DB::commit();
@@ -95,8 +136,24 @@ class FormController extends Controller
         return redirect('/form/' . $form->id);
     }
 
+    private function AddUtmParameters(string $formId): void 
+    {
+        $utmKeys = ['utm_source', 'utm_term', 'utm_content', 'utm_medium', 'utm_campaign', 'email'];
+        $utmData = [];
+        foreach ($utmKeys as $utmKey){
+            $utmData[] = [
+                'form_id' => $formId,
+                'utm_key' => $utmKey,
+                'created_at' => now(),
+                'updated_at' => now()
+            ];            
+        }
+        FormUtmParameter::insert($utmData);
+    }
+
     public function show(string $uuid)
     {
+        $isPro = User::where('id', Auth::id())->firstOrFail()->isPro();
         $section = request()->query('section');
         $form = Form::where('id', $uuid)
                 ->with('design') 
@@ -119,19 +176,21 @@ class FormController extends Controller
         if ($currentSection) {
             $currentSection->options = json_decode($currentSection->options, true);
             foreach ($currentSection->formFields as $formField) {
-                $formField->options = json_decode($formField->options, true);
+                if($formField->options){
+                    $formField->options = json_decode($formField->options, true);
+                }
             }
         }
-
+        // Your original query
         $formSections = FormSection::where('form_id', $uuid)
-            ->join('section_types', 'form_sections.section_type_id', '=', 'section_types.id')
-            ->select('form_sections.*', 'section_types.name as formsectionname')
-            ->orderBy('form_sections.order')
-            ->get()
-            ->map(function ($section) {
-                $section->options = json_decode($section->options, true);
-                return $section;
-            });
+                    ->join('section_types', 'form_sections.section_type_id', '=', 'section_types.id')
+                    ->select('form_sections.*', 'section_types.name as formsectionname')
+                    ->orderBy('form_sections.order')
+                    ->get()
+                    ->map(function ($section) {
+                        $section->options = json_decode($section->options, true);
+                        return $section;
+                    });
 
         $sectionCategories = SectionCategory::with(['sectionTypes' => function ($query) {
             $query->where('show', true)->select('id', 'name', 'section_category_id');
@@ -139,36 +198,29 @@ class FormController extends Controller
 
         $hasPublishedForm = PublishedForm::where('form_id', $uuid)->exists();
 
-        $groupedSectionTypes = $sectionCategories->map(function ($category) {
-            return [
-                'category_name' => $category->name,
-                'section_types' => $category->sectionTypes,
-            ];
-        });
+        $groupedSectionTypes = $sectionCategories
+            ->filter(function ($category) {
+                return $category->name !== 'Null';
+            })
+            ->map(function ($category) {
+                return [
+                    'category_name' => $category->name,
+                    'section_types' => $category->sectionTypes,
+                ];
+            });
+
+        $utmParameters = FormUtmParameter::where('form_id', $form->id)->pluck('utm_key');
+        $isPro = User::where('id', Auth::id())->firstOrFail()->isPro();
 
         return Inertia::render('Form', [
             'form' => $form,
             'form_sections' => $formSections,
             'groupedSectionTypes' => $groupedSectionTypes,
             'current_section' => $currentSection,
-            'has_published_form' => $hasPublishedForm
+            'has_published_form' => $hasPublishedForm,
+            'utm_parameters' => $utmParameters,
+            'isPro' => $isPro
         ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
     }
 
     /**
@@ -180,8 +232,53 @@ class FormController extends Controller
             Form::destroy($id);
             return;
         }catch(Exception $e){
-            Log::info($e);
-            return response(500);
+            Log::error($e);;
+        }
+    }
+
+    public function update(Request $request, string $id)
+    {
+        try{
+            $data = $request->validate([
+                'name' => 'string|required'
+            ]);
+            Form::findOrFail($id)->update(['name' => $data['name']]);
+        } catch (Exception $e){
+            Log::error($e);
+        }
+    }
+
+    public function connect(string $id)
+    {
+        try{
+            $form = Form::where('id', $id)
+                    ->with('formIntegration') 
+                    ->firstOrFail();
+            $hasPublishedForm = PublishedForm::where('form_id', $id)->exists();
+            $isPro = User::where('id', Auth::id())->firstOrFail()->isPro();
+            return Inertia::render('Connect', [
+                'form' => $form,
+                'has_published_form' => $hasPublishedForm,
+                'isPro' => $isPro
+            ]);
+        }catch(Exception $e){
+            Log::error($e);
+        }
+    }
+
+    public function share(string $id)
+    {
+        try{
+            $form = Form::findOrFail($id)->only(['id', 'name']);
+            $hasPublishedForm = PublishedForm::where('form_id', $id)->exists();
+            $isPro = User::where('id', Auth::id())->firstOrFail()->isPro();
+            return Inertia::render('Share', [
+                'form' => $form,
+                'has_published_form' => $hasPublishedForm,
+                'isPro' => $isPro
+            ]);
+        }catch(Exception $e){
+            Log::error($e);
         }
     }
 }

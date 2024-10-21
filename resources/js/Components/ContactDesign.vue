@@ -26,15 +26,15 @@
             <div v-if="openSettings[field.id]" class="mt-2 p-4 border rounded bg-gray-100">
                 <div class="mb-3">
                     <label class="block text-sm font-medium text-gray-700">Label</label>
-                    <input type="text" v-model="field.label" @blur="updateField(field)" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm">
+                    <input type="text" v-model="field.label" @keyup.enter="updateField(field)" @blur="updateField(field)" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm">
                 </div>
                 <div class="mb-3">
                     <label class="block text-sm font-medium text-gray-700">Placeholder</label>
-                    <input type="text" v-model="field.placeholder" @blur="updateField(field)" class="block w-full rounded-md mt-1 border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm focus:ring-1">
+                    <input type="text" v-model="field.placeholder" @keyup.enter="updateField(field)" @blur="updateField(field)" class="block w-full rounded-md mt-1 border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm focus:ring-1">
                 </div>
                 <div class="flex items-center">
                     <div class="flex h-6 items-center">
-                        <input id="field-first_name-required" type="checkbox" :checked="field.required" @change="field.required = !field.required; updateField(field)" value="" class="h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600 focus:outline-none focus:ring-0">
+                        <input id="field-first_name-required" type="checkbox" :checked="field.required" @change="field.required = !field.required; updateField(field)" class="h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600 focus:outline-none focus:ring-0">
                     </div>
                     <div class="ml-2 text-sm">
                         <label for="field-first_name-required" class="text-gray-600">Make this required?</label>
@@ -47,19 +47,30 @@
 
 <script setup>
 import { ref } from 'vue';
-import { usePage, router } from '@inertiajs/vue3';
+import { usePage } from '@inertiajs/vue3';
 
 const page = usePage();
 const openSettings = ref({});
 
-function updateField(field){
-    router.put(`/field/${field.id}`, {
-        _token: page.props.csrf_token,
-        label: field.label,
-        placeholder: field.placeholder,
-        show: field.show,
-        required: field.required
-    });
+async function updateField(field) {
+    try {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const response = await fetch(`/field/${field.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({
+                label: field.label,
+                placeholder: field.placeholder,
+                show: field.show,
+                required: field.required
+            })
+        });
+    } catch (error) {
+        console.error('Error:', error);
+    }
 }
 
 function toggleFieldVisibility(field) {

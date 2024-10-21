@@ -63,7 +63,7 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted, watch, nextTick, onBeforeUnmount } from 'vue';
+import { computed, ref } from 'vue';
 import { usePage, router } from '@inertiajs/vue3';
 import ContactDesign from './ContactDesign.vue';
 import DescriptionEditor from './DescriptionEditor.vue';
@@ -85,10 +85,10 @@ function updateField(input, value){
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': csrfToken // Pass the CSRF token in the headers
+            'X-CSRF-TOKEN': csrfToken
         },
-            body: JSON.stringify({
-            _token: csrfToken, // Also include the token in the body if needed
+        body: JSON.stringify({
+            _token: csrfToken,
             input: input,
             value: value
         })
@@ -98,7 +98,6 @@ function updateField(input, value){
 function handleBlur(){
     let embed;
 
-    // Check if 'options' exists and is not null
     if (page.props.current_section.options) {
         embed = page.props.current_section.options.embed || null;
     } else {
@@ -107,10 +106,6 @@ function handleBlur(){
 
     router.put(`/section/${page.props.current_section.id}`, {
         _token: page.props.csrf_token,
-        // button_text: page.props.current_section.button_text,
-        // name: page.props.current_section.name,
-        // description: page.props.current_section.description,
-        // text_align: page.props.current_section.text_align,
         embed: embed
     });
 }
@@ -133,8 +128,8 @@ const hasOneField = computed(() => {
 
 <style>
     .container {
-        height: 88vh; /* Full viewport height */
-        overflow: hidden; /* Prevent the page from scrolling */
+        height: 92vh;
+        overflow: hidden;
     }
 
     .ProseMirror {
@@ -194,8 +189,7 @@ const hasOneField = computed(() => {
 
     .scrollable-content {
         height: 100%;
-        overflow-y: auto; /* Enable vertical scrolling */
-        padding-right: 16px; /* Adjust padding to prevent scrollbar overlap */
-        box-sizing: content-box; /* Ensure padding doesn't affect the width */
+        overflow-y: auto;
+        box-sizing: content-box;
     }
 </style>        

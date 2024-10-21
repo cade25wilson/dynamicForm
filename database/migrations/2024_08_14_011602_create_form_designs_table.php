@@ -24,6 +24,9 @@ return new class extends Migration
             $table->string('font', 20)->default('Inter');
             $table->string('background_image', 200)->nullable(true);
             $table->string('logo', 200)->nullable(true);
+            $table->boolean('progress_bar')->default(false);
+            $table->boolean('captcha')->default(false);
+            $table->boolean('navigation')->default(false);
             $table->timestamps();
         });
     }

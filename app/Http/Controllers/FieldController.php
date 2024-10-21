@@ -10,59 +10,23 @@ use Illuminate\Support\Facades\Log;
 class FieldController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-        $data = $request->validate([
-            'label' => 'nullable|string',
-            'placeholder' => 'nullable|string',
-            'show' => 'required|boolean',
-            'required' => 'required|boolean',
-        ]);
+        try{
+            $data = $request->validate([
+                'label' => 'nullable|string',
+                'placeholder' => 'nullable|string',
+                'show' => 'required|boolean',
+                'required' => 'required|boolean',
+            ]);
 
-        FormFields::where('id', $id)->firstOrFail()->update($data);
-        return;
+            FormFields::where('id', $id)->firstOrFail()->update($data);
+            return;
+        } catch(Exception $e){
+            Log::error($e);;
+        }
     }
 
     public function maxlength(Request $request, string $id)
@@ -82,7 +46,7 @@ class FieldController extends Controller
             $formField->save();
             return;
         } catch(Exception $e){
-            Log::info($e);
+            Log::error($e);;
             return;
         }
     }
@@ -184,7 +148,7 @@ class FieldController extends Controller
                 return response()->json(['error' => 'Choices array not found'], 400);
             }
         }catch(Exception $e){
-            Log::info($e);
+            Log::error($e);;
         }
     }
 
@@ -212,7 +176,7 @@ class FieldController extends Controller
             $formField->save();
             return;
         }catch(Exception $e){
-            Log::info($e);
+            Log::error($e);;
         }
     }
 
@@ -232,7 +196,7 @@ class FieldController extends Controller
             $formField->save();
             return;
         }catch(Exception $e){
-            Log::info($e);
+            Log::error($e);;
         }
     }
 
@@ -249,7 +213,7 @@ class FieldController extends Controller
             $formField->save();
             return;
         }catch(Exception $e){
-            Log::info($e);
+            Log::error($e);;
         }
     }
 
@@ -270,7 +234,7 @@ class FieldController extends Controller
             
             return;
         }catch(Exception $e){
-            Log::info($e);
+            Log::error($e);;
         }
     }
 
@@ -300,7 +264,7 @@ class FieldController extends Controller
             $formField->options = json_encode($options);
             $formField->save();
         } catch(Exception $e){
-            Log::info($e);
+            Log::error($e);;
         }
     }
 
@@ -317,7 +281,7 @@ class FieldController extends Controller
             $formField->options = json_encode($options);
             $formField->save();
         } catch (Exception $e){
-            Log::info($e);
+            Log::error($e);;
         }
     }
 
@@ -334,7 +298,7 @@ class FieldController extends Controller
             $formField->options = json_encode($options);
             $formField->save();
         } catch(Exception $e){
-            Log::info($e);
+            Log::error($e);;
         }
     }
 
@@ -349,7 +313,7 @@ class FieldController extends Controller
             $formField->label = $data['label'];
             $formField->save();
         } catch(Exception $e){
-            Log::info($e);
+            Log::error($e);;
         }    
     }
 
@@ -360,14 +324,13 @@ class FieldController extends Controller
                 'number_stars' => 'numeric|min:3|max:10',
             ]);
             
-
             $formField = FormFields::where('id', $id)->firstOrFail();
             $options = json_decode($formField->options, true);
             $options['number_stars'] = $data['number_stars'];
             $formField->options = json_encode($options);
             $formField->save();
         } catch(Exception $e){
-            Log::info($e);
+            Log::error($e);;
         }
     }
 
@@ -384,7 +347,7 @@ class FieldController extends Controller
             $formField->options = json_encode($options);
             $formField->save();
         } catch(Exception $e){
-            Log::info($e);
+            Log::error($e);;
         }
     }
 
@@ -401,15 +364,7 @@ class FieldController extends Controller
             $formField->options = json_encode($options);
             $formField->save();
         } catch(Exception $e){
-            Log::info($e);
+            Log::error($e);;
         }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }
