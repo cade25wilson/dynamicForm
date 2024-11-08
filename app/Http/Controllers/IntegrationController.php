@@ -30,6 +30,7 @@ class IntegrationController extends Controller
             Log::error($e);
             return response(NULL, 500);
         }
+
     }
 
     /**

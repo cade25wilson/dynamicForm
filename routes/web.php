@@ -37,6 +37,15 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+Route::get('/1', function () {
+    return Inertia::render('Test', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
+});
+
 Route::get('/responses/{id}', [FormResponseController::class, 'show']);
 Route::get('forms/{id}', [PublishFormController::class, 'show']);
 Route::get('responses/{id}/{responseId}', [FormResponseController::class, 'showResponse']);
