@@ -1,5 +1,4 @@
 <template>
-  <!-- {{page}} -->
     <div
           class="relative lg:mx-6 mt-[4rem] bg-white custom-bg-color rounded-md h-[calc(100vh_-_13rem)] border border-gray-500  bg-cover bg-center bg-no-repeat custom-form-font"
           :style="{
@@ -30,6 +29,7 @@
                   <OpinionSection v-if="[14].includes(page.props.current_section.section_type_id)"/>
                   <SignatureSection v-if="[15].includes(page.props.current_section.section_type_id)"/>
                   <FileSection v-if="[16].includes(page.props.current_section.section_type_id)"/>
+                  <PaymentSection v-if="[17].includes(page.props.current_section.section_type_id)"/>
               </div>
               <div class="my-6" v-if="page.props.current_section.options.embed">
                   <iframe :src="page.props.current_section.options.embed" frameborder="0" marginheight="0" marginwidth="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen="" class="w-full max-w-2xl aspect-video mx-auto"></iframe>
@@ -66,6 +66,7 @@ import SingleSelectSection from './SingleSelectSection.vue';
 import StarSection from './StarSection.vue';
 import ThankyouSection from './ThankyouSection.vue';
 import WelcomeSection from './WelcomeSection.vue';
+import PaymentSection from './PaymentSection.vue';
 
 const page = usePage();
 </script>

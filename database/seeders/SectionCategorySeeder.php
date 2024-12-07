@@ -14,7 +14,8 @@ class SectionCategorySeeder extends Seeder
             'Choice',
             'Other',
             // 'Rating & Ranking',
-            'Null', 
+            // 'Null', 
+            'Payment'
         ];
 
         foreach ($categories as $category) {

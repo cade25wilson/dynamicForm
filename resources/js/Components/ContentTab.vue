@@ -7,7 +7,7 @@
                 <input @focus-question-input.window="$el.focus()" @keyup.enter="updateField('name', page.props.current_section.name)" @blur="updateField('name', page.props.current_section.name)" v-model="page.props.current_section.name" type="text" name="text-title-editor" id="text-title-editor" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm" placeholder="Write your title here...">
             </div>
         </div>
-        <DescriptionEditor @blur="handleBlur" />
+        <DescriptionEditor @blur="handleBlur"/>
     <div>
         <div class="mt-6 border-b border-gray-100 pb-4" v-if="![3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16].includes(page.props.current_section.section_type_id)">
             <div class="flex items-center justify-between">
@@ -28,12 +28,13 @@
         </div>
     </div>
     <ThankYouSection v-if="page.props.current_section.section_type_id == 2" />
-    <TextAlign v-if="![2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16].includes(page.props.current_section.section_type_id)" />
+    <TextAlign v-if="![2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].includes(page.props.current_section.section_type_id)" />
     <ContactDesign v-if="page.props.current_section.section_type_id===3" />
     <FormFields v-if="hasOneField && ![8, 9, 10].includes(page.props.current_section.section_type_id)"/>
     <SingleSelect v-if="[8, 9, 10].includes(page.props.current_section.section_type_id)" />
     <SchedulerOptions v-if="page.props.current_section.section_type_id == 12" />
     <StarFields v-if="page.props.current_section.section_type_id == 13"/>
+    <StripeConnect v-if="page.props.current_section.section_type_id == 17"/>
     <div class="mt-6" v-if="![2].includes(page.props.current_section.section_type_id)">
         <label for="text-cta-text-editor" class="block text-sm font-medium text-gray-700">
             Button Text 
@@ -73,6 +74,7 @@ import SingleSelect from './SingleSelect.vue';
 import StarFields from './StarFields.vue';
 import TextAlign from './TextAlign.vue';
 import ThankYouSection from './ThankYouSection.vue';
+import StripeConnect from './StripeConnect.vue';
 
 const page = usePage(); 
 const editor = ref(false);

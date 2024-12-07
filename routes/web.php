@@ -8,6 +8,7 @@ use App\Http\Controllers\FormController;
 use App\Http\Controllers\FormFieldResponseController;
 use App\Http\Controllers\FormResponseController;
 use App\Http\Controllers\IntegrationController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PublishFormController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\UtmController;
@@ -64,6 +65,7 @@ Route::middleware([
     Route::post('section/{id}', [SectionController::class, 'duplicate'])->name('section.duplicate');
     Route::post('publish/{id}', [PublishFormController::class, 'store']);
     Route::put('section/background/{id}', [SectionController::class, 'backgroundImage']);
+    Route::put('section/payment/{id}', [SectionController::class, 'payment']);
     Route::put('design/background/{id}', [DesignController::class, 'setBackground']);
     Route::put('section/{id}', [SectionController::class, 'update']);
     Route::put('section/single/{id}', [SectionController::class, 'singleField']);
@@ -103,11 +105,25 @@ Route::middleware([
     Route::post('/utm-response/{id}', [UtmController::class, 'response']);
     Route::get('/subscription-checkout', function (Request $request) {
         return $request->user()
-            ->newSubscription('prod_QtoXI3snwvM3H9', 'price_1Q20uCKy0dYEsuj84gazH5RT')
+            ->newSubscription(env('STRIPE_PRODUCT'), env('STRIPE_PRICE'))
             ->checkout([
                 'success_url' => route('dashboard'),
                 'cancel_url' => route('dashboard'),
             ]);
     });
+    Route::post('/payment-intent/{id}', [PaymentController::class, 'paymentintent']);
+
+    Route::get('/connect', function () {
+        if (!auth()->user()->getStripeAccountId()) {
+            auth()->user()->createStripeAccount(['type' => 'express']);
+        }
+    
+        if (!auth()->user()->isStripeAccountActive()) {
+            return redirect(auth()->user()->getStripeAccountLink());
+        }
+    
+        return redirect()->back()->withFallback('dashboard');
+    });
+    
     Route::put('integrations/webhook/{id}', [IntegrationController::class, 'webhook']);
 });

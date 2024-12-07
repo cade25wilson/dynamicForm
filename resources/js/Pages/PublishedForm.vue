@@ -46,6 +46,7 @@
               <OpinionSection @updateResponse="handleUpdateResponse" v-if="[14].includes(currentSection.section_type_id)" :formSection="currentSection" />
               <SignatureSection v-if="[15].includes(currentSection.section_type_id)" :formSection="currentSection" />
               <FileSection v-if="[16].includes(currentSection.section_type_id)" :formSection="currentSection" />
+              <PaymentSection @updateResponse="handleUpdateResponse" v-if="[17].includes(currentSection.section_type_id)" :formSection="currentSection" />
             </div>
 
             <div class="my-6" v-if="currentSection.options.embed">
@@ -142,6 +143,7 @@ import SingleSelectSection from '@/Components/Published/SingleSelectSection.vue'
 import StarSection from '@/Components/Published/StarSection.vue';
 import ThankyouSection from '@/Components/Published/ThankyouSection.vue';
 import WelcomeSection from '@/Components/Published/WelcomeSection.vue';
+import PaymentSection from '@/Components/Published/PaymentSection.vue';
 
 // Access the page data
 const page = usePage();
@@ -278,6 +280,9 @@ const validationContainer = ref(null);
 
   // Handle form field response updates
   function handleUpdateResponse({ fieldId, value }) {
+    if(currentSection.value.section_type_id == 17){
+      goToNextSection();
+    }
     console.log('Field ID:', fieldId);
     console.log('Field Value:', value);
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');

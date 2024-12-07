@@ -149,5 +149,13 @@ class SectionTypeSeeder extends Seeder
             'section_category_id' => 4,
             'default_name' => 'Please upload a file'
         ]);
+        DB::table('section_types')->insert([
+            'id' => 17,
+            'name' => 'Payment',
+            'description' => 'Accept a Payment',
+            'show' => true,
+            'section_category_id' => 5,
+            'default_name' => 'Enter Card Details.'
+        ]);
     }
 }

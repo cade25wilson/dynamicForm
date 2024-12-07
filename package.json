@@ -24,6 +24,7 @@
         "@headlessui/vue": "^1.7.22",
         "@heroicons/vue": "^2.1.5",
         "@melloware/coloris": "^0.24.0",
+        "@stripe/stripe-js": "^5.2.0",
         "@tinymce/tinymce-vue": "^6.0.1",
         "@vueup/vue-quill": "^1.2.0",
         "googleapis": "^144.0.0",

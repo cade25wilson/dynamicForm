@@ -24,3 +24,4 @@ yarn-error.log
 /.vscode
 rr
 .rr.yaml
+app/Providers/AppServiceProvider.php

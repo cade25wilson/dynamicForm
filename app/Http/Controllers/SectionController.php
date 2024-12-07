@@ -52,7 +52,7 @@ class SectionController extends Controller
                 'form_id' => $data['FormId'],
                 'section_type_id' => $data['SectionId'],
                 'order' => $order,
-                'options' => json_encode(['color' => $color, 'svg' => $svg, 'end' => 'button', 'button_link' => 'https://buildmyform.com/', 'redirect_url' => 'https://buildmyform.com/', 'redirect_message' => 'You will be redirected momentarily.', 'redirect_delay' => 3]),
+                'options' => json_encode(['currency' => 'USD', 'amount' => 0, 'color' => $color, 'svg' => $svg, 'end' => 'button', 'button_link' => 'https://buildmyform.com/', 'redirect_url' => 'https://buildmyform.com/', 'redirect_message' => 'You will be redirected momentarily.', 'redirect_delay' => 3]),
                 'name' => $type->default_name,
                 'text_align' => $textAlign
             ]);
@@ -207,5 +207,29 @@ class SectionController extends Controller
             ]);
         }
         return redirect('form/' . $formSection ->form_id);
+    }
+
+    public function payment(Request $request, string $id){
+        try{
+            $data = $request->validate([
+                'type' => 'required|in:currency,amount',
+                'value' => 'required'
+            ]);
+
+            $formSection = FormSection::where('id', $id)->firstOrFail();
+
+            $options = json_decode($formSection->options, true);
+
+            $options[$data['type']] = $data['value'];
+
+            $formSection->update([
+                'options' => json_encode($options)
+            ]);
+
+            return response()->noContent();
+        } catch(Exception $e){
+            Log::error($e);
+            return response(null,500);
+        }
     }
 }
