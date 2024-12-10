@@ -90,6 +90,45 @@ class FormResponseController extends Controller
             'partialResponses' => $partialResponses->toArray()    
         ]);
     }
+
+    public function getResponses(string $id)
+    {
+        $form = Form::with([
+            'responses.fieldResponses',
+            'publishedForm.sections.publishedFormFields',
+        ])->findOrFail($id);
+
+        $publishedFormFields = $form->publishedForm->sections->flatMap(function ($section) {
+            return $section->publishedFormFields;
+        })->pluck('label', 'id');
+
+        $mapResponseToRow = function ($response) use ($publishedFormFields) {
+            $row = ['response_id' => $response->id];
+            $fieldResponses = $response->fieldResponses->pluck('value', 'form_field_id');
+
+            foreach ($publishedFormFields as $fieldId => $label) {
+                $row[] = $fieldResponses[$fieldId] ?? null;
+            }
+
+            return $row;
+        };
+
+        // Filter completed and partial responses and map them to rows
+        $completedResponses = $form->responses->filter(function ($response) {
+            return $response->is_complete;
+        })->map($mapResponseToRow);
+
+        $partialResponses = $form->responses->filter(function ($response) {
+            return !$response->is_complete;
+        })->map($mapResponseToRow);
+
+        return response()->json([
+            'completed' => $completedResponses->count(),
+            'partial' => $partialResponses->count(),
+            'completeResponses' => $completedResponses->toArray(),
+            'partialResponses' => $partialResponses->toArray(),
+        ]);
+    }
     
     public function showResponse(string $id, string $responseId)
     {

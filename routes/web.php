@@ -48,6 +48,7 @@ Route::get('/1', function () {
 });
 
 Route::get('/responses/{id}', [FormResponseController::class, 'show']);
+Route::get('/responses/refresh/{id}', [FormResponseController::class, 'getResponses']);
 Route::get('forms/{id}', [PublishFormController::class, 'show']);
 Route::get('responses/{id}/{responseId}', [FormResponseController::class, 'showResponse']);
 Route::post('stripe/webhook', [WebhookController::class, 'handleWebhook']);

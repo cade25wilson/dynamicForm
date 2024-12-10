@@ -151,7 +151,7 @@
                     </div>
                 </div>
                 <div class="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button @click="deleteSubmissions" class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white border border-transparent rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm bg-red-600 hover:bg-red-700" x-text="confirmBtnText">Yes! Delete it</button>
+                    <button @click="deleteSubmissions" class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white border border-transparent rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm bg-red-600 hover:bg-red-700">Yes! Delete it</button>
                     <button @click="showDeleteModal=false" class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Cancel</button>
                 </div>
             </div>
@@ -212,7 +212,7 @@
                         </div>
                     </div>
                 </div>
-                 </div>
+                </div>
             </div>
         </div>
     </div>
@@ -351,10 +351,19 @@
             showDeleteModal.value = false;
             throw new Error('Network response was not ok');
         }
-
-        // Filter out the deleted responses from tableData.rows
-        props.tableData.rows = props.tableData.rows.filter(row => !checkedResponses.value.includes(row.response_id));
         checkedResponses.value = [];
+
+        const completedElement = document.querySelector('#completeresponses');
+
+        let responses;
+        if (completedElement && completedElement.classList.contains('border-indigo-500')) {
+            responses = 'complete';
+        } else {
+            responses = 'partial';
+        }
+
+        refreshResponses(responses);
+
         showDeleteModal.value = false;
     }
 
@@ -364,6 +373,27 @@
             return false;
         }
         return true;
+    }
+
+    async function refreshResponses(responseType){
+        const response = await fetch(`/responses/refresh/${page.props.form.id}`);
+        if (!response.ok) {
+            showDeleteModal.value = false;
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+
+        page.props.completeResponses = data.completeResponses || [];
+        page.props.partialResponses = data.partialResponses || [];
+        page.props.completed = data.completed || 0;
+        page.props.partial = data.partial || 0;
+        if(responseType == 'complete'){
+            shownResponses.value = page.props.completeResponses;
+        } else{
+            shownResponses.value = page.props.partialResponses
+        }
+        console.log(data.partial);
     }
 
     async function updateResponses(type){
