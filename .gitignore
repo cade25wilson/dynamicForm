@@ -25,3 +25,4 @@ yarn-error.log
 rr
 .rr.yaml
 app/Providers/AppServiceProvider.php
+app/Providers/*
