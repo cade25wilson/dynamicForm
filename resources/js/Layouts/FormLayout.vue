@@ -42,6 +42,7 @@
                         </Link>
 
                         <Link 
+                        v-if="page.props.has_published_form"
                         :href="`/responses/${page.props.form.id}`" 
                         class="inline-block text-center text-xs border border-transparent rounded-lg px-2 py-1 cursor-pointer hover:bg-slate-200 transition-all"
                         :class="{ 'bg-white text-blue-600 font-semibold': isActive(`/responses/${page.props.form.id}`) }"

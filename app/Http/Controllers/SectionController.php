@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\DeleteBackgroundImage;
 use App\Setup;
 use App\Models\FormFields;
 use App\Models\FormSection;
@@ -109,10 +110,31 @@ class SectionController extends Controller
             FormSection::where('id', $id)->firstOrFail()->update([
                 'background_image' => $background_image
             ]);
+            return response(json_encode(['background_image' => $background_image]), 200);
         } catch (Exception $e){
             Log::error($e);
         }
     }
+
+    public function removeBackgroundImage(string $id)
+    {
+        try {
+            $formSection = FormSection::where('id', $id)->firstOrFail();
+            $backgroundImagePath = $formSection->background_image;
+
+            DeleteBackgroundImage::dispatch($backgroundImagePath);
+
+            $formSection->update([
+                'background_image' => null
+            ]);
+
+            return response()->noContent();
+        } catch (Exception $e) {
+            Log::error($e);
+            return response(null, 500);
+        }
+    }
+
 
     public function singleField(Request $request, string $id)
     {

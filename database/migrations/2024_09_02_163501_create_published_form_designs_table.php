@@ -27,6 +27,7 @@ return new class extends Migration
             $table->boolean('progress_bar')->default(false);
             $table->boolean('captcha')->default(false);
             $table->boolean('navigation')->default(false);
+            $table->boolean('powered_by')->default(true);
             $table->timestamps();
         });
     }

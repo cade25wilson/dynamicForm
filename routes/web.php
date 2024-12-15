@@ -65,9 +65,11 @@ Route::middleware([
     Route::post('section', [SectionController::class, 'store'])->name('section.store');
     Route::post('section/{id}', [SectionController::class, 'duplicate'])->name('section.duplicate');
     Route::post('publish/{id}', [PublishFormController::class, 'store']);
-    Route::put('section/background/{id}', [SectionController::class, 'backgroundImage']);
+    Route::post('section/background/{id}', [SectionController::class, 'backgroundImage']);
+    Route::put('section/background/remove/{id}', [SectionController::class, 'removeBackgroundImage']);
     Route::put('section/payment/{id}', [SectionController::class, 'payment']);
-    Route::put('design/background/{id}', [DesignController::class, 'setBackground']);
+    Route::post('design/background/{id}', [DesignController::class, 'setBackground']);
+    Route::put('design/background/remove/{id}', [DesignController::class, 'removeBackground']);
     Route::put('section/{id}', [SectionController::class, 'update']);
     Route::put('section/single/{id}', [SectionController::class, 'singleField']);
     Route::put('section/ending/{id}', [SectionController::class, 'updateEnding']);

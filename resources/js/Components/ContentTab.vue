@@ -49,15 +49,27 @@
                 Background Image
             </p>
         </div>
-        <label class="flex items-center mt-2 justify-center border border-gray-200 rounded-md p-6 hover:bg-gray-50 cursor-pointer">
+        <label class="flex items-center mt-2 justify-center border border-gray-200 rounded-md p-6 hover:bg-gray-50 cursor-pointer relative">
             <span class="text-sm text-gray-500" v-if="!page.props.current_section.background_image">
                 Select Image
             </span>
             <div class="h-10 w-auto" v-else>
                 <img :src="page.props.current_section.background_image" alt="Cover Image" class="h-full max-h-full w-auto max-w-full object-contain">
+                <!-- Delete Icon -->
+                <button
+                    type="button"
+                    @click="deleteSectionBackground"
+                    class="absolute top-2 right-2 bg-white rounded-full p-1 shadow hover:bg-gray-100"
+                    aria-label="Delete Background Image"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-gray-500">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
-            <input type="file" accept="image/png, image/jpeg" class="text-xs hidden" @change="updateSectionBackground">
+            <input type="file" accept="image/png, image/jpeg" class="text-xs hidden" @change="updateSectionBackground">  
         </label>
+
     </div>
 </div>
 </div>
@@ -112,15 +124,50 @@ function handleBlur(){
     });
 }
 
-function updateSectionBackground(event) {
-    const file = event.target.files[0];
-    if (file) {
-        page.props.current_section.background_image = file;
-        router.put(`/section/background/${page.props.current_section.id}`, {
-            background_image: file,
+async function deleteSectionBackground(){
+    try {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        await fetch(`/section/background/remove/${page.props.current_section.id}`, {
+            method: 'PUT',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
         });
+        page.props.current_section.background_image = null;
+    } catch (error) {
+        console.error(error);
     }
 }
+
+async function updateSectionBackground(event) {
+    const file = event.target.files[0];
+    if (file) {
+        try {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            const formData = new FormData();
+            formData.append('background_image', file);
+            formData.append('_token', csrfToken);
+
+            const response = await fetch(`/section/background/${page.props.current_section.id}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                },
+                body: formData,
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                page.props.current_section.background_image = data.background_image;
+            } else {
+                console.error('Failed to upload the image');
+            }
+        } catch (error) {
+            console.error('Error uploading the background image:', error);
+        }
+    }
+}
+
 
 const hasOneField = computed(() => {
   return page.props.current_section.form_fields.length === 1;

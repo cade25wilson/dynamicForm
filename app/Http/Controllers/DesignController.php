@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\DeleteBackgroundImage;
 use App\Models\FormDesign;
 use Exception;
 use Illuminate\Http\Request;
@@ -73,8 +74,29 @@ class DesignController extends Controller
             $background_image = "/background/{$filename}";
 
             FormDesign::where('form_id', $id)->update(['background_image' => $background_image]);
+
+            return response(json_encode(['background_image' => $background_image]), 200);
         } catch(Exception $e){
-            Log::error($e);;
+            Log::error($e);
+            return response(null, 500);
         }
     }
+
+    public function removeBackground(Request $request, string $id)
+    {
+        try {
+            // Retrieve the current background image path
+            $formDesign = FormDesign::where('form_id', $id)->firstOrFail();
+
+            DeleteBackgroundImage::dispatch($formDesign->background_image);
+
+            $formDesign->update(['background_image' => null]);
+
+            return response()->json(['message' => 'Background image removed successfully'], 200);
+        } catch (Exception $e) {
+            Log::error($e);
+            return response()->json(['error' => 'Failed to remove background image'], 500);
+        }
+    }
+
 }

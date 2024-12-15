@@ -10,7 +10,7 @@ class FormDesign extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $fillable = ['form_id', 'background', 'questions', 'answers', 'buttons', 'button_text', 'star_rating', 'font', 'background_image', 'logo', 'progress_bar', 'captcha', 'navigation'];
+    protected $fillable = ['form_id', 'background', 'questions', 'answers', 'buttons', 'button_text', 'star_rating', 'font', 'background_image', 'logo', 'progress_bar', 'captcha', 'navigation', 'powered_by'];
 
     public function form()
     {

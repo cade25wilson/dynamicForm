@@ -4,14 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Exports\FormResponsesExport;
 use App\Jobs\FormCompletion;
-use App\Jobs\SendWebhookRequest;
 use App\Models\Form;
 use App\Models\FormFieldResponses;
 use App\Models\FormResponses;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -48,6 +46,7 @@ class FormResponseController extends Controller
             'publishedForm.sections.publishedFormFields',
             'responses.fieldResponses'
         ])->findOrFail($id);
+
         $formData = $form->only(['id', 'name']);
         $isPro = User::where('id', Auth::id())->firstOrFail()->isPro();
 

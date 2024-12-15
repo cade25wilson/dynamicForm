@@ -8,6 +8,7 @@ import FormModal from '@/Components/FormModal.vue';
 const page = usePage();
 const showDeleteModal = ref(false);
 const selectedFormId = ref(null);
+
 function openDeleteModal(formId){
     showDeleteModal.value = true;
     selectedFormId.value = formId;
@@ -84,12 +85,6 @@ function handleDelete() {
                 </div>
             </div>
         </div>
-        <!-- <iframe src="http://localhost:8000/forms/9d1f7428-bbd5-4569-b520-c8135caf3133" loading="lazy" width="100%" height="700" frameborder="0" marginheight="0" marginwidth="0"></iframe> -->
-        <!-- <div v-else>
-            <p class="py-10 text-center text-sm text-gray-500">
-                No forms created yet. <a href="#" @click.prevent="openModal" class="text-blue-600 hover:underline">Create one now</a>
-            </p>
-        </div> -->
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="py-12">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

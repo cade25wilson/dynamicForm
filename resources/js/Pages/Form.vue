@@ -61,7 +61,6 @@ function showModal() {
 
 function selectSectionType(sectionType) {
   selectedSectionType.value = sectionType.id;
-  console.log('Selected Section Type:', sectionType.name);
 }
 
 function getButtonClass(item) {
@@ -72,6 +71,9 @@ function getButtonClass(item) {
 }
 
 function submit() {
+  if (selectedSectionType.value === 17 &&!page.props.isPro){
+    return;
+  }
   router.post('/section', {
     _token: page.props.csrf_token,
     SectionId: selectedSectionType.value,

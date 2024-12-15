@@ -120,7 +120,7 @@
                             </div>
                         </div>
 
-                        <div class="mt-6 border-t border-gray-200 pt-6">
+                        <!-- <div class="mt-6 border-t border-gray-200 pt-6">
                             <div class="flex items-center justify-between">
                                 <p class="flex items-center text-sm font-medium text-gray-700">
                                     <span class="pr-1">Background Image </span>
@@ -146,7 +146,59 @@
                             </label>
 
 
+                        </div> -->
+
+                        <div class="mt-6 pt-6">
+                            <div class="flex items-center justify-between">
+                                <p class="block text-sm font-medium text-gray-700">
+                                    Background Image
+                                </p>
+                            </div>
+
+                            <!-- Box container for the image -->
+                            <div class="relative border border-gray-200 rounded-md p-6 hover:bg-gray-50 flex items-center justify-center">
+                                <!-- If no image -->
+                                <template v-if="!page.props.form.design.background_image">
+                                    <label class="cursor-pointer">
+                                        <span class="text-sm text-gray-500">Select Image</span>
+                                        <input 
+                                            type="file" 
+                                            accept="image/png, image/jpeg" 
+                                            class="hidden" 
+                                            @change="updateSectionBackground">
+                                    </label>
+                                </template>
+
+                                <!-- If image exists -->
+                                <template v-else>
+                                    <img 
+                                        :src="page.props.form.design.background_image" 
+                                        alt="Background Image" 
+                                        class="h-32 w-auto object-contain">
+
+                                    <!-- Delete Button in Top-Right Corner of the Box -->
+                                    <button
+                                        type="button"
+                                        @click="deleteSectionBackground"
+                                        class="absolute top-0 right-0 bg-white rounded-full p-1 shadow hover:bg-gray-100"
+                                        aria-label="Delete Background Image"
+                                        style="transform: translate(-10%, 20%);"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-gray-500">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+
+                                    <!-- Hidden input for changing the image -->
+                                    <input 
+                                        type="file" 
+                                        accept="image/png, image/jpeg" 
+                                        class="hidden" 
+                                        @change="updateSectionBackground">
+                                </template>
+                            </div>
                         </div>
+
 
                         <div class="mt-6 border-t border-gray-200 pt-6">
                             <div class="flex items-center justify-between">
@@ -333,7 +385,7 @@ function handleEnter(event) {
 function toggleDropdown() {
   opened.value = !opened.value;
 }
-
+ 
 // Function to handle Escape key press to close the font dropdown
 function handleEscape() {
     opened.value = false;
@@ -344,15 +396,55 @@ function handleClickOutside(event) {
   }
 }
 
-function updateDesignBackground(event) {
-    const file = event.target.files[0];
-    if (file) {
-        page.props.current_section.background_image = file;
-        router.put(`/design/background/${page.props.form.id}`, {
-            background_image: file,
+async function deleteSectionBackground() {
+    try{
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const response = await fetch(`/design/background/remove/${page.props.form.id}`, {
+            method: 'PUT',
+            headers:{
+                'X-CSRF-TOKEN': csrfToken
+            },
         });
+
+        if (response.ok) {
+            page.props.form.design.background_image = null;
+        } else {
+            console.error('Failed to upload the image');
+        }
+    } catch (error) {
+        console.error('Error uploading the background image');
     }
 }
+
+async function updateSectionBackground(event) {
+    const file = event.target.files[0];
+    if (file) {
+        try {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            const formData = new FormData();
+            formData.append('background_image', file);
+            formData.append('_token', csrfToken);
+
+            const response = await fetch(`/design/background/${page.props.form.id}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: formData,
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                page.props.form.design.background_image = data.background_image;
+            } else {
+                console.error('Failed to upload the image');
+            }
+        } catch (error) {
+            console.error('Error uploading the background image:');
+        }
+    }
+}
+
 // Initialize color pickers on component mount
 onMounted(() => {
     nextTick(() => {

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\FormSection;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
