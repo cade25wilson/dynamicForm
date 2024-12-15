@@ -76,8 +76,8 @@
 							<h4>
 								Show "Powered By BuildMyForm" 
 							</h4>
-							<span class="text-xs py-0.5 px-2 font-normal rounded-md bg-red-600 text-white" title="Allowed in PRO plan">
-								PRO
+							<span class="text-xs py-0.5 px-2 font-normal rounded-md bg-red-600 text-white" title="Allowed in PREMIUM plan">
+								PREMIUM
 							</span>
 						</div>
 						<label class="inline-flex items-center  cursor-pointer ">

@@ -17,8 +17,8 @@
             <div class="mt-6">
                 <label for="text-cta-text-editor" class="block text-sm font-medium text-gray-700">
                     Button Text 
-                    <button class="text-xs py-0.5 px-2 font-normal rounded-md bg-pink-600 text-white cursor-pointer" title="Allowed in PRO plan">
-                        PRO
+                    <button class="text-xs py-0.5 px-2 font-normal rounded-md bg-pink-600 text-white cursor-pointer" title="Allowed in PREMIUM plan">
+                        PREMIUM
                     </button>
                 </label>
                 <div class="mt-1">
@@ -28,8 +28,8 @@
             <div class="mt-4">
                 <label for="text-cta-link-editor" class="block text-sm font-medium text-gray-700">
                     Button Link 
-                    <button class="text-xs py-0.5 px-2 font-normal rounded-md bg-pink-600 text-white cursor-pointer" title="Allowed in PRO plan">
-                        PRO
+                    <button class="text-xs py-0.5 px-2 font-normal rounded-md bg-pink-600 text-white cursor-pointer" title="Allowed in PREMIUM plan">
+                        PREMIUM
                     </button>
                 </label>
                 <div class="mt-1">
@@ -44,8 +44,8 @@
             <div class="mt-6">
                 <label for="text-redirect-url-editor" class="block text-sm font-medium text-gray-700">
                     Redirect URL 
-                    <button class="text-xs py-0.5 px-2 font-normal rounded-md bg-pink-600 text-white cursor-pointer" title="Allowed in PRO plan">
-                        PRO
+                    <button class="text-xs py-0.5 px-2 font-normal rounded-md bg-pink-600 text-white cursor-pointer" title="Allowed in PREMIUM plan">
+                        PREMIUM
                     </button>
                 </label>
                 <div class="mt-1">
@@ -55,8 +55,8 @@
             <div class="mt-4">
                 <label for="text-redirect-message-editor" class="block text-sm font-medium text-gray-700">
                     Redirect Message
-                    <button class="text-xs py-0.5 px-2 font-normal rounded-md bg-pink-600 text-white cursor-pointer" title="Allowed in PRO plan">
-                        PRO
+                    <button class="text-xs py-0.5 px-2 font-normal rounded-md bg-pink-600 text-white cursor-pointer" title="Allowed in PREMIUM plan">
+                        PREMIUM
                     </button>
                 </label>
                 <div class="mt-1">
@@ -66,8 +66,8 @@
             <div class="mt-4">
                 <label for="text-redirect-delay-editor" class="block text-sm font-medium text-gray-700">
                     Redirect Delay (in seconds)
-                    <button class="text-xs py-0.5 px-2 font-normal rounded-md bg-pink-600 text-white cursor-pointer" title="Allowed in PRO plan">
-                        PRO
+                    <button class="text-xs py-0.5 px-2 font-normal rounded-md bg-pink-600 text-white cursor-pointer" title="Allowed in PREMIUM plan">
+                        PREMIUM
                     </button>
                 </label>
                 <div class="mt-1">

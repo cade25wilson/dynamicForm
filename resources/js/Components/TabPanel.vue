@@ -208,8 +208,8 @@
 
                                 <button @click.prevent="$dispatch('open-pro-plan-modal')"
                                     class="text-xs py-0.5 px-2 font-normal rounded-md bg-pink-600 text-white cursor-pointer"
-                                    title="Allowed in PRO plan">
-                                    PRO
+                                    title="Allowed in PREMIUM plan">
+                                    PREMIUM
                                 </button>
                             </div>
 

@@ -131,12 +131,12 @@
                             <h4 class="font-semibold text-gray-700 mr-2">
                                 Custom Domain
                             </h4>
-                            <button @click.prevent="$dispatch('open-pro-plan-modal')" class="text-xs py-0.5 px-2 font-normal rounded-md bg-pink-600 text-white cursor-pointer" title="Allowed in PRO plan">
-                                PRO
+                            <button @click.prevent="$dispatch('open-pro-plan-modal')" class="text-xs py-0.5 px-2 font-normal rounded-md bg-pink-600 text-white cursor-pointer" title="Allowed in PREMIUM plan">
+                                PREMIUM
                             </button>
                         </div>
                         <p class="text-sm mt-4 text-gray-500 cursor-pointer" @click.prevent="$dispatch('open-pro-plan-modal')">
-                            Please buy a PRO plan to add your own custom domain.
+                            Please buy a PREMIUM plan to add your own custom domain.
                         </p>
                     </div>
                     <div class="mt-10 border-t border-gray-200 pt-10">
