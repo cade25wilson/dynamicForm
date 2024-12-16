@@ -19,7 +19,7 @@
                         Make sure your form is published before you share it to the world.
                     </p>
                     <div class="mt-6">
-                        <a href="#" @click.prevent="$dispatch('open-qr-code-modal')" class="inline-block p-1" x-tooltip.raw="Get QR Code">
+                        <a href="#" @click.prevent="$dispatch('open-qr-code-modal')" class="inline-block p-1">
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z"></path>
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z"></path>
@@ -34,10 +34,10 @@
                             Embed in your website as
                           </h4>
                           <div>
-                            <select class="ml-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-gray-600 sm:text-sm sm:leading-6">
-                              <option value="inline">Inline embed</option>
+                            <select v-model="selection" class="ml-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-gray-600 sm:text-sm sm:leading-6">
+                              <option value="inlineembed">Inline embed</option>
                               <option value="popup">Popup</option>
-                              <option value="page">Full page</option>
+                              <option value="fullpage">Full page</option>
                             </select>
                           </div>
                         </div>
@@ -49,7 +49,7 @@
                             </h4>
                             
                             <div>
-                              <select x-model="popupPosition" class="ml-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-gray-600 sm:text-sm sm:leading-6">
+                              <select class="ml-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-gray-600 sm:text-sm sm:leading-6">
                                 <option value="center">Center (as a modal)</option>
                                 <option value="bottom-right">Bottom right</option>
                               </select>
@@ -58,7 +58,7 @@
                         </template>
                       </div>
                       <div class="mt-6">
-                        <div>
+                        <div v-if="selection == 'inlineembed'">
                           <p class="text-sm text-gray-600 leading-loose">
                             Works with WordPress, Squarespace, Wix, Shopify, Webflow, Carrd, and all other website builders.
                             <br>
@@ -66,7 +66,7 @@
                           </p>
                           <div class="mt-2 bg-gray-800 text-white p-6 font-light rounded-md relative">
                             <code class="block mb-2" v-html="embedCode"></code>
-                            <button @click="copyEmbedCode" class="absolute right-2 bottom-2" x-tooltip.raw="Copy code">
+                            <button @click="copyEmbedCode" class="absolute right-2 bottom-2">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75"></path>
                               </svg>                                      
@@ -77,16 +77,16 @@
                           </p>
                         </div>
 
-                        <div x-show="type == 'popup'" style="display: none;">
+                        <div v-if="selection == 'popup'">
                           <p class="text-sm text-gray-600">
                             Paste the below code snippet in the <code>head</code> section of your website:
                           </p>
                           <div class="mt-2 bg-gray-800 text-white p-6 font-light rounded-md relative">
                             <code class="block mb-2">
-                              &lt;script src="https://app.youform.com/widgets/widget.js"&gt;&lt;/script&gt;
+                              &lt;script src="https://www.buildmyform.com/widgets/widget.js"&gt;&lt;/script&gt;
                             </code>
 
-                            <button @click="copyEmbedCode" class="absolute right-2 bottom-2" x-tooltip.raw="Copy code">
+                            <button @click="copyJSCode" class="absolute right-2 bottom-2">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75"></path>
                               </svg>                                      
@@ -98,15 +98,15 @@
 
                           <div class="mt-2 bg-gray-800 text-white p-6 font-light rounded-md relative">
                             <code class="block">
-                              data-youform-open="7lkj4fvr" 
+                              data-buildmyform-open="{{page.props.form.id}}" 
                               
-                              data-youform-position="<span x-text="popupPosition">center</span>" 
+                              data-buildmyform-position="<span>center</span>" 
                             </code>
                           </div>
 
                         </div>
 
-                        <div x-show="type == 'page'" style="display: none;">
+                        <div v-if="selection == 'fullpage'">
                           <p class="text-sm text-gray-600">
                             Paste the below code snippet in a new page:
                           </p>
@@ -114,7 +114,7 @@
                             <code class="block mb-2">
                               &lt;html&gt;  &lt;head&gt;      &lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"&gt;      &lt;title&gt;My Form&lt;/title&gt;      &lt;style type="text/css"&gt;          html { margin: 0; height: 100%; overflow: hidden; }           iframe { position: absolute; top: 0; right: 0; bottom: 0; left: 0; border: 0; }      &lt;/style&gt;  &lt;/head&gt;  &lt;body&gt;      &lt;iframe src="https://app.youform.com/forms/7lkj4fvr" loading="lazy" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"&gt;&lt;/iframe&gt;  &lt;/body&gt;&lt;/html&gt;
                             </code>
-                            <button @click="copyEmbedCode" class="absolute right-2 bottom-2" x-tooltip.raw="Copy code">
+                            <button @click="copyFullPageCode" class="absolute right-2 bottom-2">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75"></path>
                               </svg>                                      
@@ -126,7 +126,7 @@
                       </div>
                     </div>
 
-                    <div class="mt-10 border-t border-gray-200 pt-10">
+                    <!-- <div class="mt-10 border-t border-gray-200 pt-10">
                       <div class="flex items-center">
                             <h4 class="font-semibold text-gray-700 mr-2">
                                 Custom Domain
@@ -138,13 +138,12 @@
                         <p class="text-sm mt-4 text-gray-500 cursor-pointer" @click.prevent="$dispatch('open-pro-plan-modal')">
                             Please buy a PREMIUM plan to add your own custom domain.
                         </p>
-                    </div>
-                    <div class="mt-10 border-t border-gray-200 pt-10">
+                    </div> -->
+                    <!-- <div class="mt-10 border-t border-gray-200 pt-10">
                       <p class="text-sm text-gray-500">
-                        To change form Title, share image or favicon go to <a href="" class="text-blue-700 hover:underline">Link Settings</a>
+                        To change form Title, share image or favicon go to <a class="text-blue-700 hover:underline">Link Settings</a>
                       </p>
-                    </div>
-
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -155,8 +154,10 @@
 <script setup>
 import FormLayout from '@/Layouts/FormLayout.vue';
 import { usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
+
 const page = usePage();
+const selection = ref('inlineembed');
 
 function copyPageUrl(){
     navigator.clipboard.writeText(`https://buildmyform.com/forms/${page.props.form.id}`); 
@@ -164,6 +165,14 @@ function copyPageUrl(){
 
 function copyEmbedCode(){
     navigator.clipboard.writeText(embedCode.value);
+}
+
+function copyJSCode(){
+	navigator.clipboard.writeText('<script>src="https://www.buildmyform.com/widgets/widget.js"</script');	
+}
+
+function copyFullPageCode(){
+	navigator.clipboard.writeText(`<html> <head> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"> <title>My Form</title> <style type="text/css"> html { margin: 0; height: 100%; overflow: hidden; } iframe { position: absolute; top: 0; right: 0; bottom: 0; left: 0; border: 0; } </style> </head> <body> <iframe src="https://www.buildmyform.com/forms/${page.props.form.id}" loading="lazy" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe> </body></html>`);
 }
 
 const embedCode = computed(() => {

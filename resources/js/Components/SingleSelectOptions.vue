@@ -11,10 +11,9 @@
             </div>
 
             <div v-if="imageUploader" @open-image-uploader.window="handleOpen()" @keyup.escape.window="handleClose()" @image-uploader-success.window="handleSuccess()" class="z-100 px-10" aria-modal="true" style="">
-                <div x-show="show" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed z-20 inset-0 bg-gray-500 bg-opacity-75 transition-opacity" style=""></div>
                 <div class="fixed inset-0 z-30 overflow-y-auto">
                     <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                        <div x-show="show" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-5 sm:w-full sm:max-w-4xl mx-4" style="">
+                        <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-5 sm:w-full sm:max-w-4xl mx-4" style="">
                             <div class="bg-white px-4 pt-5 pb-4 sm:px-14 sm:py-6">
                                 <a href="#" @click.prevent="handleClose()" class="absolute -top-3 -right-3 md:top-6 md:right-10 block p-4 ">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -60,7 +59,7 @@
                                                     Uploading...
                                                 </p>
                                             </div>
-                                            <div v-if="mode == 'link'" x-show="mode == 'link'" class="my-10">
+                                            <div class="my-10">
                                                 <label class="block text-sm font-medium leading-6 text-gray-900">Add image URL</label>
                                                 <div class="mt-2">
                                                     <div class="flex w-full rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-gray-600"> 
@@ -91,8 +90,8 @@
                                 <div class="mt-2">
                                     <p class="text-sm text-gray-500">Paste your options below, one per line.</p>
                                     <textarea v-model="bulkInsert" rows="6" class="mt-2 w-full border border-gray-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm placeholder-gray-400" placeholder="Option 1
-Option 2
-Option 3"></textarea>
+                                        Option 2
+                                        Option 3"></textarea>
                                 </div>
                             </div>
                         </div>

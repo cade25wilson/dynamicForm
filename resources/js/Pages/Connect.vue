@@ -83,7 +83,7 @@ async function updateWebhook() {
                     </div>
                 </form>
 
-                <div x-show="newWorkspaceMode" class="hidden">
+                <div class="hidden">
                     <h4 class="text-sm font-semibold text-gray-600 my-4">Next, choose your workspace.</h4>
                     <img src="" alt="Slack Workspace Change" class="rounded-md shadow-md my-4">
                     <a href="" class="block w-full text-center bg-indigo-600 text-xs text-white py-1.5 rounded-md hover:bg-indigo-500">Authorize New Slack Workspace →</a>

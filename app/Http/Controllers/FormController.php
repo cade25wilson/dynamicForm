@@ -28,7 +28,7 @@ class FormController extends Controller
             Form::where('id', $id)->firstOrFail()->update([
                 'closed' => $data['closed']
             ]);
-            return response(null,204);
+            return response()->noContent();
         } catch(Exception $e){
             Log::error($e);
             return response(null,500);
@@ -44,7 +44,7 @@ class FormController extends Controller
             Form::where('id', $id)->firstOrFail()->update([
                 'close_by' => $data['close_by']
             ]);
-            return response(null,204);
+            return response()->noContent();
         } catch(Exception $e){
             Log::error($e);
             return response(null,500);
@@ -60,7 +60,7 @@ class FormController extends Controller
             Form::where('id', $id)->firstOrFail()->update([
                 'close_by_submissions' => $data['close_by_submission']
             ]);
-            return response(null,204);
+            return response()->noContent();
         } catch(Exception $e){
             Log::error($e);
             return response(null,500);
@@ -84,7 +84,7 @@ class FormController extends Controller
             ]);
 
             FormDesign::create([
-                'form_id' =>$form->id
+                'form_id' => $form->id
             ]);
 
             FormSection::create([
@@ -230,9 +230,10 @@ class FormController extends Controller
     {
         try{
             Form::destroy($id);
-            return;
+            return response()->noContent();
         }catch(Exception $e){
-            Log::error($e);;
+            Log::error($e);
+            return response(null,500);
         }
     }
 
@@ -243,8 +244,10 @@ class FormController extends Controller
                 'name' => 'string|required'
             ]);
             Form::findOrFail($id)->update(['name' => $data['name']]);
+            return response()->noContent();
         } catch (Exception $e){
             Log::error($e);
+            return response(null, 500);
         }
     }
 
