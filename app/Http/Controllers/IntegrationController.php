@@ -19,7 +19,6 @@ class IntegrationController extends Controller
 
     public function webhook(string $id, Request $request)
     {
-        Log::info($request);
         try{
             $data = $request->validate([
                 'webhook' => 'required|url:https'

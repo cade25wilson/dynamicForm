@@ -16,7 +16,6 @@ class DesignController extends Controller
 
     public function updateSettings(Request $request, string $id)
     {
-        Log::info($request);
         try {
             $fillableColumns = (new FormDesign)->getFillable();
             $data = $request->validate([

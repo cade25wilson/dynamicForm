@@ -129,7 +129,7 @@ class FormController extends Controller
             DB::commit();
         } catch(Exception $e) {
             DB::rollBack();
-            Log::info("error " . $e);
+            Log::error("error " . $e);
             return redirect('/dashboard');
         }
 

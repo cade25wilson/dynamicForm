@@ -61,8 +61,6 @@ class FormCompletion implements ShouldQueue
             $responseData[$sectionName] = $fieldsData;
         }        
 
-        Log::info(json_encode($responseData));
-
         if($webhookUrl){
             Http::withHeaders([
                 'Content-Type' => 'application/json',
