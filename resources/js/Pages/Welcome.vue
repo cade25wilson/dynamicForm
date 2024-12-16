@@ -89,12 +89,12 @@ function toggleBilling(billing){
         </div>
         <div class="mx-auto max-w-2xl py-16 sm:py-20 lg:pt-24 lg:pb-0">
             <div class="text-center">
-                <div class="inline-flex items-center bg-blue-100 rounded-full px-6 py-2 text-blue-700 font-medium mb-8">
+                <!-- <div class="inline-flex items-center bg-blue-100 rounded-full px-6 py-2 text-blue-700 font-medium mb-8">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                     Try free for 7 days - Cancel anytime
-                </div>
+                </div> -->
                 <h1 class="text-4xl font-bold tracking-tight text-[#4D3300] dark:text-white/100 sm:text-6xl">Effortless Form Building for Your Business Needs</h1>
                 <p class="mt-6 mb-6 text-lg leading-8 text-[#4D3300] dark:text-white/100">Create and share powerful, customizable forms in minutes. Our platform simplifies data collection, automates workflows, and enhances user engagement—all while keeping you in control.</p>
                 <div>
@@ -429,11 +429,11 @@ function toggleBilling(billing){
     <section class="py-20" id="pricing-section">
         <div class="container mx-auto px-4">
             <div class="sm:flex sm:flex-col sm:align-center">
-                <div class="mb-8 text-center">
+                <!-- <div class="mb-8 text-center">
                     <div class="inline-flex items-center bg-blue-100 rounded-full px-6 py-2 text-blue-700 font-medium"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>Try free for 7 days - Cancel anytime</div>
-                </div>
+                </div> -->
                 <h1 class="text-4xl font-extrabold text-[#4D3300] sm:text-center sm:text-6xl mb-8 dark:text-white/100">Pricing Plans</h1>
                 <p class="max-w-2xl m-auto mt-5 text-xl text-[#4D3300] sm:text-center sm:text-2xl mb-12 dark:text-white/100">Simple pricing that works for any scale.</p>
                 <!-- <div class="relative self-center mt-6 rounded-lg p-0.5 flex border-2 border-[#4D3300] sm:mt-8">
