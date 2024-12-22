@@ -161,7 +161,7 @@
             </div>
             <p class="mb-4 mt-10 text-center text-gray-600 text-sm">Or choose your next adventure:</p>
             <div class="grid grid-cols-3 gap-4 text-xs transition-all font-semibold">
-                <a href="https://app.youform.com/form/8f2hlx5f/share" class="rounded-md bg-pale-violet p-6 hover:bg-contessa-300">
+                <a class="rounded-md bg-pale-violet p-6 hover:bg-contessa-300">
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mx-auto">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0V12a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 12V5.25"></path>
@@ -171,7 +171,7 @@
                         Embed <br> in website
                     </p>
                 </a>
-                <a href="https://app.youform.com/form/8f2hlx5f/integrations" class="rounded-md bg-bright-green-200 p-6 hover:bg-contessa-300">
+                <a class="rounded-md bg-bright-green-200 p-6 hover:bg-contessa-300">
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mx-auto">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"></path>
@@ -181,7 +181,7 @@
                         Setup <br> integrations
                     </p>
                 </a>
-                <a href="https://app.youform.com/form/8f2hlx5f/settings/link-settings" class="rounded-md bg-vivid-yellow p-6 hover:bg-contessa-300">
+                <a class="rounded-md bg-vivid-yellow p-6 hover:bg-contessa-300">
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mx-auto">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"></path>

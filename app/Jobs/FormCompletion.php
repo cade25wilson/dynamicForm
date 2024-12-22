@@ -8,6 +8,7 @@ use App\Models\FormFieldResponses;
 use App\Models\PublishedForm;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -28,10 +29,12 @@ class FormCompletion implements ShouldQueue
      */
     public function handle(): void
     {
-    $formId = PublishedForm::where('id', $this->formId)->pluck('form_id')->first();
+        $formId = PublishedForm::where('id', $this->formId)->pluck('form_id')->first();
         $form = Form::where('id', $formId)
-                ->with('formIntegration') 
+                ->with('formIntegration')
+                ->with('emailSettings')
                 ->firstOrFail();
+
         $webhookUrl = $form->formIntegration->webhook;
         $form = Form::with(['publishedForm.sections.publishedFormFields'])->findOrFail($formId);
         $sections = $form->publishedForm->sections;
@@ -67,6 +70,17 @@ class FormCompletion implements ShouldQueue
             ])->post($webhookUrl, $responseData);
         }
 
-        Mail::to($form->user->email)->send(new CompleteFormMail($responseData, $form));
+        if($form->emailSettings->send_email){
+            $replyTo = null;
+
+            if ($form->emailSettings->reply_to) {
+                $replyTo = FormFieldResponses::where('response_id', $this->responseId)
+                    ->where('form_field_id', $form->emailSettings->reply_to)
+                    ->select('value')
+                    ->first();
+            }
+
+            Mail::to($form->emailSettings->send_to)->send(new CompleteFormMail($responseData, $form, $replyTo['value'], $form->emailSettings)) ;
+        }
     }
 }

@@ -43,7 +43,6 @@
           <div class="text-sm text-blue-700">
             <p>Note: Your URL should look like the following. Replace XXX with the appropriate values.</p>
             <p class="mt-2 font-mono text-xs bg-gray-100 p-2 rounded">
-              https://app.youform.com/forms/7lkj4fvr?utm_source=XXX&amp;utm_term=XXX&amp;utm_content=XXX&amp;utm_medium=XXX&amp;utm_campaign=XXX&amp;email=XXX
             </p>
           </div>
         </div>

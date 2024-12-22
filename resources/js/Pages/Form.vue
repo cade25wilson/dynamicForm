@@ -9,6 +9,7 @@
           :filteredCategories="filteredCategories" :selectSectionType="selectSectionType"
           :getButtonClass="getButtonClass" :submit="submit" @close="showNewSectionModal = false" />
         <CanvasContent :formSections="form_sections" :design="form.design" :current_section="current_section"/>
+        <ProModal :show="showProModal" @closePro="showProModal = false" />
       </div>
       <div class="h-screen col-span-3">
         <TabPanel :tabs="tabs" :design="form.design" :current_section="current_section">
@@ -24,6 +25,7 @@ import { router, usePage } from '@inertiajs/vue3';
 import FormLayout from '@/Layouts/FormLayout.vue';
 import CanvasContent from '@/Components/CanvasContent.vue';
 import FormSidebar from '@/Components/FormSidebar.vue';
+import ProModal from '@/Components/ProModal.vue';
 import SectionModal from '@/Components/SectionModal.vue';
 import TabPanel from '@/Components/TabPanel.vue';
 
@@ -36,6 +38,7 @@ const props = defineProps({
 
 const page = usePage();
 const showNewSectionModal = ref(false);
+const showProModal = ref(false);
 const searchQuery = ref('');
 const selectedSectionType = ref(null);
 
@@ -59,6 +62,11 @@ function showModal() {
   showNewSectionModal.value = true;
 }
 
+function showProModalFunc() {
+  showNewSectionModal.value = false;
+  showProModal.value = true;
+}
+
 function selectSectionType(sectionType) {
   selectedSectionType.value = sectionType.id;
 }
@@ -72,6 +80,7 @@ function getButtonClass(item) {
 
 function submit() {
   if (selectedSectionType.value === 17 &&!page.props.isPro){
+    showProModalFunc();
     return;
   }
   router.post('/section', {

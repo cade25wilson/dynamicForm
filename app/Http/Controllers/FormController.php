@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EmailSettings;
 use App\Models\Form;
 use App\Models\FormDesign;
 use App\Models\FormIntegrations;
@@ -121,7 +122,7 @@ class FormController extends Controller
             ]);
 
             $this->AddUtmParameters($form->id);
-
+            $this->CreateEmailSettings($form);
             FormIntegrations::create([
                 'form_id' => $form->id
             ]);
@@ -136,27 +137,13 @@ class FormController extends Controller
         return redirect('/form/' . $form->id);
     }
 
-    private function AddUtmParameters(string $formId): void 
-    {
-        $utmKeys = ['utm_source', 'utm_term', 'utm_content', 'utm_medium', 'utm_campaign', 'email'];
-        $utmData = [];
-        foreach ($utmKeys as $utmKey){
-            $utmData[] = [
-                'form_id' => $formId,
-                'utm_key' => $utmKey,
-                'created_at' => now(),
-                'updated_at' => now()
-            ];            
-        }
-        FormUtmParameter::insert($utmData);
-    }
-
     public function show(string $uuid)
     {
         $isPro = User::where('id', Auth::id())->firstOrFail()->isPro();
         $section = request()->query('section');
         $form = Form::where('id', $uuid)
                 ->with('design') 
+                ->with('emailSettings')
                 ->firstOrFail();
 
         if ($section) {
@@ -181,6 +168,7 @@ class FormController extends Controller
                 }
             }
         }
+
         // Your original query
         $formSections = FormSection::where('form_id', $uuid)
                     ->join('section_types', 'form_sections.section_type_id', '=', 'section_types.id')
@@ -198,6 +186,17 @@ class FormController extends Controller
 
         $hasPublishedForm = PublishedForm::where('form_id', $uuid)->exists();
 
+        $formSection = FormSection::where('section_type_id', 3)->with('formFields')->get();
+
+        $formFields = $formSection->flatMap(function ($formSection) {
+            return $formSection->formFields()
+                ->where('type', 'email')
+                ->where('show', 'true')
+                ->select('label', 'id')
+                ->get();
+        });
+        
+                    
         $groupedSectionTypes = $sectionCategories
             ->filter(function ($category) {
                 return $category->name !== 'Null';
@@ -219,7 +218,8 @@ class FormController extends Controller
             'current_section' => $currentSection,
             'has_published_form' => $hasPublishedForm,
             'utm_parameters' => $utmParameters,
-            'isPro' => $isPro
+            'isPro' => $isPro,
+            'has_email_block' => $formFields
         ]);
     }
 
@@ -283,5 +283,33 @@ class FormController extends Controller
         }catch(Exception $e){
             Log::error($e);
         }
+    }
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        PRIVATE FUNCTIONS
+    */////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private function CreateEmailSettings(Form $form): void
+    {
+        EmailSettings::create([
+            'form_id' => $form->id,
+            'send_to' => Auth::user()->email,
+            'subject' => '🎉 You received a new submission in' . $form->name,
+        ]);
+    }
+
+    private function AddUtmParameters(string $formId): void 
+    {
+        $utmKeys = ['utm_source', 'utm_term', 'utm_content', 'utm_medium', 'utm_campaign', 'email'];
+        $utmData = [];
+        foreach ($utmKeys as $utmKey){
+            $utmData[] = [
+                'form_id' => $formId,
+                'utm_key' => $utmKey,
+                'created_at' => now(),
+                'updated_at' => now()
+            ];            
+        }
+        FormUtmParameter::insert($utmData);
     }
 }

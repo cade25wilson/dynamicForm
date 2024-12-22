@@ -2,9 +2,9 @@
 
 namespace App\Mail;
 
+use App\Models\EmailSettings;
 use App\Models\Form;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -17,7 +17,7 @@ class CompleteFormMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public array $responseData, public Form $form)
+    public function __construct(public array $responseData, public Form $form, public ?string $customReplyTo, public EmailSettings $emailSettings)
     {
         //
     }
@@ -28,7 +28,7 @@ class CompleteFormMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'New Form Submission',
+            subject: $this->emailSettings->subject,
         );
     }
 
@@ -54,5 +54,14 @@ class CompleteFormMail extends Mailable
     public function attachments(): array
     {
         return [];
+    }
+
+    public function build()
+    {
+        if (!empty($this->customReplyTo)) {
+            $this->replyTo($this->customReplyTo);
+        }
+
+        return $this;
     }
 }

@@ -17,7 +17,7 @@ return new class extends Migration
             // $table->foreignUuid('form_id')->constrained()->onDelete('cascade');
             $table->string('label', 255)->nullable(true);
             $table->string('placeholder')->nullable(true);
-            $table->string('type', 50);
+            $table->string('type', 50)->index();
             $table->boolean('required')->default(false);
             $table->integer('order')->default(1)->index();
             $table->boolean('show')->default(true)->index();

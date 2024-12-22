@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DesignController;
 use App\Http\Controllers\DownloadController;
+use App\Http\Controllers\EmailSettingsController;
 use App\Http\Controllers\FieldController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\FormFieldResponseController;
@@ -12,7 +13,6 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PublishFormController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\UtmController;
-use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -34,16 +34,6 @@ Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
-Route::get('/1', function () {
-    return Inertia::render('Test', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
     ]);
 });
 
@@ -70,6 +60,7 @@ Route::middleware([
     Route::put('section/payment/{id}', [SectionController::class, 'payment']);
     Route::post('design/background/{id}', [DesignController::class, 'setBackground']);
     Route::put('design/background/remove/{id}', [DesignController::class, 'removeBackground']);
+    Route::put('emailsettings/update/{id}', [EmailSettingsController::class, 'update']);
     Route::put('section/{id}', [SectionController::class, 'update']);
     Route::put('section/single/{id}', [SectionController::class, 'singleField']);
     Route::put('section/ending/{id}', [SectionController::class, 'updateEnding']);

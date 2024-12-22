@@ -46,4 +46,9 @@ class Form extends Model
     {
         return $this->hasOne(FormIntegrations::class);
     }
+
+    public function emailSettings(): HasOne
+    {
+        return $this->hasOne(EmailSettings::class);
+    }
 }

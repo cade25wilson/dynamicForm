@@ -7,6 +7,7 @@
             Settings
           </h4>
         </div>
+		<ProModal :show="showProModal" @closePro="showProModal = false" />
 
         <!-- General -->
         <div>
@@ -81,7 +82,8 @@
 							</span>
 						</div>
 						<label class="inline-flex items-center  cursor-pointer ">
-							<input type="checkbox" :checked="page.props.form.design.powered_by" @change="handleChange('powered_by', $event.target.checked)" class="sr-only peer">
+							<input v-if="page.props.isPro" type="checkbox" :checked="page.props.form.design.powered_by" @change="handleChange('powered_by', $event.target.checked)" class="sr-only peer">
+							<input v-else type="checkbox" checked @click="showProModalFunc" class="sr-only peer">
 							<div class="relative w-11 h-6 peer-focus:outline-none peer-focus:ring-0 peer-focus:ring-green-300 rounded-full peer bg-gray-400 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all  peer-checked:bg-green-500"></div>
 						</label>
 					</div>
@@ -99,7 +101,7 @@
           </button>
           <div v-show="dropdowns.emailSettings" class="ml-4">
             <!-- Email Settings Content Here -->
-            <p>Email settings content goes here...</p>
+            <EmailSettings />
           </div>
         </div>
 
@@ -212,7 +214,9 @@
 <script setup>
 import { usePage } from '@inertiajs/vue3';
 import { ref, reactive } from 'vue';
+import EmailSettings from '@/Components/EmailSettings.vue';
 import HiddenFields from './HiddenFields.vue';
+import ProModal from '@/Components/ProModal.vue';
 
 const page = usePage();
 
@@ -231,6 +235,11 @@ const toggleDropdown = (dropdown) => {
 const showClosed = ref(page.props.form.closed !== null ? true : false);
 const showCloseBy = ref(page.props.form.close_by !== null ? true : false);
 const showCloseBySubmissions = ref(page.props.form.close_by_submissions !== null ? true : false);
+const showProModal = ref(false);
+
+function showProModalFunc() {
+  showProModal.value = true;
+}
 
 async function handleChange(item, value) {
 	const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');

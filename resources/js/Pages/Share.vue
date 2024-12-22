@@ -112,7 +112,7 @@
                           </p>
                           <div class="mt-2 bg-gray-800 text-white p-6 font-light rounded-md relative">
                             <code class="block mb-2">
-                              &lt;html&gt;  &lt;head&gt;      &lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"&gt;      &lt;title&gt;My Form&lt;/title&gt;      &lt;style type="text/css"&gt;          html { margin: 0; height: 100%; overflow: hidden; }           iframe { position: absolute; top: 0; right: 0; bottom: 0; left: 0; border: 0; }      &lt;/style&gt;  &lt;/head&gt;  &lt;body&gt;      &lt;iframe src="https://app.youform.com/forms/7lkj4fvr" loading="lazy" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"&gt;&lt;/iframe&gt;  &lt;/body&gt;&lt;/html&gt;
+                              &lt;html&gt;  &lt;head&gt;      &lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"&gt;      &lt;title&gt;My Form&lt;/title&gt;      &lt;style type="text/css"&gt;          html { margin: 0; height: 100%; overflow: hidden; }           iframe { position: absolute; top: 0; right: 0; bottom: 0; left: 0; border: 0; }      &lt;/style&gt;  &lt;/head&gt;  &lt;body&gt;      &lt;iframe  loading="lazy" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"&gt;&lt;/iframe&gt;  &lt;/body&gt;&lt;/html&gt;
                             </code>
                             <button @click="copyFullPageCode" class="absolute right-2 bottom-2">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -131,7 +131,7 @@
                             <h4 class="font-semibold text-gray-700 mr-2">
                                 Custom Domain
                             </h4>
-                            <button @click.prevent="$dispatch('open-pro-plan-modal')" class="text-xs py-0.5 px-2 font-normal rounded-md bg-pink-600 text-white cursor-pointer" title="Allowed in PREMIUM plan">
+                            <button @click.prevent="$dispatch('open-pro-plan-modal')" class="text-xs py-0.5 px-2 font-normal rounded-md bg-red-600 text-white cursor-pointer" title="Allowed in PREMIUM plan">
                                 PREMIUM
                             </button>
                         </div>

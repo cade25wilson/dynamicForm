@@ -17,7 +17,7 @@
             <div class="mt-6">
                 <label for="text-cta-text-editor" class="block text-sm font-medium text-gray-700">
                     Button Text 
-                    <button class="text-xs py-0.5 px-2 font-normal rounded-md bg-pink-600 text-white cursor-pointer" title="Allowed in PREMIUM plan">
+                    <button class="text-xs py-0.5 px-2 font-normal rounded-md bg-red-600 text-white cursor-pointer" title="Allowed in PREMIUM plan">
                         PREMIUM
                     </button>
                 </label>
@@ -28,12 +28,12 @@
             <div class="mt-4">
                 <label for="text-cta-link-editor" class="block text-sm font-medium text-gray-700">
                     Button Link 
-                    <button class="text-xs py-0.5 px-2 font-normal rounded-md bg-pink-600 text-white cursor-pointer" title="Allowed in PREMIUM plan">
+                    <button class="text-xs py-0.5 px-2 font-normal rounded-md bg-red-600 text-white cursor-pointer" title="Allowed in PREMIUM plan">
                         PREMIUM
                     </button>
                 </label>
                 <div class="mt-1">
-                    <input type="text" @blur="updateProp('button_link', page.props.current_section.options.button_link)" v-model="page.props.current_section.options.button_link" name="text-cta-link-editor" id="text-cta-link-editor" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm" placeholder="youform.com">
+                    <input type="text" @blur="updateProp('button_link', page.props.current_section.options.button_link)" v-model="page.props.current_section.options.button_link" name="text-cta-link-editor" id="text-cta-link-editor" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm">
                 </div>
             </div>
         </div>
@@ -44,18 +44,18 @@
             <div class="mt-6">
                 <label for="text-redirect-url-editor" class="block text-sm font-medium text-gray-700">
                     Redirect URL 
-                    <button class="text-xs py-0.5 px-2 font-normal rounded-md bg-pink-600 text-white cursor-pointer" title="Allowed in PREMIUM plan">
+                    <button class="text-xs py-0.5 px-2 font-normal rounded-md bg-red-600 text-white cursor-pointer" title="Allowed in PREMIUM plan">
                         PREMIUM
                     </button>
                 </label>
                 <div class="mt-1">
-                    <input type="text" @blur="updateProp('redirect_url', page.props.current_section.options.redirect_url)" v-model="page.props.current_section.options.redirect_url" name="text-redirect-url-editor" id="text-redirect-url-editor" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm" placeholder="youform.com">
+                    <input type="text" @blur="updateProp('redirect_url', page.props.current_section.options.redirect_url)" v-model="page.props.current_section.options.redirect_url" name="text-redirect-url-editor" id="text-redirect-url-editor" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm">
                 </div>
             </div>
             <div class="mt-4">
                 <label for="text-redirect-message-editor" class="block text-sm font-medium text-gray-700">
                     Redirect Message
-                    <button class="text-xs py-0.5 px-2 font-normal rounded-md bg-pink-600 text-white cursor-pointer" title="Allowed in PREMIUM plan">
+                    <button class="text-xs py-0.5 px-2 font-normal rounded-md bg-red-600 text-white cursor-pointer" title="Allowed in PREMIUM plan">
                         PREMIUM
                     </button>
                 </label>
@@ -66,7 +66,7 @@
             <div class="mt-4">
                 <label for="text-redirect-delay-editor" class="block text-sm font-medium text-gray-700">
                     Redirect Delay (in seconds)
-                    <button class="text-xs py-0.5 px-2 font-normal rounded-md bg-pink-600 text-white cursor-pointer" title="Allowed in PREMIUM plan">
+                    <button class="text-xs py-0.5 px-2 font-normal rounded-md bg-red-600 text-white cursor-pointer" title="Allowed in PREMIUM plan">
                         PREMIUM
                     </button>
                 </label>
