@@ -119,35 +119,6 @@
                                 </ul>
                             </div>
                         </div>
-
-                        <!-- <div class="mt-6 border-t border-gray-200 pt-6">
-                            <div class="flex items-center justify-between">
-                                <p class="flex items-center text-sm font-medium text-gray-700">
-                                    <span class="pr-1">Background Image </span>
-                                </p>
-
-                            </div>
-
-                            <label
-                                class="flex items-center mt-2 justify-center border border-gray-200 rounded-md p-6 hover:bg-gray-50 cursor-pointer">
-                                <template v-if="!page.props.form.design.background_image">
-                                    <span class="text-sm text-gray-500">
-                                        Select image
-                                    </span>
-
-                                    <input type="file" accept="image/png, image/jpeg" class="text-xs hidden" @change="updateDesignBackground">
-                                </template>
-                                <template v-else>
-                                    <div class="h-16 w-auto">
-                                        <img :src="page.props.form.design.background_image" alt="bg image" class="h-full max-h-full w-auto max-w-full object-contain">
-                                        <input type="file" accept="image/png, image/jpeg" class="text-xs hidden" @change="updateDesignBackground">
-                                    </div>
-                                </template>
-                            </label>
-
-
-                        </div> -->
-
                         <div class="mt-6 pt-6">
                             <div class="flex items-center justify-between">
                                 <p class="block text-sm font-medium text-gray-700">
@@ -228,8 +199,7 @@
     <div v-if="activeTab === 'Logic'" class="p-4">
         <!-- Content for Logic tab goes here -->
     </div>
-    <SettingsTab v-if="activeTab === 'Settings'">
-    </SettingsTab>
+    <SettingsTab v-if="activeTab === 'Settings'" />
 
 </template>
 

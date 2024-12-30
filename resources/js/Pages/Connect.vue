@@ -159,11 +159,11 @@ async function updateWebhook() {
                         </button>
                     </div>
                 </div>
-                <div class="text-center mt-8">
+                <!-- <div class="text-center mt-8">
                     <a href="" target="_blank" class="text-blue-600 text-sm underline">
                         How to use this?
                     </a>
-                </div>
+                </div> -->
             </div>
           </div>
         </div>
