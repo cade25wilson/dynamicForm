@@ -71,7 +71,7 @@ class FormCompletion implements ShouldQueue
         }
 
         if($form->emailSettings->send_email){
-            $replyTo = null;
+            $replyTo['value'] = null;
 
             if ($form->emailSettings->reply_to) {
                 $replyTo = FormFieldResponses::where('response_id', $this->responseId)
@@ -80,7 +80,7 @@ class FormCompletion implements ShouldQueue
                     ->first();
             }
 
-            Mail::to($form->emailSettings->send_to)->send(new CompleteFormMail($responseData, $form, $replyTo['value'], $form->emailSettings)) ;
+            Mail::to($form->emailSettings->send_to)->send(new CompleteFormMail($responseData, $form, $replyTo['value'], $form->emailSettings));
         }
     }
 }
