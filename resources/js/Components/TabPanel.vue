@@ -364,6 +364,7 @@ function selectFont(font) {
     selectedFont.value = font;
     opened.value = false;
     handleColorPickerClose();
+    window.location.reload();
 }
 
 // Function to filter fonts based on search input

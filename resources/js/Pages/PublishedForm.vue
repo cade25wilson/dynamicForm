@@ -1,6 +1,15 @@
 <template>
   <template v-if="page.props.is_closed">
-    form is closed
+    <div class="h-screen flex justify-center items-center">
+      <div class="text-center">
+          <h4 class="text-lg md:text-2xl lg:text-4xl font-semibold text-gray-700">Sorry! This form is now closed.</h4>
+          <div class="mt-6">
+              <a href="https://buildmyform.com/" target="_self" class="bg-blue-600 mt-2 bg-coral border-2 border-black drop-shadow-3xl hover:drop-shadow-4xl px-10 py-2 text-black rounded-md block mx-auto text-center">
+                  Create Your Own Buildmyform →
+              </a>
+          </div>
+      </div>
+    </div>
   </template>
   <template v-else>
     <div v-if="page.props.form.design.progress_bar" class="absolute top-0 left-0 right-0 z-10" @update-progress-bar.window="handleProgressBarUpdate">
@@ -24,7 +33,10 @@
             <h4 class="text-4xl py-6 text-gray-700 custom-text-color leading-snug">
               {{ currentSection.title }}
             </h4>
-            <div class="text-gray-600 custom-text-color-light text-sm md:text-base js_text_description">
+            <div class="text-gray-600 custom-text-color-light text-sm md:text-base js_text_description"
+            :style="{ fontFamily: page.props.form.design.font }"
+
+            >
               <CoverImage :formSection="currentSection" />
               <FormSectionName :formSection="currentSection" />
               <FormSectionDescription :formSection="currentSection" />
@@ -86,7 +98,6 @@
                       {{currentSection.options.redirect_message}}
                   </p>
                 </div>
-
               </template>
             </div>
           </div>

@@ -11,10 +11,13 @@
                   'text-center': page.props.current_section.text_align === 'center',
                   'text-right': page.props.current_section.text_align === 'right',
                   'text-left': page.props.current_section.text_align === 'left'
-              }" class="w-9/12 transition-all overflow-auto max-h-full py-12 scrollbar-hide">
+              }"
+              :style="{ fontFamily: page.props.form.design.font }"
+              class="w-9/12 transition-all overflow-auto max-h-full py-12 scrollbar-hide">
               <h4 class="text-4xl py-6 text-gray-700 custom-text-color leading-snug">
               </h4>
-              <div class="text-gray-600 custom-text-color-light text-sm md:text-base js_text_description">
+              <div
+               class="text-gray-600 custom-text-color-light text-sm md:text-base js_text_description">
                   <WelcomeSection v-if="page.props.current_section.section_type_id === 1"/>
                   <ThankyouSection v-if="page.props.current_section.section_type_id === 2"/>
                   <ContactSection v-if="page.props.current_section.section_type_id === 3"/>

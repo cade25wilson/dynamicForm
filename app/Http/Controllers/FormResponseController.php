@@ -86,7 +86,8 @@ class FormResponseController extends Controller
             'completed' => $completedResponses->count(),
             'partial' => $partialResponses->count(),
             'completeResponses' => $completedResponses->toArray(),
-            'partialResponses' => $partialResponses->toArray()    
+            'partialResponses' => $partialResponses->toArray()    ,
+            'has_published_form' => 'true'
         ]);
     }
 

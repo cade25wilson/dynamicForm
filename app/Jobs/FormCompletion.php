@@ -8,9 +8,7 @@ use App\Models\FormFieldResponses;
 use App\Models\PublishedForm;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class FormCompletion implements ShouldQueue
@@ -19,10 +17,7 @@ class FormCompletion implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(protected string $formId, protected string $responseId)
-    {
-        //
-    }
+    public function __construct(protected string $formId, protected string $responseId){}
 
     /**
      * Execute the job.
