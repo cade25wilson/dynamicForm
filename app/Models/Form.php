@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,7 +12,7 @@ class Form extends Model
 {
     use HasUuids;
     // The attributes that are mass assignable.
-    protected $fillable = ['name', 'user_id', 'closed', 'close_by', 'close_by_submissions'];
+    protected $fillable = ['name', 'user_id', 'closed', 'close_by', 'close_by_submissions', 'workspace_id'];
 
     // Define the relationship with the User model
     public function user(): BelongsTo
@@ -50,5 +49,10 @@ class Form extends Model
     public function emailSettings(): HasOne
     {
         return $this->hasOne(EmailSettings::class);
+    }
+
+    public function workspace(): HasOne
+    {
+        return $this->hasOne(Workspace::class);
     }
 }

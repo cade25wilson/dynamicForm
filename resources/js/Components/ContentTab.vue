@@ -163,7 +163,7 @@ async function updateSectionBackground(event) {
                 console.error('Failed to upload the image');
             }
         } catch (error) {
-            console.error('Error uploading the background image:', error);
+            console.error('Error uploading the background image:');
         }
     }
 }

@@ -4,6 +4,7 @@ namespace App\Actions\Fortify;
 
 use App\Models\Team;
 use App\Models\User;
+use App\Models\Workspace;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -35,6 +36,10 @@ class CreateNewUser implements CreatesNewUsers
                 'password' => Hash::make($input['password']),
             ]), function (User $user) {
                 $this->createTeam($user);
+                Workspace::create([
+                    'name' => 'My workspace',
+                    'user_id' => $user->id,
+                ]);
             });
         });
     }

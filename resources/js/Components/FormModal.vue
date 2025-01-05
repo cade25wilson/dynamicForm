@@ -2,10 +2,10 @@
   <!-- Create Button -->
   <a 
       href="#" 
-      class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-300"
+      class="bg-blue-500 w-100 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-300"
       @click.prevent="openModal"
   >
-      Create
+      Create New Form 
   </a>
 
   <!-- Modal -->
@@ -55,11 +55,14 @@
 <script setup>
 import { ref } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import { router } from '@inertiajs/vue3'
+import { router, usePage } from '@inertiajs/vue3'
 import { reactive } from 'vue'
+
+const page = usePage();
 
 const form = reactive({
   formName: null,
+  workSpace: page.props.currentWorkspace ? page.props.currentWorkspace.id : 0
 });
 
 const open = ref(false)
