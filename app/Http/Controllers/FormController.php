@@ -73,68 +73,21 @@ class FormController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'formName' => 'required|string'
-        ]);
-
-        DB::beginTransaction();
         try{
-            $form = Form::create([
-                'name' => $data['formName'],
-                'user_id' => Auth::id()
+            $data = $request->validate([
+                'formName' => 'required|string',
+                'workSpace' => 'required|exists:workspaces,id'
             ]);
 
-            FormDesign::create([
-                'form_id' => $form->id
-            ]);
-
-            FormSection::create([
-                'form_id' => $form->id,
-                'section_type_id' => 1,
-                'name' => 'Hey there 😀',
-                'description' => 'Mind filling out this form?',
-                'button_text' => 'Start',
-                'text_align' => 'center',
-                'options' => json_encode([
-                    'embed' => null,
-                    'color' => 'pink',
-                    'svg' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path></svg>'
-                ]),
-            ]);
-
-            FormSection::create([
-                'form_id' => $form->id,
-                'section_type_id' => 2,
-                'name' => 'Thank you! 🙌',
-                'order' => 0,
-                'description' => "That's all. You may now close this window.",
-                "button_text" => "Create your own Form",
-                'text_align' => 'center',
-                'options' => json_encode([
-                    'embed' => null,
-                    'color' => 'pink',
-                    'end' => 'button',
-                    'button_link' => 'https://buildmyform.com/',
-                    'redirect_url' => 'https://buildmyform.com/',
-                    'redirect_message' => 'You will be redirected momentarily.',
-                    'redirect_delay' => 3
-                ]),
-            ]);
-
-            $this->AddUtmParameters($form->id);
-            $this->CreateEmailSettings($form);
-            FormIntegrations::create([
-                'form_id' => $form->id
-            ]);
-            
+            DB::beginTransaction();
+            $form = $this->CreateStarterForm($data);
             DB::commit();
+            return redirect('/form/' . $form->id);
         } catch(Exception $e) {
             DB::rollBack();
             Log::error("error " . $e);
             return redirect('/dashboard');
         }
-
-        return redirect('/form/' . $form->id);
     }
 
     public function show(string $uuid)
@@ -288,6 +241,76 @@ class FormController extends Controller
     /*////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         PRIVATE FUNCTIONS
     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private function CreateStarterForm(array $data): mixed 
+    {
+        $form = $this->createForm($data);
+        $this->CreateFormDesign($form->id);
+        $this->CreateStarterFormSection($form->id);
+        $this->AddUtmParameters($form->id);
+        $this->CreateEmailSettings($form);
+        $this->CreateFormIntegration($form->id);
+        return $form;
+    }
+
+    private function CreateForm(array $data): mixed
+    {
+        return Form::create([
+            'name' => $data['formName'],
+            'user_id' => Auth::id(),
+            'workspace_id' => $data['workSpace']
+        ]);
+    }
+
+    private function CreateFormDesign(string $formId): void
+    {
+        FormDesign::create([
+            'form_id' => $formId
+        ]);
+    }
+
+    private function CreateStarterFormSection(string $formId): void
+    {
+        FormSection::create([
+            'form_id' => $formId,
+            'section_type_id' => 1,
+            'name' => 'Hey there 😀',
+            'description' => 'Mind filling out this form?',
+            'button_text' => 'Start',
+            'text_align' => 'center',
+            'options' => json_encode([
+                'embed' => null,
+                'color' => 'pink',
+                'svg' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path></svg>'
+            ]),
+        ]);
+
+        FormSection::create([
+            'form_id' => $formId,
+            'section_type_id' => 2,
+            'name' => 'Thank you! 🙌',
+            'order' => 0,
+            'description' => "That's all. You may now close this window.",
+            "button_text" => "Create your own Form",
+            'text_align' => 'center',
+            'options' => json_encode([
+                'embed' => null,
+                'color' => 'pink',
+                'end' => 'button',
+                'button_link' => 'https://buildmyform.com/',
+                'redirect_url' => 'https://buildmyform.com/',
+                'redirect_message' => 'You will be redirected momentarily.',
+                'redirect_delay' => 3
+            ]),
+        ]);
+    }
+
+    private function CreateFormIntegration(string $formId)
+    {
+        FormIntegrations::create([
+            'form_id' => $formId
+        ]);
+    }
 
     private function CreateEmailSettings(Form $form): void
     {

@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Response;
 use Inertia\Inertia;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -166,19 +167,18 @@ class FormResponseController extends Controller
                 return $section->publishedFormFields;
             })->pluck('label', 'id');
         
-            $formResponses = $this->getData($data['responses'], $id);
+            // $formResponses = $this->getData($data['responses'], $id);
         
-            $export = new FormResponsesExport($formResponses, $publishedFormFields);
+            $export = new FormResponsesExport($this->getData($data['responses'], $id), $publishedFormFields);
             $spreadsheet = $export->generate();
         
-            $fileName = 'form_responses_' . $form->name . '.xlsx';
-            $writer = new Xlsx($spreadsheet);
-            $filePath = storage_path("app/{$fileName}");
-            $writer->save($filePath);
-        
+            $filePath = storage_path("app/form_responses_{$form->name}.xlsx");
+            (new Xlsx($spreadsheet))->save($filePath);
+
             return response()->download($filePath)->deleteFileAfterSend(true);
         } catch(Exception $e){
             Log::error($e);
+            return response("An error occurred generating spreadsheet.", 500);
         }
     }
 
@@ -205,7 +205,7 @@ class FormResponseController extends Controller
             ]);        
             FormResponses::destroy($data['responses']);
         } catch(Exception $e){
-            Log::error($e);;
+            Log::error($e);
         }
     }
 }

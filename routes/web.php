@@ -13,6 +13,8 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PublishFormController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\UtmController;
+use App\Http\Controllers\WorkspaceController;
+use App\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -51,6 +53,7 @@ Route::middleware([
     Route::get('/share/{id}', [FormController::class, 'share']);
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('form', FormController::class);
+    Route::resource('workspace', WorkspaceController::class)->only(['store', 'update', 'destroy']);
     Route::delete('section/{id}', [SectionController::class, 'destroy'])->name('section.destroy');
     Route::post('section', [SectionController::class, 'store'])->name('section.store');
     Route::post('section/{id}', [SectionController::class, 'duplicate'])->name('section.duplicate');
