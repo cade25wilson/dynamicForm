@@ -50,6 +50,7 @@ function handleFormDelete() {
             if (response.ok) {
                 page.props.currentWorkspace.forms = page.props.currentWorkspace.forms.filter(form => form.id !== selectedFormId.value);
                 closeFormDeleteModal();
+                router.get(`/dashboard?workspace=${page.props.currentWorkspace.id}`);
             }
         })
         .catch(error => {
