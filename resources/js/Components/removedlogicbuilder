@@ -1,0 +1,123 @@
+<!-- <template x-if="actionType !== 'jump'">
+                                                    <div class="flex items-center space-x-3">
+                                                        <div class="w-full" x-data="{ 
+                                                                        selectValue: '',
+                                                                        actionOperand1: '',
+                                                                        actionOperand1Type: '',
+                                                                        showInput: false,
+                                                                        init() {
+                                                                            this.actionOperand1 = this.$wire.get('logics.0.actions.0.operand_1');
+                                                                            this.actionOperand1Type = this.$wire.get('logics.0.actions.0.operand_1_type');
+                                                                            
+                                                                            this.showInput = this.actionOperand1Type == 'value';
+                                                                            if(! this.showInput) {
+                                                                                this.selectValue = this.actionOperand1;
+                                                                            }
+
+                                                                            this.$watch('actionOperand1', (value) => {
+                                                                                this.$wire.set('logics.0.actions.0.operand_1', value);
+                                                                            });
+                                                                            this.$watch('actionOperand1Type', (value) => {
+                                                                                this.$wire.set('logics.0.actions.0.operand_1_type', value);
+                                                                            });
+                                                                        },
+                                                                        handleSelectChange() {
+                                                                            if(this.selectValue == 'enter_value') {
+                                                                                this.showInput = true;
+                                                                                this.actionOperand1 = '';
+                                                                                this.actionOperand1Type = 'value';
+                                                                                setTimeout(() => {
+                                                                                    this.$refs.inputValue.focus();
+                                                                                }, 100);
+                                                                            } else {
+                                                                                this.showInput = false;
+                                                                                this.actionOperand1 = this.selectValue;
+                                                                                this.actionOperand1Type = 'block';
+                                                                            }
+                                                                        },
+                                                                        cancelEnterValue() {
+                                                                            this.showInput = false;
+                                                                            this.selectValue = '';
+                                                                        }
+                                                                    }">
+                                                            <select x-show="!showInput" x-model="selectValue" class="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-400 focus:ring-1 focus:ring-gray-600 sm:text-sm sm:leading-6">
+                                                                <option value="">select...</option>
+                                                                <option value="enter_value">Enter a value</option>
+                                                                <optgroup label="Blocks">
+                                                                    <option value="ca5ab564-5d96-45f5-b92e-c1d323a6b2a4">Please fill the following</option>
+                                                                </optgroup>
+                                                            </select>
+
+                                                            <div x-show="showInput" class="relative">
+                                                                <input type="text" x-model="actionOperand1" x-ref="inputValue" class="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-400 focus:ring-1 focus:ring-gray-600 sm:text-sm sm:leading-6" placeholder="Enter a value...">
+                                                                <button class="absolute top-1/2 right-2 transform -translate-y-1/2 text-gray-600 rounded-full p-1 hover:text-gray-800 ">
+                                                                    ×
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <span x-show="actionType == 'add'">
+                                                            to
+                                                        </span>
+                                                        <span x-show="actionType == 'subtract'">
+                                                            from
+                                                        </span>
+                                                        <span x-show="(actionType == 'multiply' || actionType == 'divide')">
+                                                            by
+                                                        </span>
+                                                        <div class="w-full" x-data="{ 
+                                                                        selectValue: '',
+                                                                        actionOperand2: '',
+                                                                        actionOperand2Type: '',
+                                                                        showInput: false,
+                                                                        init() {
+                                                                            this.actionOperand2 = this.$wire.get('logics.0.actions.0.operand_2');
+                                                                            this.actionOperand2Type = this.$wire.get('logics.0.actions.0.operand_2_type');
+                                                                            
+                                                                            this.showInput = this.actionOperand2Type == 'value';
+                                                                            if(! this.showInput) {
+                                                                                this.selectValue = this.actionOperand2;
+                                                                            }
+
+                                                                            this.$watch('actionOperand2', (value) => {
+                                                                                this.$wire.set('logics.0.actions.0.operand_2', value);
+                                                                            });
+                                                                            this.$watch('actionOperand2Type', (value) => {
+                                                                                this.$wire.set('logics.0.actions.0.operand_2_type', value);
+                                                                            });
+                                                                        },
+                                                                        handleSelectChange() {
+                                                                            if(this.selectValue == 'enter_value') {
+                                                                                this.showInput = true;
+                                                                                this.actionOperand2 = '';
+                                                                                this.actionOperand2Type = 'value';
+                                                                                setTimeout(() => {
+                                                                                    this.$refs.inputValue.focus();
+                                                                                }, 100);
+                                                                            } else {
+                                                                                this.showInput = false;
+                                                                                this.actionOperand2 = this.selectValue;
+                                                                                this.actionOperand2Type = 'block';
+                                                                            }
+                                                                        },
+                                                                        cancelEnterValue() {
+                                                                            this.showInput = false;
+                                                                            this.selectValue = '';
+                                                                        }
+                                                                    }">
+                                                            <select x-show="!showInput" x-model="selectValue" class="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-400 focus:ring-1 focus:ring-gray-600 sm:text-sm sm:leading-6">
+                                                                <option value="">select...</option>
+                                                                <option value="enter_value">Enter a value</option>
+                                                                <optgroup label="Blocks">
+                                                                    <option value="ca5ab564-5d96-45f5-b92e-c1d323a6b2a4">Please fill the following</option>
+                                                                </optgroup>
+                                                            </select>
+
+                                                            <div x-show="showInput" class="relative">
+                                                                <input type="text" x-model="actionOperand2" x-ref="inputValue" class="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-400 focus:ring-1 focus:ring-gray-600 sm:text-sm sm:leading-6" placeholder="Enter a value...">
+                                                                <button class="absolute top-1/2 right-2 transform -translate-y-1/2 text-gray-600 rounded-full p-1 hover:text-gray-800 ">
+                                                                    ×
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </template> -->

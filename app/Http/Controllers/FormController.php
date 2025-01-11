@@ -102,11 +102,13 @@ class FormController extends Controller
         if ($section) {
             $currentSection = FormSection::with(['formFields' => function ($query) {
                 $query->orderBy('order');
-            }])->find($section);
+            }])->with('logic')
+            ->find($section);
         } else {
             $currentSection = FormSection::where('form_id', $form->id)
                 ->where('order', '!=', 0)
                 ->orderBy('order')
+                ->with('logic')
                 ->with(['formFields' => function ($query) {
                     $query->orderBy('order', 'asc');
                 }])
@@ -122,7 +124,6 @@ class FormController extends Controller
             }
         }
 
-        // Your original query
         $formSections = FormSection::where('form_id', $uuid)
                     ->join('section_types', 'form_sections.section_type_id', '=', 'section_types.id')
                     ->select('form_sections.*', 'section_types.name as formsectionname')

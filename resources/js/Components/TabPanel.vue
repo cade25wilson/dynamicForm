@@ -1,5 +1,5 @@
 <template #default="{ activeTab, setActiveTab }">
-   <div class="grid grid-cols-3 border-b">
+   <div class="grid grid-cols-4 border-b">
         <button v-for="(tab, index) in tabs" :key="index"
             :class="{ 'border-indigo-500 text-indigo-600': activeTab === tab.name }" 
             @click="setActiveTab(tab.name)"
@@ -196,10 +196,8 @@
             </div>
         </div>
     </div>
-    <div v-if="activeTab === 'Logic'" class="p-4">
-        <!-- Content for Logic tab goes here -->
-    </div>
     <SettingsTab v-if="activeTab === 'Settings'" />
+    <LogicTab v-if="activeTab === 'Logic'" />
 
 </template>
 
@@ -210,6 +208,7 @@ import "@melloware/coloris/dist/coloris.css";
 import Coloris from "@melloware/coloris";
 import { usePage, router } from '@inertiajs/vue3';
 import SettingsTab from './SettingsTab.vue';
+import LogicTab from './LogicTab.vue';
 
 const page = usePage();
 const dropdown = ref(null);
@@ -226,6 +225,7 @@ const tabs = ref([
     { name: 'Content' },
     { name: 'Design' },
     { name: 'Settings' },
+    { name: 'Logic'}
 ]);
 
 // Manage the active tab state

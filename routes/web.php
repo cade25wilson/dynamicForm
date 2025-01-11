@@ -9,6 +9,7 @@ use App\Http\Controllers\FormController;
 use App\Http\Controllers\FormFieldResponseController;
 use App\Http\Controllers\FormResponseController;
 use App\Http\Controllers\IntegrationController;
+use App\Http\Controllers\LogicController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PublishFormController;
 use App\Http\Controllers\SectionController;
@@ -100,6 +101,7 @@ Route::middleware([
     Route::post('utmfields/{id}', [UtmController::class, 'store']);
     Route::delete('utmfields/{id}', [UtmController::class, 'destroy']);
     Route::post('/utm-response/{id}', [UtmController::class, 'response']);
+    Route::post('logic', [LogicController::class, 'store']);
     Route::get('/subscription-checkout', function (Request $request) {
         return $request->user()
             ->newSubscription(env('STRIPE_PRODUCT'), env('STRIPE_PRICE'))
