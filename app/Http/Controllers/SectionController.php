@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\DeleteBackgroundImage;
+use App\Models\DefaultAction;
 use App\Setup;
 use App\Models\FormFields;
 use App\Models\FormSection;
@@ -56,6 +57,11 @@ class SectionController extends Controller
                 'options' => json_encode(['currency' => 'USD', 'amount' => 0, 'color' => $color, 'svg' => $svg, 'end' => 'button', 'button_link' => 'https://buildmyform.com/', 'redirect_url' => 'https://buildmyform.com/', 'redirect_message' => 'You will be redirected momentarily.', 'redirect_delay' => 3]),
                 'name' => $type->default_name,
                 'text_align' => $textAlign
+            ]);
+
+            DefaultAction::create([
+                'form_section_id' => $section->id,
+                'type' => 'goto'
             ]);
 
             $this->generateFormFields($section->id, $type);
@@ -182,8 +188,7 @@ class SectionController extends Controller
     public function duplicate(string $id)
     {
         try{
-            $formSection = FormSection::where('id', $id)->firstOrFail();
-            $formFields = FormFields::where('form_section_id', $formSection->id)->get();
+            $formSection = FormSection::where('id', $id)->with('defaultAction')->with('formFields')->firstOrFail();
             $newOrder = $formSection->order == 0 ? 1 : $formSection->order + 1;
         
             if ($formSection->order != 0) {
@@ -193,7 +198,7 @@ class SectionController extends Controller
             }
 
             $newFormSection = $this->duplicateFormSection($formSection, $newOrder);
-            $this->duplicateFormFields($formFields, $formSection->form_id, $newFormSection->id);
+            $this->duplicateFormFields($formSection->formFields, $formSection->form_id, $newFormSection->id);
 
             return redirect('form/' . $formSection->form_id);
         } catch(Exception $e){
