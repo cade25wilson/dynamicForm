@@ -1,77 +1,92 @@
 <script setup>
-import { usePage } from '@inertiajs/vue3';
-import { computed, ref, reactive } from 'vue';
-import axios from 'axios';
-
-const page = usePage();
-const actionType = ref("goto");
-
-const nextSection = computed(() => {
+  import { usePage } from '@inertiajs/vue3';
+  import { computed, ref, reactive } from 'vue';
+  import PastLogic from './PastLogic.vue';
+  
+  // Access Inertia.js page data
+  const page = usePage();
+  const actionType = ref("goto");
+  const isAlways = ref(false);
+    
+  // Computed properties for filtered sections
+  const nextSection = computed(() => {
 	return page.props.form_sections.find(
-		(section) => section.order === page.props.current_section.order + 1
+	  (section) => section.order === page.props.current_section.order + 1
 	);
-});
-
-// Form data for logic
-const logicData = reactive({
-	form_section_id: page.props.current_section.id,	
+  });
+  
+  const afterFilteredSections = computed(() => {
+	return page.props.form_sections.filter(
+	  (section) => section.order > page.props.current_section.order
+	);
+  });
+  
+  const beforeFilteredSections = computed(() => {
+	return page.props.form_sections.filter(
+	  (section) => section.order < page.props.current_section.order
+	);
+  });
+  
+  // Form data for adding new logic
+  const logicData = reactive({
+	form_section_id: page.props.current_section.id,
+	is_always: isAlways,
 	condition: [
-		{ section_id: null, operator: "equal", value: "", connector: null },
+	  { section_id: null, operator: "equal", value: "", connector: null },
 	],
 	action: {
-		type: "goto",
-		target: null,
+	  type: "goto",
+	  target: null,
 	},
 	default_action: {
-		type: "goto",
-		target: nextSection.id,
+	  type: "goto",
+	  target: nextSection.value?.id || null,
 	},
-});
-
-
-const addCondition = () => {
-  logicData.condition.push({
-    section_id: null,
-    operator: "equal",
-    value: "",
-    connector: "and",
   });
-};
-
-const removeCondition = (index) => {
-  logicData.condition.splice(index, 1);
-};
-
-// Flag for always condition
-const isAlways = ref(false);
-
-const afterFilteredSections = computed(() => {
-  return page.props.form_sections.filter(
-    (section) => section.order > page.props.current_section.order
-  );
-});
-
-const beforeFilteredSections = computed(() => {
-  return page.props.form_sections.filter(
-    (section) => section.order < page.props.current_section.order
-  );
-});
-
-// Submit logic data to backend
-async function saveLogic() {
+  
+  // Add a condition to the logic
+  const addCondition = () => {
+	logicData.condition.push({
+	  section_id: null,
+	  operator: "equal",
+	  value: "",
+	  connector: "and",
+	});
+  };
+  
+  // Remove a condition from the logic
+  const removeCondition = (index) => {
+	logicData.condition.splice(index, 1);
+  };
+  
+  // Save new logic to the server
+  async function saveLogic() {
 	try {
-		await axios.post('/logic', logicData);
+	  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+	  const response = await fetch('/logic', {
+		method: 'POST',
+		headers: {
+		  'Content-Type': 'application/json',
+		  'X-CSRF-TOKEN': csrfToken,
+		},
+		body: JSON.stringify(logicData),
+	  });
+  
+	  if (!response.ok) {
+		throw new Error(`Failed to save logic: ${response.statusText}`);
+	  }
+  
+	  const result = await response.json();
+  
+	  page.props.current_section.logic.push(result.logic);
 	} catch (error) {
-		console.error('Error saving logic:', error);
-		alert('Failed to save logic. Please try again.');
+	  console.error('Error saving logic:', error);
+	  alert('Failed to save logic. Please try again.');
 	}
-}
+  }
 </script>
 
-
 <template>
-	<!-- {{ logicData }} -->
-	  {{ afterFilteredSections }}
     <div>
       	<div class="z-100" aria-modal="true">
 			<a
@@ -120,27 +135,31 @@ async function saveLogic() {
 								<p class="pl-1 truncate">{{ page.props.current_section.name }}</p>
                 			</div>
 						</div>
-						<button
+						<!-- <button
 							@click="saveLogic"
 							type="button"
 							class="rounded-md bg-gray-700 px-3 py-1.5 text-xs text-white shadow-sm hover:bg-gray-600"
 						>
 							<span>Save</span>
-						</button>
+						</button> -->
 					</div>
 					<div
 						class="bg-white pt-2 px-14 pb-6 overflow-y-auto"
 						style="max-height: 40rem;"
 					>
               		<div class="w-full">
-                		<div class="mt-3 space-y-4">
+						<PastLogic 
+							:beforeFilteredSections="beforeFilteredSections" 
+							:afterFilteredSections="afterFilteredSections" 
+						/>
+						<div class="mt-3 space-y-4">
 	                  		<!-- Logic Conditions -->
-                  			<div class="text-gray-700 bg-gray-50 rounded-md relative group">
-    			                <div class="max-w-sm mx-auto py-6">
+                  			<div class="text-gray-700 bg-gray-50 border-2 rounded-md relative group">
+    			                <div class="max-w-sm mx-auto py-6 px-6">
                 			        <div>
 										<select
-										v-model="isAlways"
-										class="block rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900"
+											v-model="isAlways"
+											class="block rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900"
 										>
 											<option :value="false">If</option>
 											<option :value="true">Always</option>
@@ -156,7 +175,7 @@ async function saveLogic() {
 											<div v-if="index > 0" class="flex items-center space-x-2">
 												<select
 													v-model="condition.connector"
-													class="block w-20 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-400 focus:ring-1 focus:ring-gray-600 sm:text-sm sm:leading-6"
+													class="block w-35 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-400 focus:ring-1 focus:ring-gray-600 sm:text-sm sm:leading-6"
 												>
 													<option value="and">AND</option>
 													<option value="or">OR</option>
@@ -242,9 +261,10 @@ async function saveLogic() {
                   		</div>
                 	</div>
 					<!-- Default Action -->
-					<div class="text-gray-700 bg-gray-50 rounded-md relative group mb-6">
-                  		<div class="max-w-sm mx-auto py-6">
-                    		<span>In all other cases go to</span>
+					<div class="text-gray-700 bg-gray-50 border-2 rounded-md relative group mb-6 mt-3">
+                  		<div class="max-w-sm mx-auto py-6 px-6">
+							<span v-if="page.props.current_section.logic.length == 0">Always go to</span>
+                    		<span v-else>In all other cases go to</span>
 							<select
 								v-model="logicData.default_action.target"
 								class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900"
@@ -260,6 +280,14 @@ async function saveLogic() {
 							</select>
                   		</div>
                 	</div>
+					<div class="mt-4 flex justify-end">
+						<button
+							@click="saveLogic()"
+							class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+						>
+							Add
+						</button>
+					</div>
               	</div>
 			</div>
 		</div>
@@ -268,3 +296,16 @@ async function saveLogic() {
 </div>
   </template>
   
+
+<style scoped>
+	div[aria-modal="true"] {
+	display: flex;
+	flex-direction: column;
+	height: 100vh; /* Full viewport height */
+	}
+
+
+	.bg-white {
+	flex-grow: 1; /* Ensure content stretches to fill remaining space */
+	}
+</style>

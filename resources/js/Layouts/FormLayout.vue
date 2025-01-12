@@ -359,7 +359,7 @@ function downloadSvgAsPng(svgElement, filename = 'image.png') {
 </script>
 
 <style scoped>
-main {
+/* main {
     height: 110vh;
-}
+} */
 </style>

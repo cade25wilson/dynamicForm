@@ -433,7 +433,7 @@ onBeforeUnmount(() => {
 ul {
     position: absolute; /* Change from fixed to absolute */
     z-index: 10; /* Ensure it stays on top of other elements */
-    max-height: 20vh; /* Limit the height for scrolling */
+    /* max-height: 20vh;  */
     overflow-y: auto; /* Enable scrolling if the list is too long */
 }
 </style>

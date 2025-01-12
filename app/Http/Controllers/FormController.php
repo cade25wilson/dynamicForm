@@ -102,13 +102,17 @@ class FormController extends Controller
         if ($section) {
             $currentSection = FormSection::with(['formFields' => function ($query) {
                 $query->orderBy('order');
-            }])->with('logic')
+            }])->with(['logic' => function ($query) {
+                $query->orderBy('id', 'asc');
+            }])
             ->find($section);
         } else {
             $currentSection = FormSection::where('form_id', $form->id)
                 ->where('order', '!=', 0)
                 ->orderBy('order')
-                ->with('logic')
+                ->with(['logic' => function ($query) {
+                    $query->orderBy('id', 'asc');
+                }])
                 ->with(['formFields' => function ($query) {
                     $query->orderBy('order', 'asc');
                 }])

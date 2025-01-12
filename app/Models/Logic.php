@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Logic extends Model
 {
-    protected $fillable = ['form_section_id', 'condition', 'action', 'default_action'];
+    protected $fillable = ['form_section_id', 'is_always', 'condition', 'action', 'default_action'];
 
     protected $casts = [
         'condition' => 'array',

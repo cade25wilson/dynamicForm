@@ -33,6 +33,7 @@ class LogicController extends Controller
         try{
             $data = $request->validate([
                 'form_section_id' => 'required|exists:form_sections,id',
+                'is_always' => 'required|boolean',
                 'condition' => 'required|array',
                 'condition.*.section_id' => 'required|exists:form_sections,id', // Section being evaluated
                 'condition.*.operator' => 'required|string', // E.g., "is", "is not"
@@ -77,7 +78,30 @@ class LogicController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try{
+            $data = $request->validate([
+                'form_section_id' => 'required|exists:form_sections,id',
+                'is_always' => 'required|boolean',
+                'condition' => 'required|array',
+                'condition.*.section_id' => 'required|exists:form_sections,id', // Section being evaluated
+                'condition.*.operator' => 'required|string', // E.g., "is", "is not"
+                'condition.*.value' => 'required|string', // Value to compare
+                'condition.*.logical_operator' => 'nullable|string|in:AND,OR', // Logical operator
+                'action' => 'required|array',
+                'action.type' => 'required|string|in:goto',
+                'action.target' => 'required|exists:form_sections,id', // Target section
+                'default_action' => 'nullable|array',
+                'default_action.type' => 'nullable|string|in:goto',
+                'default_action.target' => 'nullable|exists:form_sections,id', // Default target
+            ]);
+            $logic = Logic::findOrFail($id);
+            $logic->update($data);
+        
+            return response()->noContent();
+        } catch(Exception $e){
+            Log::error($e);
+            return response($e, 500);
+        }
     }
 
     /**
@@ -85,6 +109,13 @@ class LogicController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try{
+            $logic = Logic::findOrFail($id);
+            $logic->delete($id);
+            return response()->noContent();
+        } catch(Exception $e){
+            Log::error($e);
+            return response("there was an error deleting the logic", 500);
+        }
     }
 }

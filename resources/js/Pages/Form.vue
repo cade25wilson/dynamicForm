@@ -94,3 +94,19 @@ function submit() {
   });
 }
 </script>
+
+<style>
+
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden; /* Prevent scrolling */
+}
+
+#app {
+  height: 100%; /* Ensure the root Vue app takes up the full height */
+  display: flex;
+  flex-direction: column; /* Optional: adjust layout as needed */
+}
+
+</style>

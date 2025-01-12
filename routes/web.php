@@ -102,6 +102,8 @@ Route::middleware([
     Route::delete('utmfields/{id}', [UtmController::class, 'destroy']);
     Route::post('/utm-response/{id}', [UtmController::class, 'response']);
     Route::post('logic', [LogicController::class, 'store']);
+    Route::put('logic/{id}', [LogicController::class, 'update']);
+    Route::delete('logic/{id}', [LogicController::class, 'destroy']);
     Route::get('/subscription-checkout', function (Request $request) {
         return $request->user()
             ->newSubscription(env('STRIPE_PRODUCT'), env('STRIPE_PRICE'))
