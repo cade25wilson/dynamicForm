@@ -10,10 +10,17 @@
     
   // Computed properties for filtered sections
   const nextSection = computed(() => {
-	return page.props.form_sections.find(
-	  (section) => section.order === page.props.current_section.order + 1
+	const nextByOrder = page.props.form_sections.find(
+		(section) => section.order === page.props.current_section.order + 1
 	);
-  });
+
+	// Fallback to the first section with section_type_id === 2 if no next section is found by order
+	if (!nextByOrder) {
+		return page.props.form_sections.find((section) => section.section_type_id === 2);
+	}
+
+	return nextByOrder;
+	});
   
   const afterFilteredSections = computed(() => {
 	return page.props.form_sections.filter(
@@ -37,10 +44,6 @@
 	action: {
 	  type: "goto",
 	  target: null,
-	},
-	default_action: {
-	  type: "goto",
-	  target: nextSection.value?.id || null,
 	},
   });
   
@@ -82,6 +85,32 @@
 	} catch (error) {
 	  console.error('Error saving logic:', error);
 	  alert('Failed to save logic. Please try again.');
+	}
+  }
+
+  const updateDefaultAction = async () => {
+	try {
+	  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+	  const response = await fetch(`/default-action/${page.props.current_section.default_action.id}`, {
+		method: 'PUT',
+		headers: {
+		  'Content-Type': 'application/json',
+		  'X-CSRF-TOKEN': csrfToken,
+		},
+		body: JSON.stringify({
+			'form_section_id': page.props.current_section.id,
+			'type': 'goto',
+			'target': page.props.current_section.default_action.target
+		}),
+	  });
+  
+	  if (!response.ok) {
+		throw new Error(`Failed to save logic: ${response.statusText}`);
+	  }
+
+	} catch (error) {
+	  console.error('Error saving default action:', error);
+	  alert('Failed to update default action. Please try again.');
 	}
   }
 </script>
@@ -135,13 +164,6 @@
 								<p class="pl-1 truncate">{{ page.props.current_section.name }}</p>
                 			</div>
 						</div>
-						<!-- <button
-							@click="saveLogic"
-							type="button"
-							class="rounded-md bg-gray-700 px-3 py-1.5 text-xs text-white shadow-sm hover:bg-gray-600"
-						>
-							<span>Save</span>
-						</button> -->
 					</div>
 					<div
 						class="bg-white pt-2 px-14 pb-6 overflow-y-auto"
@@ -257,6 +279,14 @@
 										</select>
 									</div>
 								</div>
+								<div class="mt-4 flex justify-end">
+									<button
+										@click="saveLogic()"
+										class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+									>
+										Add
+									</button>
+								</div>
                     		</div>
                   		</div>
                 	</div>
@@ -266,10 +296,10 @@
 							<span v-if="page.props.current_section.logic.length == 0">Always go to</span>
                     		<span v-else>In all other cases go to</span>
 							<select
-								v-model="logicData.default_action.target"
+								v-model="page.props.current_section.default_action.target"
 								class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900"
 							>
-								<option value="">the next block</option>
+								<option :value="nextSection.id">the next block</option>
 								<option
 								v-for="section in afterFilteredSections"
 								:key="section.id"
@@ -278,16 +308,16 @@
 								{{ section.name }}
 								</option>
 							</select>
+							<div class="mt-4 flex justify-end">
+								<button
+									@click="updateDefaultAction()"
+									class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+								>
+									Update
+								</button>
+							</div>
                   		</div>
                 	</div>
-					<div class="mt-4 flex justify-end">
-						<button
-							@click="saveLogic()"
-							class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-						>
-							Add
-						</button>
-					</div>
               	</div>
 			</div>
 		</div>

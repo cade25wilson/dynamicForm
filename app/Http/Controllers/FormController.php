@@ -105,6 +105,7 @@ class FormController extends Controller
             }])->with(['logic' => function ($query) {
                 $query->orderBy('id', 'asc');
             }])
+            ->with('defaultAction')
             ->find($section);
         } else {
             $currentSection = FormSection::where('form_id', $form->id)
@@ -113,6 +114,7 @@ class FormController extends Controller
                 ->with(['logic' => function ($query) {
                     $query->orderBy('id', 'asc');
                 }])
+                ->with('defaultAction')
                 ->with(['formFields' => function ($query) {
                     $query->orderBy('order', 'asc');
                 }])

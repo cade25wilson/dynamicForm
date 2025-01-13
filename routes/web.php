@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DefaultActionController;
 use App\Http\Controllers\DesignController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\EmailSettingsController;
@@ -45,6 +46,7 @@ Route::get('/responses/refresh/{id}', [FormResponseController::class, 'getRespon
 Route::get('forms/{id}', [PublishFormController::class, 'show']);
 Route::get('responses/{id}/{responseId}', [FormResponseController::class, 'showResponse']);
 Route::post('stripe/webhook', [WebhookController::class, 'handleWebhook']);
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -54,6 +56,7 @@ Route::middleware([
     Route::get('/share/{id}', [FormController::class, 'share']);
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('form', FormController::class);
+    Route::resource('logic', LogicController::class)->only(['store', 'update', 'destroy']);
     Route::resource('workspace', WorkspaceController::class)->only(['store', 'update', 'destroy']);
     Route::delete('section/{id}', [SectionController::class, 'destroy'])->name('section.destroy');
     Route::post('section', [SectionController::class, 'store'])->name('section.store');
@@ -100,10 +103,8 @@ Route::middleware([
     Route::get('download/file_uploads/{id}', [DownloadController::class, 'fileUploads']);
     Route::post('utmfields/{id}', [UtmController::class, 'store']);
     Route::delete('utmfields/{id}', [UtmController::class, 'destroy']);
-    Route::post('/utm-response/{id}', [UtmController::class, 'response']);
-    Route::post('logic', [LogicController::class, 'store']);
-    Route::put('logic/{id}', [LogicController::class, 'update']);
-    Route::delete('logic/{id}', [LogicController::class, 'destroy']);
+    Route::post('/utm-response/{id}', [UtmController::class, 'response']); 
+    Route::put('default-action/{id}', [DefaultActionController::class, 'update']);
     Route::get('/subscription-checkout', function (Request $request) {
         return $request->user()
             ->newSubscription(env('STRIPE_PRODUCT'), env('STRIPE_PRICE'))

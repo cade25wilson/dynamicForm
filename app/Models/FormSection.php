@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class FormSection extends Model
 {
@@ -32,6 +33,11 @@ class FormSection extends Model
     public function logic(): HasMany
     {
         return $this->hasMany(Logic::class);
+    }
+
+    public function defaultAction(): HasOne
+    {
+        return $this->hasOne(DefaultAction::class);
     }
 
     protected $casts = [

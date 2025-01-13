@@ -199,9 +199,11 @@ class SectionController extends Controller
 
             $newFormSection = $this->duplicateFormSection($formSection, $newOrder);
             $this->duplicateFormFields($formSection->formFields, $formSection->form_id, $newFormSection->id);
+            $this->duplicateSectionDefaultAction($newFormSection, $formSection->defaultAction);
 
             return redirect('form/' . $formSection->form_id);
         } catch(Exception $e){
+            Log::error($e);
             return redirect('form/' . $formSection->form_id);
         }
     }

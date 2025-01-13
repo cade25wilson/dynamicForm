@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignUuid('published_form_section_id')->constrained('published_form_sections')->onDelete('cascade');
             $table->json('condition')->nullable(true);
             $table->json('action')->nullable(true);
-            $table->json('default_action')->nullable(true);
             $table->timestamps();
         });
     }

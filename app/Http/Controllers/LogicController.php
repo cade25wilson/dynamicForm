@@ -10,22 +10,6 @@ use Illuminate\Support\Facades\Log;
 class LogicController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -42,9 +26,6 @@ class LogicController extends Controller
                 'action' => 'required|array',
                 'action.type' => 'required|string|in:goto',
                 'action.target' => 'required|exists:form_sections,id', // Target section
-                'default_action' => 'nullable|array',
-                'default_action.type' => 'nullable|string|in:goto',
-                'default_action.target' => 'nullable|exists:form_sections,id', // Default target
             ]);
         
             $logic = Logic::create($data);
@@ -56,23 +37,6 @@ class LogicController extends Controller
         }
     }
     
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      */
@@ -90,9 +54,6 @@ class LogicController extends Controller
                 'action' => 'required|array',
                 'action.type' => 'required|string|in:goto',
                 'action.target' => 'required|exists:form_sections,id', // Target section
-                'default_action' => 'nullable|array',
-                'default_action.type' => 'nullable|string|in:goto',
-                'default_action.target' => 'nullable|exists:form_sections,id', // Default target
             ]);
             $logic = Logic::findOrFail($id);
             $logic->update($data);

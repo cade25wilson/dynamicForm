@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\DefaultAction;
 use App\Models\FormFields;
 use App\Models\FormSection;
 use Illuminate\Database\Eloquent\Collection;
@@ -250,7 +251,16 @@ trait Setup
         }
     }
 
-    private function duplicateFormSection(FormSection $formSection, int $newOrder): FormSection
+    private function duplicateSectionDefaultAction(FormSection $newFormSection, mixed $defaultAction): void
+    {
+        DefaultAction::create([
+            'form_section_id' => $newFormSection->id,
+            'type' => $defaultAction->type,
+            'target' => $defaultAction->target
+        ]);
+    }
+
+    private function duplicateFormSection(FormSection $formSection, string $newOrder): FormSection
     {
         return FormSection::create([
             'form_id' => $formSection->form_id,
